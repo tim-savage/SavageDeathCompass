@@ -24,7 +24,6 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.Metadatable;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class PlayerEventListener implements Listener {
@@ -52,7 +51,7 @@ public class PlayerEventListener implements Listener {
 		Player player = event.getEntity();
 		
 		// if player world is not enabled in config, do nothing and return
-		if (!this.playerWorldEnabled(player)) {
+		if (!playerWorldEnabled(player)) {
 			return;
 		}
 		
@@ -87,9 +86,9 @@ public class PlayerEventListener implements Listener {
 		}
 		
 		// if deathTriggeredRespawn hashmap does not contain user uuid, do nothing and return
-		if (!this.deathTriggeredRespawn.containsKey(player.getUniqueId().toString())) {
+		if (!deathTriggeredRespawn.containsKey(player.getUniqueId().toString())) {
 			if (plugin.debug) {
-				this.plugin.getLogger().info("player uuid not in deathRespawnCheck hashmap.");
+				plugin.getLogger().info("player uuid not in deathRespawnCheck hashmap.");
 			}
 			return;
 		}
@@ -100,7 +99,7 @@ public class PlayerEventListener implements Listener {
 		// if player does not have deathcompass.use permission, do nothing and return
 		if (!player.hasPermission("deathcompass.use")) {
 			if (plugin.debug) {
-				this.plugin.getLogger().info("Player " + player.getName() + " does not have permission 'deathcompass.use'.");
+				plugin.getLogger().info("Player " + player.getName() + " does not have permission 'deathcompass.use'.");
 			}
 			return;
 		}
@@ -126,7 +125,7 @@ public class PlayerEventListener implements Listener {
 		Player player = event.getPlayer();
 		
 		// if player world is not enabled, do nothing and return
-		if (!this.playerWorldEnabled(player)) {
+		if (!playerWorldEnabled(player)) {
 			return;
 		}
 		
@@ -185,7 +184,7 @@ public class PlayerEventListener implements Listener {
 		}
 		
 		// set death compass target to player last death location
-		this.setDeathCompassTarget(player);
+		setDeathCompassTarget(player);
 	}
 
 
@@ -244,7 +243,7 @@ public class PlayerEventListener implements Listener {
 		event.getItemDrop().remove();
 		
 		// play item_break sound to player
-		player.playSound(player.getLocation(), Sound.ITEM_BREAK, 1.0f, 1.0f);
+		player.playSound(player.getLocation(), Sound.ITEM_BREAK, 1, 1);
 		
 		// if inventory does not contain at least 1 death compass, reset compass target
 		if (!player.getInventory().containsAtLeast(dc, 1)) {
@@ -263,10 +262,10 @@ public class PlayerEventListener implements Listener {
 	private void giveDeathCompass(Player player) {
 		
 		// create 1 death compass itemstack
-		ItemStack dc = this.createDeathCompassStack(1);
+		ItemStack deathcompass = createDeathCompassStack(1);
 		
 		// add death compass itemstack to player inventory
-		player.getInventory().addItem(new ItemStack[]{dc});
+		player.getInventory().addItem(deathcompass);
 		
 		// log info
 		plugin.logger.log(Level.INFO, "[DeathCompass] " + player.getName() + " was given a death compass in " + player.getWorld().getName() + ".");
@@ -278,8 +277,8 @@ public class PlayerEventListener implements Listener {
 	 * @param inventory
 	 */
 	private void removeDeathCompasses(Inventory inventory) {
-		ItemStack deathcompass = this.createDeathCompassStack(64);
-		inventory.removeItem(new ItemStack[]{deathcompass});
+		ItemStack deathcompass = createDeathCompassStack(64);
+		inventory.removeItem(deathcompass);
 	}
 
 	
@@ -296,13 +295,13 @@ public class PlayerEventListener implements Listener {
 			quantity = 1;
 		}
 		// get item name from messages file
-		String itemname = plugin.messagemanager.messages.getConfig().getString("itemname", "Death Compass");
+		String itemname = plugin.messagemanager.getItemName();
 		
 		// allow '&' as color code character
 		itemname = ChatColor.translateAlternateColorCodes((char)'&', itemname);
 		
 		// get item lore from messages file
-		List<String> itemlore = plugin.messagemanager.messages.getConfig().getStringList("itemlore");
+		List<String> itemlore = plugin.messagemanager.getItemLore();
 		
 		// allow '&' as color code character
 		ArrayList<String> coloredlore = new ArrayList<String>();
@@ -333,10 +332,12 @@ public class PlayerEventListener implements Listener {
 
 			public void run() {
 				Location myloc = plugin.deathlocations.getDeathLocation(player);
-				if (myloc.getWorld() != player.getWorld()) return;
+				if (myloc.getWorld() != player.getWorld()) {
+					return;
+				}
 				player.setCompassTarget(myloc);
 			}
-		}.runTaskLater((Plugin)this.plugin, 20);
+		}.runTaskLater(plugin, 20);
 	}
 
 	
