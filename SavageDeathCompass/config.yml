@@ -1,0 +1,15 @@
+# DeathCompass Configuration
+
+# Localization language
+language: en-US
+
+# Enabled Worlds
+EnabledWorlds:
+  - world
+  - another_world
+
+# Destroy compass on drop
+DestroyOnDrop: true
+
+# Use UUID instead of player name
+use-uuid: true

@@ -1,0 +1,31 @@
+name: SavageDeathCompass
+main: com.winterhaven_mc.deathcompass.DeathCompassMain
+author: Tim Savage
+version: 1.2
+
+commands:
+   deathcompass:
+      description: show DeathCompass info
+      usage: /deathcompass
+      permission: deathcompass.admin
+      permission-message: You don't have required deathcompass.admin permission.
+   deathcompass reload:
+      description: reload DeathCompass configuration
+      usage: /deathcompass reload
+      permission: deathcompass.reload
+      permission-message: You don't have required deathcompass.reload permission.
+
+permissions:
+    deathcompass.use:
+        description: Give player a compass on death and set compass target to last death location
+        default: false
+        
+    deathcompass.reload:
+        description: Reload DeathCompass config file
+        default: op
+
+    deathcompass.admin:
+        description: DeathCompass admin commands
+        default: op
+        children:
+            deathcompass.reload: true        

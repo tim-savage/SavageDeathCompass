@@ -1,0 +1,25 @@
+# Item Display Name
+itemname: 'Death Compass'
+
+# Item Lore
+itemlore:
+  - '&ePoints to Your Last'
+  - '&eDeath Location'
+
+
+# Custom Messages
+#
+# Variable substitutions:
+# %itemname%            Item name as configured above
+# %playername%          Player's full name
+# %playernickname%      Player's nickname
+# %playerdisplayname%   Player's display name, including prefix/suffix
+# %worldname%           World name that player is in
+
+messages:
+  respawn:
+    enabled: true
+    string: '&c%itemname% points to %playernickname%''s death location in %worldname%.'
+  destroy:
+    enabled: true
+    string: '&c%itemname% destroyed.'

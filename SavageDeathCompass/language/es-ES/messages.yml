@@ -1,0 +1,25 @@
+# Item Display Name
+itemname: 'Brújula de la Muerte'
+
+# Item Lore
+itemlore:
+  - '&ePuntos para la ubicación'
+  - '&ede su última muerte'
+
+
+# Custom Messages
+#
+# Variable substitutions:
+# %itemname%            Item name as configured above
+# %playername%          Player's full name
+# %playernickname%      Player's nickname
+# %playerdisplayname%   Player's display name, including prefix/suffix
+# %worldname%           World name that player is in
+
+messages:
+  respawn:
+    enabled: true
+    string: '&c%itemname% apunta a la ubicación de la muerte de %playernickname%, en %worldname%.'
+  destroy:
+    enabled: true
+    string: '&c%itemname% destruido.'

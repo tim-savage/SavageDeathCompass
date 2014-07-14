@@ -1,0 +1,24 @@
+# Item Display Name
+itemname: 'Tod Kompass'
+
+# Item Lore
+itemlore:
+  - '&eVerweist auf den Ort'
+  - '&edes letzten Todes'
+
+# Custom Messages
+#
+# Variable substitutions:
+# %itemname%            Item name as configured above
+# %playername%          Player's full name
+# %playernickname%      Player's nickname
+# %playerdisplayname%   Player's display name, including prefix/suffix
+# %worldname%           World name that player is in
+
+messages:
+  respawn:
+    enabled: true
+    string: '&c%itemname% zeigt die Stelle von %playernickname%s Tod in %worldname%.'
+  destroy:
+    enabled: true
+    string: '&c%itemname% zerstört.'
