@@ -40,7 +40,7 @@ implements CommandExecutor {
 				sender.hasPermission("deathcompass.reload")) {
 
 			// get current language setting
-			String original_language = plugin.getConfig().getString("language", "en-US");
+			String original_language = plugin.getConfig().getString("Language", "en-US");
 			
 			// get current StorageType
 			String original_storageType = plugin.getConfig().getString("StorageType","sqlite");
@@ -49,7 +49,7 @@ implements CommandExecutor {
 			plugin.reloadConfig();
 
 			// if language setting has changed, instantiate new message manager with new language file
-			if (!original_language.equals(plugin.getConfig().getString("language", "en-US"))) {
+			if (!original_language.equals(plugin.getConfig().getString("Language", "en-US"))) {
 				plugin.messagemanager = new MessageManager(plugin);
 			}
 			else {
