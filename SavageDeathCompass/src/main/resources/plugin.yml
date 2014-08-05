@@ -1,7 +1,7 @@
 name: SavageDeathCompass
 main: com.winterhaven_mc.deathcompass.DeathCompassMain
+version: ${project.version}
 author: Tim Savage
-version: 1.2-beta
 
 commands:
    deathcompass:

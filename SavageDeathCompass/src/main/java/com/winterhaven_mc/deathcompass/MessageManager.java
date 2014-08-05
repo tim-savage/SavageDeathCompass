@@ -23,7 +23,7 @@ public class MessageManager {
 		installLocalizationFiles(localization_files);
 
 		// get configured language
-		String language = plugin.getConfig().getString("language","en-US");
+		String language = plugin.getConfig().getString("Language","en-US");
 
 		// check if localization file for configured language exists, if not then fallback to en-US
 		if (!new File(plugin.getDataFolder() + "/language/" + language + ".yml").exists()) {
