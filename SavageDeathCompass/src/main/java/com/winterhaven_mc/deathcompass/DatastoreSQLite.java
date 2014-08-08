@@ -88,8 +88,8 @@ public class DatastoreSQLite extends Datastore {
 		String worldName = world.getName();
 		String playerID = player.getUniqueId().toString();
 
-		// if config setting UseUUID is false, use player name for playerID
-		if (!plugin.getConfig().getBoolean("UseUUID",true)) {
+		// if config setting use-uuid is false, use player name for playerID
+		if (!plugin.getConfig().getBoolean("use-uuid",true)) {
 			playerID = player.getName();
 		}
 
@@ -146,7 +146,7 @@ public class DatastoreSQLite extends Datastore {
 		Location location = player.getLocation();
 		
 		// if config setting use-uuid is false, use player name for playerID
-		if (!plugin.getConfig().getBoolean("UseUUID",true)) {
+		if (!plugin.getConfig().getBoolean("use-uuid",true)) {
 			playerID = player.getName();
 		}
 		

@@ -28,8 +28,8 @@ public class DatastoreFile extends Datastore {
 		
 		plugin.getLogger().info("Flat file storage initialized.");
 		
-		// get FileSyncInterval in minutes from config and convert to ticks
-		Long fileSyncTicks = (long) (plugin.getConfig().getInt("FileSyncInterval",5) * 60 * 20);
+		// get file-sync-interval in minutes from config and convert to ticks
+		Long fileSyncTicks = (long) (plugin.getConfig().getInt("file-sync-interval",5) * 60 * 20);
 		
 		// create repeating task to sync deathlocationsfile to disk
 		fileSyncTaskID = plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new BukkitRunnable() {
@@ -37,6 +37,10 @@ public class DatastoreFile extends Datastore {
 				deathlocationsfile.saveConfig();
 			}
 		}, 1200, fileSyncTicks);
+		
+		if (plugin.debug) {
+			plugin.getLogger().info("File sync task created with task id: " + fileSyncTaskID);
+		}
 		
 		convertFromSQLite();
 	}
@@ -54,7 +58,7 @@ public class DatastoreFile extends Datastore {
 		String playerid = player.getName();
 		
 		// if use-uuid is enabled in config, set playerid to player uuid
-		if (plugin.getConfig().getBoolean("UseUUID", true)) {
+		if (plugin.getConfig().getBoolean("use-uuid", true)) {
 			playerid = player.getUniqueId().toString();
 		}
 		
@@ -95,7 +99,7 @@ public class DatastoreFile extends Datastore {
 		String playerID = player.getUniqueId().toString();
 		
 		// if use-uuid is not enabled in config, set playerid to player name
-		if (!plugin.getConfig().getBoolean("UseUUID", true)) {
+		if (!plugin.getConfig().getBoolean("use-uuid", true)) {
 			playerID = player.getName();
 		}
 
@@ -128,7 +132,10 @@ public class DatastoreFile extends Datastore {
 		deathlocationsfile.saveConfig();
 		
 		// cancel fileSyncTask
-		plugin.getServer().getScheduler().cancelTask(fileSyncTaskID);		
+		plugin.getServer().getScheduler().cancelTask(fileSyncTaskID);
+		if (plugin.debug) {
+			plugin.getLogger().info("Cancelled File Sync Task ID: " + fileSyncTaskID);
+		}
 	}
 	
 	/**

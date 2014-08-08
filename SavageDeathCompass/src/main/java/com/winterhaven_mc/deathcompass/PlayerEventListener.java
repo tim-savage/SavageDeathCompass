@@ -258,8 +258,8 @@ public class PlayerEventListener implements Listener {
 		// create death compass itemstack for comparison
 		ItemStack dc = createDeathCompassStack(droppeditemstack.getAmount());
 		
-		// if dropped itemstack is not deathcompass or DestroyOnDrop config is not true, do nothing and return 
-		if (!droppeditemstack.equals(dc) || !plugin.getConfig().getBoolean("DestroyOnDrop", true)) {
+		// if dropped itemstack is not deathcompass or destroy-on-drop config is not true, do nothing and return 
+		if (!droppeditemstack.equals(dc) || !plugin.getConfig().getBoolean("destroy-on-drop", true)) {
 			return;
 		}
 		
@@ -396,7 +396,7 @@ public class PlayerEventListener implements Listener {
 	private boolean playerWorldEnabled(Player player) {
 		
 		// get list of enabled worlds from config
-		List<String> enabledworlds = plugin.getConfig().getStringList("EnabledWorlds");
+		List<String> enabledworlds = plugin.getConfig().getStringList("enabled-worlds");
 		
 		// if player world is in list of enabled worlds, return true
 		if (enabledworlds.contains(player.getWorld().getName())) {
