@@ -23,7 +23,7 @@ public class MessageManager {
 		installLocalizationFiles(localization_files);
 
 		// get configured language
-		String language = plugin.getConfig().getString("Language","en-US");
+		String language = plugin.getConfig().getString("language","en-US");
 
 		// check if localization file for configured language exists, if not then fallback to en-US
 		if (!new File(plugin.getDataFolder() + "/language/" + language + ".yml").exists()) {
@@ -39,9 +39,9 @@ public class MessageManager {
 
 		if (messages.getConfig().getBoolean("messages." + messageID + ".enabled", false)) {
 			String message = messages.getConfig().getString("messages." + messageID + ".string");
-			String itemname = messages.getConfig().getString("itemname", "Death Compass").replaceAll("&[0-9A-Za-zK-Ok-oRr]", "");
-			String playername = player.getName().replaceAll("&[0-9A-Za-zK-Ok-oRr]", "");
-			String playernickname = player.getPlayerListName().replaceAll("&[0-9A-Za-zK-Ok-oRr]", "");
+			String itemname = messages.getConfig().getString("itemname", "Death Compass").replaceAll("[&§][0-9A-Za-zK-Ok-oRr]", "");
+			String playername = player.getName().replaceAll("[&§][0-9A-Za-zK-Ok-oRr]", "");
+			String playernickname = player.getPlayerListName().replaceAll("[&§][0-9A-Za-zK-Ok-oRr]", "");
 			String playerdisplayname = player.getDisplayName();
 			String worldname = player.getWorld().getName();
 			message = message.replaceAll("%itemname%", itemname);
