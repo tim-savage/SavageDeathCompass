@@ -22,7 +22,7 @@ public class DatastoreFile extends Datastore {
 	 * create repeating task to sync file to disk
 	 */
 	@Override
-	void initializeDb() {
+	void initialize() throws Exception {
 		deathlocationsfile = new ConfigAccessor(plugin, "deathlocations.yml");
 		deathlocationsfile.saveDefaultConfig();
 		
@@ -41,18 +41,7 @@ public class DatastoreFile extends Datastore {
 		if (plugin.debug) {
 			plugin.getLogger().info("File sync task created with task id: " + fileSyncTaskID);
 		}
-		
-		try {
-			convertFromSQLite();
-		} catch (SQLException e) {
-			// output error message to log
-			plugin.getLogger().warning("An error occured while converting the datastore from SQLite to flat file.");
-
-			// output additional information to log if debugging is enabled
-			if (plugin.debug) {
-				plugin.getLogger().warning(e.getMessage());
-			}
-		}
+		convertFromSQLite();
 	}
 
 	/**
@@ -136,7 +125,7 @@ public class DatastoreFile extends Datastore {
 	 * @throws exception
 	 */
 	@Override
-	void closeDb() {
+	void close() {
 		
 		// sync to disk
 		deathlocationsfile.saveConfig();

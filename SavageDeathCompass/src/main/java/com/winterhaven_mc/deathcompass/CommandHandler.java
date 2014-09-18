@@ -13,6 +13,7 @@ implements CommandExecutor {
 
 	public CommandHandler(DeathCompassMain plugin) {
 		this.plugin = plugin;
+		plugin.getCommand("deathcompass").setExecutor(this);
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -57,19 +58,19 @@ implements CommandExecutor {
 
 			// if language setting has changed, instantiate new message manager with new language file
 			if (!original_language.equals(current_language)) {
-				plugin.messagemanager = new MessageManager(plugin);
+				plugin.messageManager = new MessageManager(plugin);
 				sender.sendMessage(ChatColor.AQUA + "Changed language to " + ChatColor.DARK_AQUA + current_language + ChatColor.AQUA + ".");
 			}
 			// otherwise just reload the messages file to pull in any changes
 			else {
-				plugin.messagemanager.reloadMessages();
+				plugin.messageManager.reloadMessages();
 			}
 			
 			// if storage-type has changed, copy records to new datastore
 			String storageType = plugin.getConfig().getString("storage-type","sqlite");
 			if (!original_storageType.equals(storageType)) {
 				try {
-					plugin.datastore.closeDb();
+					plugin.datastore.close();
 				} catch (Exception e) {
 					plugin.getLogger().warning("Could not close datastore.");
 				}
@@ -83,7 +84,7 @@ implements CommandExecutor {
 				}
 				// initialize new datastore
 				try {
-					plugin.datastore.initializeDb();
+					plugin.datastore.initialize();
 				} catch (Exception e) {
 					plugin.getLogger().severe("Could not initialize new datastore on reload.");
 				}

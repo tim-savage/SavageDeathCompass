@@ -34,21 +34,12 @@ public class DatastoreSQLite extends Datastore {
 	 * create table if one doesn't already exist
 	 */
 	@Override
-	public void initializeDb() {
+	public void initialize() throws Exception {
 
 		// register the driver 
 		String jdbcDriverName = "org.sqlite.JDBC";
 		
-		try {
-			Class.forName(jdbcDriverName);
-		}
-		catch (Exception e) {
-			plugin.getLogger().severe("An error occured while initializing the SQLite datastore.");
-			if (plugin.debug) {
-				plugin.getLogger().severe(e.getMessage());
-			}
-			return;
-		}
+		Class.forName(jdbcDriverName);
 		
 		// create database url
 		String deathLocationsDb = plugin.getDataFolder() + File.separator + "deathlocations.db";
@@ -56,7 +47,7 @@ public class DatastoreSQLite extends Datastore {
 		String dbUrl = jdbc + ":" + deathLocationsDb;
 
 		// sql statement to create table if it doesn't already exist
-		String makePlayerTable = "CREATE TABLE IF NOT EXISTS deathlocations (" +
+		String makeDeathLocationTable = "CREATE TABLE IF NOT EXISTS deathlocations (" +
 				"playerid VARCHAR(36) NOT NULL," +
 				"worldname VARCHAR(255) NOT NULL," +
 				"x INTEGER, " +
@@ -66,35 +57,17 @@ public class DatastoreSQLite extends Datastore {
 				"UNIQUE (playerid,worldname) )";
 
 		// create a database connection
-		try {
-			connection = DriverManager.getConnection(dbUrl);
-			Statement statement = connection.createStatement();
-			// execute table creation statement
-			statement.executeUpdate(makePlayerTable);
+		connection = DriverManager.getConnection(dbUrl);
+		
+		// execute table creation statement
+		Statement statement = connection.createStatement();
+		statement.executeUpdate(makeDeathLocationTable);
 			
-		}
-		catch (SQLException e) {
-			plugin.getLogger().severe("An error occured while connecting to the SQLite datastore.");
-			if (plugin.debug) {
-				plugin.getLogger().severe(e.getMessage());
-			}
-		}
-
 		// output status to log
 		plugin.getLogger().info("SQLite database intialized.");
 		
 		// convert records from flat file if necessary
-		try {
-			convertFromFile("deathlocations.yml");
-		} catch (SQLException e) {
-			// output error message to log
-			plugin.getLogger().warning("An error occured while converting datastore from flat file to SQLite.");
-			
-			// output additional info to log if debugging is enabled
-			if (plugin.debug) {
-				plugin.getLogger().warning(e.getMessage());
-			}
-		}
+		convertFromFile("deathlocations.yml");
 	}
 
 
@@ -238,7 +211,7 @@ public class DatastoreSQLite extends Datastore {
 	 * Close database connection
 	 */
 	@Override
-	void closeDb() {
+	void close() {
 
 		try {
 			connection.close();

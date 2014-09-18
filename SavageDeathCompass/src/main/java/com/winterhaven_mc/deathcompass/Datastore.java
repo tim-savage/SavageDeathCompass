@@ -9,7 +9,7 @@ abstract class Datastore {
 	 * Initialize Datastore
 	 * @throws Exception
 	 */
-	abstract void initializeDb();
+	abstract void initialize() throws Exception;
 	
 	/**
 	 * Retrieve player death location from Datastore
@@ -30,6 +30,6 @@ abstract class Datastore {
 	 * Close Datastore
 	 * @throws Exception
 	 */
-	abstract void closeDb();
+	abstract void close();
 
 }
