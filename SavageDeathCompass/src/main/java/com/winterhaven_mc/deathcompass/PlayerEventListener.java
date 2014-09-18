@@ -116,7 +116,7 @@ public class PlayerEventListener implements Listener {
 		setDeathCompassTarget(player);
 		
 		// send player respawn message
-		plugin.messagemanager.sendPlayerMessage(player, "respawn");
+		plugin.messageManager.sendPlayerMessage(player, "respawn");
 	}
 
 	
@@ -275,7 +275,7 @@ public class PlayerEventListener implements Listener {
 		}
 		
 		// send player compass destroyed message
-		plugin.messagemanager.sendPlayerMessage(player, "destroy");
+		plugin.messageManager.sendPlayerMessage(player, "destroy");
 	}
 
 	
@@ -319,13 +319,13 @@ public class PlayerEventListener implements Listener {
 			quantity = 1;
 		}
 		// get item name from messages file
-		String itemname = plugin.messagemanager.getItemName();
+		String itemname = plugin.messageManager.getItemName();
 		
 		// allow '&' as color code character
 		itemname = ChatColor.translateAlternateColorCodes((char)'&', itemname);
 		
 		// get item lore from messages file
-		List<String> itemlore = plugin.messagemanager.getItemLore();
+		List<String> itemlore = plugin.messageManager.getItemLore();
 		
 		// allow '&' as color code character
 		ArrayList<String> coloredlore = new ArrayList<String>();
