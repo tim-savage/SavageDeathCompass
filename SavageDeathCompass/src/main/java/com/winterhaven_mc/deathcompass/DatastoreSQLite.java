@@ -12,6 +12,7 @@ import java.util.Set;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * SQLite implementation of Datastore
@@ -33,7 +34,7 @@ public class DatastoreSQLite extends Datastore {
 	 * create table if one doesn't already exist
 	 */
 	@Override
-	public void initializeDb() throws SQLException {
+	public void initializeDb() {
 
 		// register the driver 
 		String jdbcDriverName = "org.sqlite.JDBC";
@@ -42,7 +43,10 @@ public class DatastoreSQLite extends Datastore {
 			Class.forName(jdbcDriverName);
 		}
 		catch (Exception e) {
-			plugin.getLogger().severe(e.getMessage());
+			plugin.getLogger().severe("An error occured while initializing the SQLite datastore.");
+			if (plugin.debug) {
+				plugin.getLogger().severe(e.getMessage());
+			}
 			return;
 		}
 		
@@ -62,17 +66,35 @@ public class DatastoreSQLite extends Datastore {
 				"UNIQUE (playerid,worldname) )";
 
 		// create a database connection
-		connection = DriverManager.getConnection(dbUrl);
-		Statement statement = connection.createStatement();
+		try {
+			connection = DriverManager.getConnection(dbUrl);
+			Statement statement = connection.createStatement();
+			// execute table creation statement
+			statement.executeUpdate(makePlayerTable);
+			
+		}
+		catch (SQLException e) {
+			plugin.getLogger().severe("An error occured while connecting to the SQLite datastore.");
+			if (plugin.debug) {
+				plugin.getLogger().severe(e.getMessage());
+			}
+		}
 
-		// execute table creation statement
-		statement.executeUpdate(makePlayerTable);
-		
 		// output status to log
 		plugin.getLogger().info("SQLite database intialized.");
 		
 		// convert records from flat file if necessary
-		convertFromFile("deathlocations.yml");
+		try {
+			convertFromFile("deathlocations.yml");
+		} catch (SQLException e) {
+			// output error message to log
+			plugin.getLogger().warning("An error occured while converting datastore from flat file to SQLite.");
+			
+			// output additional info to log if debugging is enabled
+			if (plugin.debug) {
+				plugin.getLogger().warning(e.getMessage());
+			}
+		}
 	}
 
 
@@ -82,8 +104,8 @@ public class DatastoreSQLite extends Datastore {
 	 * @return location
 	 */
 	@Override
-	Location getRecord(Player player) throws Exception {
-		
+	Location getRecord(Player player) {
+
 		World world = player.getWorld();
 		String worldName = world.getName();
 		String playerID = player.getUniqueId().toString();
@@ -97,38 +119,52 @@ public class DatastoreSQLite extends Datastore {
 		String sql = "SELECT * FROM deathlocations WHERE playerid = ? AND worldname = ?";
 
 		// create sql prepared statement
-		PreparedStatement preparedStatement = connection.prepareStatement(sql);
+		PreparedStatement preparedStatement;
+		try {
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, playerID);
+			preparedStatement.setString(2, worldName);
 
-		preparedStatement.setString(1, playerID);
-		preparedStatement.setString(2, worldName);
+			// execute sql query
+			ResultSet rs = preparedStatement.executeQuery();
 
-		// execute sql query
-		ResultSet rs = preparedStatement.executeQuery();
+			// initialize location variables
+			Integer x = 0;
+			Integer y = 0;
+			Integer z = 0;
 
-		// initialize location variables
-		Integer x = 0;
-		Integer y = 0;
-		Integer z = 0;
-		
-		boolean empty = true;
+			boolean empty = true;
 
-		// iterate through returned rows and set location variables (there should be only 1 row returned)
-		while( rs.next() ) {
-			x = rs.getInt("x");
-			y = rs.getInt("y");
-			z = rs.getInt("z");
-		    empty = false;
+			// iterate through returned rows and set location variables (there should be only 1 row returned)
+			while( rs.next() ) {
+				x = rs.getInt("x");
+				y = rs.getInt("y");
+				z = rs.getInt("z");
+				empty = false;
+			}
+
+			// if no matching location found for player in world return null
+			if (empty) {
+				if (plugin.debug) {
+					plugin.getLogger().info("No death location found for " + player.getName() + " in world " + worldName + ".");
+				}
+				return null;
+			}
+
+			// create new location with results and return location
+			Location location = new Location(world, x.doubleValue() , y.doubleValue(), z.doubleValue());
+			return location;
 		}
-
-		// if no matching location found for player in world, write log message and return null
-		if (empty) {
-			plugin.getLogger().info("No death location found for " + player.getName() + " in world " + worldName + ".");
-			return null;
+		catch (SQLException e) {
+			// output error message to log
+			plugin.getLogger().warning("An error occurred while fetching a record from the flat file datastore.");
+			
+			// output additional info to log if debugging is enabled
+			if (plugin.debug) {
+				plugin.getLogger().warning(e.getMessage());
+			}
 		}
-		
-		// create new location with results and return location
-		Location location = new Location(world, x.doubleValue() , y.doubleValue(), z.doubleValue());
-		return location;
+		return null;
 	}
 	
 
@@ -137,8 +173,12 @@ public class DatastoreSQLite extends Datastore {
 	 * @param player
 	 */
 	@Override
-	void putRecord(Player player) throws Exception {
+	void putRecord(Player player) {
 
+		// sql statement to insert or replace record
+		final String sql = "INSERT OR REPLACE INTO deathlocations (playerid,worldname,x,y,z,timestamp) " +
+				"values(?,?,?,?,?,?) ";
+		
 		// set playerID to player UUID
 		String playerID = player.getUniqueId().toString();
 
@@ -149,35 +189,48 @@ public class DatastoreSQLite extends Datastore {
 		if (!plugin.getConfig().getBoolean("use-uuid",true)) {
 			playerID = player.getName();
 		}
+		final String sqlPlayerID = playerID;
 		
 		// get worldname as string, x,y,z as int from location
-		String worldName = location.getWorld().getName();
-		int x = location.getBlockX();
-		int y = location.getBlockY();
-		int z = location.getBlockZ();
-		long timestamp = System.currentTimeMillis();
+		final String worldName = location.getWorld().getName();
+		final int x = location.getBlockX();
+		final int y = location.getBlockY();
+		final int z = location.getBlockZ();
+		final long timestamp = System.currentTimeMillis();
 
-		// sql statement to insert or replace record
-		String sql = "INSERT OR REPLACE INTO deathlocations (playerid,worldname,x,y,z,timestamp) " +
-				"values(?,?,?,?,?,?) ";
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				try {
+					// create prepared statement
+					PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
-		// create prepared statement
-		PreparedStatement preparedStatement = connection.prepareStatement(sql);
+					preparedStatement.setString(1, sqlPlayerID);
+					preparedStatement.setString(2, worldName);
+					preparedStatement.setInt(3, x);
+					preparedStatement.setInt(4, y);
+					preparedStatement.setInt(5, z);
+					preparedStatement.setLong(6, timestamp);
 
-		preparedStatement.setString(1, playerID);
-		preparedStatement.setString(2, worldName);
-		preparedStatement.setInt(3, x);
-		preparedStatement.setInt(4, y);
-		preparedStatement.setInt(5, z);
-		preparedStatement.setLong(6, timestamp);
-		
-		// execute prepared statement
-		int rowsAffected = preparedStatement.executeUpdate();
-		
-		// output debugging information
-		if (plugin.debug) {
-			plugin.getLogger().info(rowsAffected + " rows affected.");
-		}
+					// execute prepared statement
+					int rowsAffected = preparedStatement.executeUpdate();
+
+					// output debugging information
+					if (plugin.debug) {
+						plugin.getLogger().info(rowsAffected + " rows affected.");
+					}
+				} catch (SQLException e) {
+					// output error to log
+					plugin.getLogger().warning("An error occured while inserting a death location in the SQLite datastore.");
+
+					// output additional information if debugging is enabled
+					if (plugin.debug) {
+						plugin.getLogger().warning(e.getMessage());
+					}
+				}
+			}
+		}.runTaskAsynchronously(plugin);
+
 	}
 
 	
@@ -185,10 +238,19 @@ public class DatastoreSQLite extends Datastore {
 	 * Close database connection
 	 */
 	@Override
-	void closeDb() throws Exception {
+	void closeDb() {
 
-		connection.close();
-		plugin.getLogger().info("SQLite database connection closed.");		
+		try {
+			connection.close();
+			if (plugin.debug) {
+				plugin.getLogger().info("SQLite database connection closed.");
+			}
+		} catch (SQLException e) {
+			plugin.getLogger().warning("An error occurred while closing the SQLite datastore.");
+			if (plugin.debug) {
+				plugin.getLogger().warning(e.getMessage());
+			}
+		}
 	}
 
 	/**
@@ -197,6 +259,10 @@ public class DatastoreSQLite extends Datastore {
 	 * @throws SQLException
 	 */
 	void convertFromFile(String filename) throws SQLException {
+		
+		// sql statement to insert or replace record
+		final String sql = "INSERT OR REPLACE INTO deathlocations (playerid,worldname,x,y,z,timestamp) " +
+				"values(?,?,?,?,?,?) ";
 		
 		int totalRowsAffected = 0;
 		
@@ -240,10 +306,6 @@ public class DatastoreSQLite extends Datastore {
 
 					// if result set is empty or flat file timestamp is newer than dbtimestamp, insert/update record
 					if (empty || timestamp > dbtimestamp) {
-						
-						// sql statement to insert or replace record
-						String sql = "INSERT OR REPLACE INTO deathlocations (playerid,worldname,x,y,z,timestamp) " +
-								"values(?,?,?,?,?,?) ";
 						
 						// create prepared statement
 						preparedStatement = connection.prepareStatement(sql);
