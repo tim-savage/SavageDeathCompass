@@ -147,12 +147,7 @@ public class PlayerEventListener implements Listener {
 		
 		Location lastdeathloc = null;
 
-		try {
-			lastdeathloc = plugin.datastore.getRecord(player);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		lastdeathloc = plugin.datastore.getRecord(player);
 		
 		// if player does not have at least one death compass in inventory or
 		// entry in deathlocations hashmap, do nothing and return
@@ -194,12 +189,7 @@ public class PlayerEventListener implements Listener {
 		// get last death location from datastore
 		Location lastdeathloc = null;
 		
-		try {
-			lastdeathloc = plugin.datastore.getRecord(player);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		lastdeathloc = plugin.datastore.getRecord(player);
 		
 		// if player does not have a death compass or saved death location, do nothing and return
 		if (!player.getInventory().containsAtLeast(deathcompass, 1) ||
@@ -356,12 +346,7 @@ public class PlayerEventListener implements Listener {
 
 			public void run() {
 				Location myloc = null;
-				try {
-					myloc = plugin.datastore.getRecord(player);
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				myloc = plugin.datastore.getRecord(player);
 				if (myloc.getWorld() != player.getWorld()) {
 					return;
 				}

@@ -17,17 +17,29 @@ implements CommandExecutor {
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+		
 		int maxArgs = 1;
 		if (args.length > maxArgs) {
 			sender.sendMessage("Too many arguments!");
 			return false;
 		}
+
+		String storageType;
+		
+		if (plugin.datastore instanceof DatastoreFile) {
+			storageType = "file";
+		}
+		else {
+			storageType = "sqlite";
+		}
+		
+		
 		// if called with no arguments, output config settings
 		if (args.length < 1 && sender.hasPermission("deathcompass.admin")) {
 			sender.sendMessage((Object)ChatColor.AQUA + "[SavageDeathCompass] Version " + plugin.getDescription().getVersion());
 			sender.sendMessage(ChatColor.GREEN + "Language: " + ChatColor.RESET + plugin.getConfig().getString("language"));
-			sender.sendMessage(ChatColor.GREEN + "Storage Type: " + ChatColor.RESET + plugin.getConfig().getString("storage-type"));
-			if (plugin.getConfig().getString("storage-type").equals("file")) {
+			sender.sendMessage(ChatColor.GREEN + "Storage Type: " + ChatColor.RESET + storageType);
+			if (storageType.equals("file")) {
 				sender.sendMessage(ChatColor.GREEN + "File Sync Interval: " + ChatColor.RESET + plugin.getConfig().getString("file-sync-interval"));
 			}
 			sender.sendMessage(ChatColor.GREEN + "Destroy On Drop: " + ChatColor.RESET + plugin.getConfig().getString("destroy-on-drop"));
@@ -67,7 +79,7 @@ implements CommandExecutor {
 			}
 			
 			// if storage-type has changed, copy records to new datastore
-			String storageType = plugin.getConfig().getString("storage-type","sqlite");
+			storageType = plugin.getConfig().getString("storage-type","sqlite");
 			if (!original_storageType.equals(storageType)) {
 				try {
 					plugin.datastore.close();
@@ -82,6 +94,7 @@ implements CommandExecutor {
 					sender.sendMessage(ChatColor.AQUA + "Switched to " + ChatColor.DARK_AQUA + "sqlite" + ChatColor.AQUA + " storage.");
 					plugin.datastore = new DatastoreSQLite();
 				}
+				
 				// initialize new datastore
 				try {
 					plugin.datastore.initialize();

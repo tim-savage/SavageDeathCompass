@@ -16,8 +16,11 @@ import org.bukkit.entity.Player;
 
 public class MessageManager {
 
+	// reference to main class
 	private final DeathCompassMain plugin;
-	ConfigAccessor messages;
+	
+	// config accessor object for messages
+	private ConfigAccessor messages;
 
 	
 	/**
