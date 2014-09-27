@@ -94,6 +94,7 @@ implements CommandExecutor {
 					sender.sendMessage(ChatColor.AQUA + "Switched to " + ChatColor.DARK_AQUA + "sqlite" + ChatColor.AQUA + " storage.");
 					plugin.datastore = new DatastoreSQLite();
 				}
+				
 				// initialize new datastore
 				try {
 					plugin.datastore.initialize();

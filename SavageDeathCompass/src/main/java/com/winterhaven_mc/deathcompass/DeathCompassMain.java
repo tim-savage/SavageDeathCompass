@@ -9,7 +9,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  * that points to players death location.
  * 
  * @author      Tim Savage
- * @version		1.0
+ * @version		1.2
  */
 public final class DeathCompassMain extends JavaPlugin {
 
@@ -57,7 +57,7 @@ public final class DeathCompassMain extends JavaPlugin {
 	private Datastore initializeDatastore() {
 
 		// if config has sqlite as storage option...
-		if (getConfig().getString("storage-type","file").equalsIgnoreCase("sqlite")) {
+		if (getConfig().getString("storage-type","sqlite").equalsIgnoreCase("sqlite")) {
 
 			// instantiate sqlite datastore
 			datastore = new DatastoreSQLite();

@@ -17,5 +17,5 @@ use-uuid: true
 # Storage type ( file | sqlite )
 storage-type: sqlite
 
-# Time interval (in minutes) to sync file to disk (for StorageType file only)
+# Time interval (in minutes) to sync file to disk (for StorageType 'file' only)
 file-sync-interval: 5
