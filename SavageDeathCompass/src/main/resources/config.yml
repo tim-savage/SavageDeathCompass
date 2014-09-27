@@ -1,0 +1,21 @@
+# DeathCompass Configuration
+
+# Localization language
+language: en-US
+
+# Enabled Worlds
+enabled-worlds:
+  - world
+  - another_world
+
+# Destroy compass on drop
+destroy-on-drop: true
+
+# Use UUID instead of player name
+use-uuid: true
+
+# Storage type ( file | sqlite )
+storage-type: sqlite
+
+# Time interval (in minutes) to sync file to disk (for StorageType 'file' only)
+file-sync-interval: 5

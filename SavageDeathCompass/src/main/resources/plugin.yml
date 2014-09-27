@@ -1,7 +1,7 @@
 name: SavageDeathCompass
 main: com.winterhaven_mc.deathcompass.DeathCompassMain
+version: ${project.version}
 author: Tim Savage
-version: 1.2-beta
 
 commands:
    deathcompass:
@@ -9,6 +9,7 @@ commands:
       usage: /deathcompass
       permission: deathcompass.admin
       permission-message: You don't have required deathcompass.admin permission.
+
    deathcompass reload:
       description: reload DeathCompass configuration
       usage: /deathcompass reload

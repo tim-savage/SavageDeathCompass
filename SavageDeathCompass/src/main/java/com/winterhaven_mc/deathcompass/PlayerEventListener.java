@@ -1,10 +1,12 @@
 package com.winterhaven_mc.deathcompass;
 
 import com.winterhaven_mc.deathcompass.DeathCompassMain;
+
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Level;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -29,7 +31,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class PlayerEventListener implements Listener {
 	
 	private final DeathCompassMain plugin;
-	private HashMap<String, Boolean> deathTriggeredRespawn = new HashMap<String, Boolean>();
+	private HashSet<String> deathTriggeredRespawn = new HashSet<String>();
 
 	
 	/**
@@ -45,10 +47,13 @@ public class PlayerEventListener implements Listener {
 	/**
 	 * Player death event handler
 	 * @param event
+	 * @throws Exception 
 	 */
 	@EventHandler
-	public void onPlayerDeath(PlayerDeathEvent event) {
+	public void onPlayerDeath(PlayerDeathEvent event) throws Exception {
+		
 		Player player = event.getEntity();
+		String playeruuid = player.getUniqueId().toString();
 		
 		// if player world is not enabled in config, do nothing and return
 		if (!playerWorldEnabled(player)) {
@@ -60,11 +65,11 @@ public class PlayerEventListener implements Listener {
 			return;
 		}
 		
-		// set death location in hashmap
-		plugin.deathlocations.setDeathLocation(player);
+		// put death location in database
+		plugin.datastore.putRecord(player);
 		
-		// put player uuid in deathTriggeredRespawn hashmap
-		deathTriggeredRespawn.put(player.getUniqueId().toString(), true);
+		// put player uuid in deathTriggeredRespawn hashset
+		deathTriggeredRespawn.add(playeruuid);
 	}
 
 	
@@ -85,15 +90,15 @@ public class PlayerEventListener implements Listener {
 			return;
 		}
 		
-		// if deathTriggeredRespawn hashmap does not contain user uuid, do nothing and return
-		if (!deathTriggeredRespawn.containsKey(player.getUniqueId().toString())) {
+		// if deathTriggeredRespawn hashset does not contain user uuid, do nothing and return
+		if (!deathTriggeredRespawn.contains(player.getUniqueId().toString())) {
 			if (plugin.debug) {
-				plugin.getLogger().info("player uuid not in deathRespawnCheck hashmap.");
+				plugin.getLogger().info("player uuid not in deathTriggeredRespawn hashset.");
 			}
 			return;
 		}
 		
-		// remove player uuid from deathTriggeredRespawn hashmap
+		// remove player uuid from deathTriggeredRespawn hashset
 		deathTriggeredRespawn.remove(player.getUniqueId().toString());
 		
 		// if player does not have deathcompass.use permission, do nothing and return
@@ -111,7 +116,7 @@ public class PlayerEventListener implements Listener {
 		setDeathCompassTarget(player);
 		
 		// send player respawn message
-		plugin.messagemanager.sendPlayerMessage(player, "respawn");
+		plugin.messageManager.sendPlayerMessage(player, "respawn");
 	}
 
 	
@@ -138,12 +143,16 @@ public class PlayerEventListener implements Listener {
 		ItemStack deathcompass = createDeathCompassStack(1);
 		
 		// get player last death location from hashmap
-		plugin.deathlocations.loadDeathLocation(player);
+		//plugin.deathlocations.loadDeathLocation(player);
+		
+		Location lastdeathloc = null;
+
+		lastdeathloc = plugin.datastore.getRecord(player);
 		
 		// if player does not have at least one death compass in inventory or
 		// entry in deathlocations hashmap, do nothing and return
 		if (!player.getInventory().containsAtLeast(deathcompass, 1) || 
-				plugin.deathlocations.getDeathLocation(player) == null) {
+				lastdeathloc == null) {
 			return;
 		}
 		
@@ -175,11 +184,16 @@ public class PlayerEventListener implements Listener {
 		ItemStack deathcompass = createDeathCompassStack(1);
 		
 		// load player last death location
-		plugin.deathlocations.loadDeathLocation(player);
+		//plugin.deathlocations.loadDeathLocation(player);
+
+		// get last death location from datastore
+		Location lastdeathloc = null;
+		
+		lastdeathloc = plugin.datastore.getRecord(player);
 		
 		// if player does not have a death compass or saved death location, do nothing and return
 		if (!player.getInventory().containsAtLeast(deathcompass, 1) ||
-				plugin.deathlocations.getDeathLocation(player) == null) {
+				lastdeathloc == null) {
 			return;
 		}
 		
@@ -234,8 +248,8 @@ public class PlayerEventListener implements Listener {
 		// create death compass itemstack for comparison
 		ItemStack dc = createDeathCompassStack(droppeditemstack.getAmount());
 		
-		// if dropped itemstack is not deathcompass or DestroyOnDrop config is not true, do nothing and return 
-		if (!droppeditemstack.equals(dc) || !plugin.getConfig().getBoolean("DestroyOnDrop", true)) {
+		// if dropped itemstack is not deathcompass or destroy-on-drop config is not true, do nothing and return 
+		if (!droppeditemstack.equals(dc) || !plugin.getConfig().getBoolean("destroy-on-drop", true)) {
 			return;
 		}
 		
@@ -251,7 +265,7 @@ public class PlayerEventListener implements Listener {
 		}
 		
 		// send player compass destroyed message
-		plugin.messagemanager.sendPlayerMessage(player, "destroy");
+		plugin.messageManager.sendPlayerMessage(player, "destroy");
 	}
 
 	
@@ -295,13 +309,13 @@ public class PlayerEventListener implements Listener {
 			quantity = 1;
 		}
 		// get item name from messages file
-		String itemname = plugin.messagemanager.getItemName();
+		String itemname = plugin.messageManager.getItemName();
 		
 		// allow '&' as color code character
 		itemname = ChatColor.translateAlternateColorCodes((char)'&', itemname);
 		
 		// get item lore from messages file
-		List<String> itemlore = plugin.messagemanager.getItemLore();
+		List<String> itemlore = plugin.messageManager.getItemLore();
 		
 		// allow '&' as color code character
 		ArrayList<String> coloredlore = new ArrayList<String>();
@@ -331,7 +345,8 @@ public class PlayerEventListener implements Listener {
 		new BukkitRunnable(){
 
 			public void run() {
-				Location myloc = plugin.deathlocations.getDeathLocation(player);
+				Location myloc = null;
+				myloc = plugin.datastore.getRecord(player);
 				if (myloc.getWorld() != player.getWorld()) {
 					return;
 				}
@@ -366,7 +381,7 @@ public class PlayerEventListener implements Listener {
 	private boolean playerWorldEnabled(Player player) {
 		
 		// get list of enabled worlds from config
-		List<String> enabledworlds = plugin.getConfig().getStringList("EnabledWorlds");
+		List<String> enabledworlds = plugin.getConfig().getStringList("enabled-worlds");
 		
 		// if player world is in list of enabled worlds, return true
 		if (enabledworlds.contains(player.getWorld().getName())) {
