@@ -76,7 +76,6 @@ public class DatastoreSQLite extends Datastore {
 	 * @param player
 	 * @return location
 	 */
-	@Override
 	Location getRecord(Player player) {
 
 		World world = player.getWorld();
@@ -145,7 +144,6 @@ public class DatastoreSQLite extends Datastore {
 	 * Insert player death location into SQLite database
 	 * @param player
 	 */
-	@Override
 	void putRecord(Player player) {
 
 		// sql statement to insert or replace record
@@ -210,7 +208,6 @@ public class DatastoreSQLite extends Datastore {
 	/**
 	 * Close database connection
 	 */
-	@Override
 	void close() {
 
 		try {

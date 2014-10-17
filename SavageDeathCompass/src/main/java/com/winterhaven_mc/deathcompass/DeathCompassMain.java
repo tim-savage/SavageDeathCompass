@@ -1,7 +1,5 @@
 package com.winterhaven_mc.deathcompass;
 
-import java.util.logging.Logger;
-
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -16,7 +14,6 @@ public final class DeathCompassMain extends JavaPlugin {
 	public static DeathCompassMain plugin;
 
 	Boolean debug = this.getConfig().getBoolean("debug", false);
-	Logger logger = Logger.getLogger("Minecraft");
 
 	MessageManager messageManager;
 	CommandHandler commandHandler;

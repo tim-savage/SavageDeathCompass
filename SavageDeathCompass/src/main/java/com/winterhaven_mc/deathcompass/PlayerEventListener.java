@@ -5,7 +5,6 @@ import com.winterhaven_mc.deathcompass.DeathCompassMain;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -282,7 +281,8 @@ public class PlayerEventListener implements Listener {
 		player.getInventory().addItem(deathcompass);
 		
 		// log info
-		plugin.logger.log(Level.INFO, "[DeathCompass] " + player.getName() + " was given a death compass in " + player.getWorld().getName() + ".");
+		plugin.getLogger().info(player.getName() + " was given a death compass in " + player.getWorld().getName() + ".");
+		
 	}
 
 	
@@ -325,7 +325,9 @@ public class PlayerEventListener implements Listener {
 		}
 		
 		// create itemstack with given quantity and durability 1 (to differentiate from other compasses)
-		ItemStack dc = new ItemStack(Material.COMPASS, quantity, (short) 1);
+		// NOTE: removing the custom durability, as it is not compatible with 1.8
+		// death compasses will now be identified solely by their item metadata (name and lore)
+		ItemStack dc = new ItemStack(Material.COMPASS, quantity);
 
 		// set item name and lore metadata
 		ItemMeta dcMeta = dc.getItemMeta();
