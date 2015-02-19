@@ -5,16 +5,19 @@ import com.winterhaven_mc.deathcompass.DeathCompassMain;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.logging.Level;
+import java.util.ListIterator;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
@@ -49,7 +52,7 @@ public class PlayerEventListener implements Listener {
 	 * @param event
 	 * @throws Exception 
 	 */
-	@EventHandler
+	@EventHandler(priority = EventPriority.LOW)
 	public void onPlayerDeath(PlayerDeathEvent event) throws Exception {
 		
 		Player player = event.getEntity();
@@ -70,6 +73,28 @@ public class PlayerEventListener implements Listener {
 		
 		// put player uuid in deathTriggeredRespawn hashset
 		deathTriggeredRespawn.add(playeruuid);
+		
+		// if destroy-on-drop is enabled in configuration, remove any death compasses from player drops on death
+		if (plugin.getConfig().getBoolean("destroy-on-drop",true)) {
+
+			// get death drops as list
+			List<ItemStack> drops = event.getDrops();
+
+			// get iterator of death drops list
+			ListIterator<ItemStack> iterator = drops.listIterator();
+
+			// create death compass stack for comparison
+			ItemStack deathCompass = createDeathCompassStack(1);
+
+			// loop through all dropped items and remove any stacks that are death compasses
+			while (iterator.hasNext()) {
+				ItemStack stack = iterator.next();
+				if (stack.isSimilar(deathCompass)) {
+					iterator.remove();
+				}
+			}
+		}
+		
 	}
 
 	
@@ -217,15 +242,51 @@ public class PlayerEventListener implements Listener {
 
 		InventoryHolder inventoryItem = event.getInventory().getHolder();
 
-		// if inventory item is a chest and has deathchest metadata, remove all death compasses from inventory
-		if (inventoryItem instanceof Chest && ((Metadatable) inventoryItem).hasMetadata("deathchest")) {
+		// if inventory item is a chest and has deathchest metadata,
+		// remove all death compasses from chest and player inventory
+		if (inventoryItem instanceof Chest && ((Metadatable) inventoryItem).hasMetadata("deathchest-owner")) {
 			Player player = (Player)event.getPlayer();
 			removeDeathCompasses(event.getInventory());
-			removeDeathCompasses((Inventory)player.getInventory());
+			removeDeathCompasses(player.getInventory());
 			
 			// reset compass target to home or spawn
 			resetDeathCompassTarget(player);
 		}
+	}
+	
+	
+	/**
+	 * Block damage event handler<br>
+	 * Remove all death compasses from player inventory on death chest damage
+	 * @param event
+	 */
+	@EventHandler
+	public void onBlockDamage(BlockDamageEvent event) {
+	
+		Player player = event.getPlayer();
+		Block block = event.getBlock();
+		
+		// if block is not a DeathChestBlock, do nothing and return
+		if (!(block instanceof Metadatable && block.hasMetadata("deathchest-owner"))) {
+			return;
+		}
+		if (plugin.debug) {
+			plugin.getLogger().info(player.getName() + " punched a deathchest block."); 
+		}
+		
+		// if deathchest owner is not player, do nothing and return
+		if (!block.getMetadata("deathchest-owner").get(0).asString().equals(player.getUniqueId().toString())) {
+			if (plugin.debug) {
+				plugin.getLogger().info("Deathchest block was not owned by player.");
+			}
+			return;
+		}
+		
+		// remove all death compasses from player inventory
+		removeDeathCompasses(player.getInventory());
+		
+		// reset compass target to home or spawn
+		resetDeathCompassTarget(player);
 	}
 
 
@@ -282,7 +343,8 @@ public class PlayerEventListener implements Listener {
 		player.getInventory().addItem(deathcompass);
 		
 		// log info
-		plugin.logger.log(Level.INFO, "[DeathCompass] " + player.getName() + " was given a death compass in " + player.getWorld().getName() + ".");
+		plugin.getLogger().info(player.getName() + " was given a death compass in " + player.getWorld().getName() + ".");
+		
 	}
 
 	
@@ -325,7 +387,9 @@ public class PlayerEventListener implements Listener {
 		}
 		
 		// create itemstack with given quantity and durability 1 (to differentiate from other compasses)
-		ItemStack dc = new ItemStack(Material.COMPASS, quantity, (short) 1);
+		// NOTE: removing the custom durability, as it is not compatible with 1.8
+		// death compasses will now be identified solely by their item metadata (name and lore)
+		ItemStack dc = new ItemStack(Material.COMPASS, quantity);
 
 		// set item name and lore metadata
 		ItemMeta dcMeta = dc.getItemMeta();
