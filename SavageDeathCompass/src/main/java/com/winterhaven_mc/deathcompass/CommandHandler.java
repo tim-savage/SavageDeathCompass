@@ -1,19 +1,25 @@
 package com.winterhaven_mc.deathcompass;
 
+import java.util.ArrayList;
+//import java.util.List;
+
 import com.winterhaven_mc.deathcompass.DeathCompassMain;
 
 import org.bukkit.ChatColor;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-public class CommandHandler
-implements CommandExecutor {
+public class CommandHandler implements CommandExecutor {
+	
 	private DeathCompassMain plugin;
+	private ArrayList<String> enabledWorlds;
 
 	public CommandHandler(DeathCompassMain plugin) {
 		this.plugin = plugin;
 		plugin.getCommand("deathcompass").setExecutor(this);
+		updateEnabledWorlds();
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -44,7 +50,7 @@ implements CommandExecutor {
 			}
 			sender.sendMessage(ChatColor.GREEN + "Destroy On Drop: " + ChatColor.RESET + plugin.getConfig().getString("destroy-on-drop"));
 			sender.sendMessage(ChatColor.GREEN + "Use UUID: " + ChatColor.RESET + plugin.getConfig().getString("use-uuid"));
-			sender.sendMessage(ChatColor.GREEN + "Enabled Words: " + ChatColor.RESET + plugin.getConfig().getString("enabled-worlds").toString());
+			sender.sendMessage(ChatColor.GREEN + "Enabled Words: " + ChatColor.RESET + this.getEnabledWorlds().toString());
 			return true;
 		}
 		
@@ -63,11 +69,12 @@ implements CommandExecutor {
 
 			// reload config.yml
 			plugin.reloadConfig();
+			
+			// update enabledWorlds field
+			updateEnabledWorlds();
+			
 			String current_language = plugin.getConfig().getString("language", "en-US");
 			
-			// send reloaded message to command sender
-			sender.sendMessage(ChatColor.AQUA + "[DeathCompass] config reloaded.");
-
 			// if language setting has changed, instantiate new message manager with new language file
 			if (!original_language.equals(current_language)) {
 				plugin.messageManager = new MessageManager(plugin);
@@ -102,8 +109,43 @@ implements CommandExecutor {
 					plugin.getLogger().severe("Could not initialize new datastore on reload.");
 				}
 			}
+			
+			// send reloaded message to command sender
+			sender.sendMessage(ChatColor.AQUA + "[DeathCompass] config reloaded.");
 			return true;
 		}
 		return false;
 	}
+	
+	
+	/**
+	 * update enabledWorlds ArrayList field from config file settings
+	 */
+	public void updateEnabledWorlds() {
+		
+		// copy list of enabled worlds from config into enabledWorlds ArrayList field
+		this.enabledWorlds = new ArrayList<String>(plugin.getConfig().getStringList("enabled-worlds"));
+		
+		// if enabledWorlds ArrayList is empty, add all worlds to ArrayList
+		if (this.enabledWorlds.isEmpty()) {
+			for (World world : plugin.getServer().getWorlds()) {
+				enabledWorlds.add(world.getName());
+			}
+		}
+		
+		// remove each disabled world from enabled worlds field
+		for (String disabledWorld : plugin.getConfig().getStringList("disabled-worlds")) {
+			this.enabledWorlds.remove(disabledWorld);
+		}
+	}
+	
+	
+	/**
+	 * get list of enabled worlds
+	 * @return ArrayList of String enabledWorlds
+	 */
+	public ArrayList<String> getEnabledWorlds() {
+		return this.enabledWorlds;
+	}
+	
 }

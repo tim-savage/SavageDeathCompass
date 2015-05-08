@@ -1,5 +1,6 @@
 package com.winterhaven_mc.deathcompass;
 
+import com.onarandombox.MultiverseCore.MultiverseCore;
 import com.winterhaven_mc.deathcompass.ConfigAccessor;
 import com.winterhaven_mc.deathcompass.DeathCompassMain;
 
@@ -12,22 +13,27 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class MessageManager {
 
 	// reference to main class
-	private final DeathCompassMain plugin;
+	private DeathCompassMain plugin;
 	
 	// config accessor object for messages
 	private ConfigAccessor messages;
 
-	
+	MultiverseCore mvCore;
+	Boolean mvEnabled = false;
+
+
 	/**
 	 * Class constructor
 	 * @param plugin
 	 */
 	public MessageManager(DeathCompassMain plugin) {
+		
 		this.plugin = plugin;
 
 		// install any embedded resource localization files that are not already present
@@ -44,46 +50,74 @@ public class MessageManager {
 
 		// instantiate custom configuration manager
 		messages = new ConfigAccessor(plugin, "language" + File.separator + language + ".yml");
+		
+		// get reference to Multiverse-Core if installed
+		mvCore = (MultiverseCore) plugin.getServer().getPluginManager().getPlugin("Multiverse-Core");
+		if (mvCore != null && mvCore.isEnabled()) {
+			plugin.getLogger().info("Multiverse-Core detected.");
+			this.mvEnabled = true;
+		}
+
 	}
 
 	
 	/**
 	 * Send a predefined message to a player
-	 * @param player
+	 * @param sender
 	 * @param messageID
 	 */
-	public void sendPlayerMessage(Player player, String messageID) {
+	public void sendPlayerMessage(CommandSender sender, String messageID) {
 
-		if (messages.getConfig().getBoolean("messages." + messageID + ".enabled", false)) {
+		if (messages.getConfig().getBoolean("messages." + messageID + ".enabled")) {
+
+			// set some string defaults in case sender is not a player
+			String playerName = sender.getName();
+			String playerNickname = playerName;
+			String playerDisplayName = playerName;
+			String worldName = "unknown";
+
+			// if sender is a player then get nickname, display name and world name
+			if (sender instanceof Player) {
+				playerNickname = ((Player) sender).getPlayerListName();
+				playerDisplayName = ((Player) sender).getDisplayName();
+				worldName = getWorldAlias(((Player) sender).getWorld().getName());
+			}
+
+			// get message string from localization file
 			String message = messages.getConfig().getString("messages." + messageID + ".string");
-			String itemname = messages.getConfig().getString("itemname", "Death Compass").replaceAll("[&§][0-9A-Za-zK-Ok-oRr]", "");
-			String playername = player.getName().replaceAll("[&§][0-9A-Za-zK-Ok-oRr]", "");
-			String playernickname = player.getPlayerListName().replaceAll("[&§][0-9A-Za-zK-Ok-oRr]", "");
-			String playerdisplayname = player.getDisplayName();
-			String worldname = player.getWorld().getName();
-			message = message.replaceAll("%itemname%", itemname);
-			message = message.replaceAll("%playername%", playername);
-			message = message.replaceAll("%playerdisplayname%", playerdisplayname);
-			message = message.replaceAll("%playernickname%", playernickname);
-			message = message.replaceAll("%worldname%", worldname);
-			player.sendMessage(ChatColor.translateAlternateColorCodes((char)'&', (String)message));
+
+			// strip color codes
+			String itemName = messages.getConfig().getString("itemname").replaceAll("[&§][0-9A-Za-zK-Ok-oRr]", "");
+			playerName = playerName.replaceAll("[&§][0-9A-Za-zK-Ok-oRr]", "");
+			playerNickname = playerNickname.replaceAll("[&§][0-9A-Za-zK-Ok-oRr]", "");
+			
+			// do variable substitutions
+			message = message.replaceAll("%itemname%", itemName);
+			message = message.replaceAll("%playername%", playerName);
+			message = message.replaceAll("%playerdisplayname%", playerDisplayName);
+			message = message.replaceAll("%playernickname%", playerNickname);
+			message = message.replaceAll("%worldname%", worldName);
+			
+			// send message
+			sender.sendMessage(ChatColor.translateAlternateColorCodes((char)'&', message));
 		}
 	}
 
 	
 	/**
 	 * Broadcast a predefined message
-	 * @param player
+	 * @param sender
 	 * @param messageID
 	 */
-	public void broadcastMessage(Player player, String messageID) {
+	public void broadcastMessage(Player sender, String messageID) {
+		
 		if (messages.getConfig().getBoolean("messages." + messageID + ".enabled", false)) {
 			String message = messages.getConfig().getString("messages." + messageID + ".string");
 			String itemname = messages.getConfig().getString("itemname", "Death Compass").replaceAll("&[0-9A-Za-zK-Ok-oRr]", "");
-			String playername = player.getName().replaceAll("&[0-9A-Za-zK-Ok-oRr]", "");
-			String playernickname = player.getPlayerListName().replaceAll("&[0-9A-Za-zK-Ok-oRr]", "");
-			String playerdisplayname = player.getDisplayName();
-			String worldname = player.getWorld().getName();
+			String playername = sender.getName().replaceAll("&[0-9A-Za-zK-Ok-oRr]", "");
+			String playernickname = sender.getPlayerListName().replaceAll("&[0-9A-Za-zK-Ok-oRr]", "");
+			String playerdisplayname = sender.getDisplayName();
+			String worldname = getWorldAlias(sender.getWorld().getName());
 			message = message.replaceAll("%itemname%", itemname);
 			message = message.replaceAll("%playername%", playername);
 			message = message.replaceAll("%playerdisplayname%", playerdisplayname);
@@ -160,5 +194,19 @@ public class MessageManager {
 		return itemlore;
 	}   	
 
+	
+	private String getWorldAlias(String worldName) {
+		
+		// if Multiverse is installed, use Multiverse world alias for world name
+		if (mvEnabled && mvCore.getMVWorldManager().getMVWorld(worldName) != null) {
+			
+			// if Multiverse alias is not blank, set world name to alias
+			if (!mvCore.getMVWorldManager().getMVWorld(worldName).getAlias().isEmpty()) {
+				worldName = mvCore.getMVWorldManager().getMVWorld(worldName).getAlias();
+			}
+		}
+		return worldName;
+
+	}
 }
 

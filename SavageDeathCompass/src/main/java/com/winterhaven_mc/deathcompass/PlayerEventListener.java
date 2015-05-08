@@ -12,20 +12,17 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
-import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.Metadatable;
@@ -228,57 +225,28 @@ public class PlayerEventListener implements Listener {
 
 
 	/**
-	 * Inventory open event handler
-	 * Removes death compasses from inventories when a death chest is opened
+	 * Player Interact event handler
+	 * Remove all death compasses from player inventory on interaction with DeathChestBlocks
 	 * @param event
 	 */
 	@EventHandler
-	public void onInventoryOpenEvent(InventoryOpenEvent event) {
-
+	public void onPlayerInteract(PlayerInteractEvent event) {
+		
+		final Player player = event.getPlayer();
+		final Block block = event.getClickedBlock();
+		
 		// if event is cancelled, do nothing and return
 		if (event.isCancelled()) {
 			return;
 		}
-
-		InventoryHolder inventoryItem = event.getInventory().getHolder();
-
-		// if inventory item is a chest and has deathchest metadata,
-		// remove all death compasses from chest and player inventory
-		if (inventoryItem instanceof Chest && ((Metadatable) inventoryItem).hasMetadata("deathchest-owner")) {
-			Player player = (Player)event.getPlayer();
-			removeDeathCompasses(event.getInventory());
-			removeDeathCompasses(player.getInventory());
-			
-			// reset compass target to home or spawn
-			resetDeathCompassTarget(player);
-		}
-	}
-	
-	
-	/**
-	 * Block damage event handler<br>
-	 * Remove all death compasses from player inventory on death chest damage
-	 * @param event
-	 */
-	@EventHandler
-	public void onBlockDamage(BlockDamageEvent event) {
-	
-		Player player = event.getPlayer();
-		Block block = event.getBlock();
 		
 		// if block is not a DeathChestBlock, do nothing and return
 		if (!(block instanceof Metadatable && block.hasMetadata("deathchest-owner"))) {
 			return;
 		}
-		if (plugin.debug) {
-			plugin.getLogger().info(player.getName() + " punched a deathchest block."); 
-		}
 		
 		// if deathchest owner is not player, do nothing and return
 		if (!block.getMetadata("deathchest-owner").get(0).asString().equals(player.getUniqueId().toString())) {
-			if (plugin.debug) {
-				plugin.getLogger().info("Deathchest block was not owned by player.");
-			}
 			return;
 		}
 		
@@ -444,11 +412,8 @@ public class PlayerEventListener implements Listener {
 	 */
 	private boolean playerWorldEnabled(Player player) {
 		
-		// get list of enabled worlds from config
-		List<String> enabledworlds = plugin.getConfig().getStringList("enabled-worlds");
-		
 		// if player world is in list of enabled worlds, return true
-		if (enabledworlds.contains(player.getWorld().getName())) {
+		if (plugin.commandHandler.getEnabledWorlds().contains(player.getWorld().getName())) {
 			return true;
 		}
 		
@@ -456,6 +421,4 @@ public class PlayerEventListener implements Listener {
 		return false;
 	}
 
-
 }
-

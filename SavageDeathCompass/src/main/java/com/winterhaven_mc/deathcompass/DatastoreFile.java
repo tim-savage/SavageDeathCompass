@@ -13,7 +13,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class DatastoreFile extends Datastore {
 	
-	DeathCompassMain plugin = DeathCompassMain.plugin;
+	DeathCompassMain plugin = DeathCompassMain.instance;
 	private ConfigAccessor deathlocationsfile;
 	private int fileSyncTaskID;
 

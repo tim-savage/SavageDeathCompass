@@ -23,7 +23,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class DatastoreSQLite extends Datastore {
 	
 	// static reference to main class
-	private DeathCompassMain plugin = DeathCompassMain.plugin;
+	private DeathCompassMain plugin = DeathCompassMain.instance;
 
 	// database connection object
 	private Connection connection;
