@@ -65,8 +65,11 @@ public class PlayerEventListener implements Listener {
 			return;
 		}
 		
+		// create new death record for player
+		DeathRecord deathRecord = new DeathRecord(player);
+		
 		// put death location in database
-		plugin.datastore.putRecord(player);
+		plugin.dataStore.putRecord(deathRecord);
 		
 		// put player uuid in deathTriggeredRespawn hashset
 		deathTriggeredRespawn.add(playeruuid);
@@ -169,10 +172,10 @@ public class PlayerEventListener implements Listener {
 		
 		Location lastdeathloc = null;
 
-		lastdeathloc = plugin.datastore.getRecord(player);
+		lastdeathloc = getDeathLocation(player);
 		
 		// if player does not have at least one death compass in inventory or
-		// entry in deathlocations hashmap, do nothing and return
+		// saved death location in current world, do nothing and return
 		if (!player.getInventory().containsAtLeast(deathcompass, 1) || 
 				lastdeathloc == null) {
 			return;
@@ -205,13 +208,10 @@ public class PlayerEventListener implements Listener {
 		// create 1 death compass itemstack
 		ItemStack deathcompass = createDeathCompassStack(1);
 		
-		// load player last death location
-		//plugin.deathlocations.loadDeathLocation(player);
-
-		// get last death location from datastore
 		Location lastdeathloc = null;
 		
-		lastdeathloc = plugin.datastore.getRecord(player);
+		// get last death location from datastore
+		lastdeathloc = getDeathLocation(player);
 		
 		// if player does not have a death compass or saved death location, do nothing and return
 		if (!player.getInventory().containsAtLeast(deathcompass, 1) ||
@@ -378,7 +378,7 @@ public class PlayerEventListener implements Listener {
 
 			public void run() {
 				Location myloc = null;
-				myloc = plugin.datastore.getRecord(player);
+				myloc = getDeathLocation(player);
 				if (myloc.getWorld() != player.getWorld()) {
 					return;
 				}
@@ -413,12 +413,51 @@ public class PlayerEventListener implements Listener {
 	private boolean playerWorldEnabled(Player player) {
 		
 		// if player world is in list of enabled worlds, return true
-		if (plugin.commandHandler.getEnabledWorlds().contains(player.getWorld().getName())) {
+		if (plugin.commandManager.getEnabledWorlds().contains(player.getWorld().getName())) {
 			return true;
 		}
 		
 		// otherwise return false
 		return false;
+	}
+
+	
+	/**
+	 * Retrieve player death location from datastore
+	 * @param player
+	 * @return location
+	 */
+	private Location getDeathLocation(Player player) {
+		
+		//set playerid to player name
+		String playerId = player.getName();
+		
+		// if use-uuid is enabled in config, set playerid to player uuid
+		if (plugin.getConfig().getBoolean("use-uuid", true)) {
+			playerId = player.getUniqueId().toString();
+		}
+		
+		// set worldname to player current world
+		String worldName = player.getWorld().getName();
+	
+		// set lastdeathloc to player bed spawn location
+		Location lastdeathloc = player.getBedSpawnLocation();
+		
+		// if player bedspawn is null, set lastdeathloc to world spawn location
+		if (lastdeathloc == null) {
+			lastdeathloc = player.getWorld().getSpawnLocation();
+		}
+		
+		// fetch death record from datastore
+		DeathRecord deathRecord = plugin.dataStore.getRecord(playerId,worldName);
+		
+		if (deathRecord != null) {
+			
+			lastdeathloc = deathRecord.getLocation();
+		}
+		
+		// return location
+		return lastdeathloc;
 	}
 
 }

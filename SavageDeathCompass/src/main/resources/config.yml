@@ -22,7 +22,7 @@ destroy-on-drop: true
 # Use UUID instead of player name
 use-uuid: true
 
-# Storage type ( file | sqlite )
+# Storage type ( yaml | sqlite )
 storage-type: sqlite
 
 # Time interval (in minutes) to sync file to disk (for StorageType 'file' only)

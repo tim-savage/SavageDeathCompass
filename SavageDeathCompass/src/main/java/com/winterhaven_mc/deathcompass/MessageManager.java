@@ -43,12 +43,14 @@ public class MessageManager {
 		String language = plugin.getConfig().getString("language","en-US");
 
 		// check if localization file for configured language exists, if not then fallback to en-US
-		if (!new File(plugin.getDataFolder() + File.separator + "language" + File.separator + language + ".yml").exists()) {
+		if (!new File(plugin.getDataFolder() 
+				+ File.separator + "language" 
+				+ File.separator + language + ".yml").exists()) {
 			plugin.getLogger().info("Language file for " + language + " not found. Defaulting to en-US.");
 			language = "en-US";
 		}
 
-		// instantiate custom configuration manager
+		// instantiate custom configuration manager for language file
 		messages = new ConfigAccessor(plugin, "language" + File.separator + language + ".yml");
 		
 		// get reference to Multiverse-Core if installed
@@ -148,7 +150,7 @@ public class MessageManager {
 					break;
 				}
 				String name = e.getName();
-				if (name.startsWith("language" + File.separator) && name.endsWith(".yml")) {
+				if (name.startsWith("language" + '/') && name.endsWith(".yml")) {
 					filelist.add(name);
 				}
 			}

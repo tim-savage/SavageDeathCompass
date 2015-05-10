@@ -1,35 +1,69 @@
 package com.winterhaven_mc.deathcompass;
 
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
+import java.util.List;
 
-abstract class Datastore {
+public abstract class DataStore {
 
+	protected boolean initialized;
+	
 	/**
-	 * Initialize Datastore
+	 * Initialize storage
 	 * @throws Exception
 	 */
 	abstract void initialize() throws Exception;
 	
 	/**
-	 * Retrieve player death location from Datastore
-	 * @param player
-	 * @return
-	 * @throws Exception
+	 * Get record
+	 * @param playerId
+	 * @param worldName
+	 * @return death record or null if no matching record
 	 */
-	abstract Location getRecord(Player player);
+	abstract DeathRecord getRecord(String playerId, String worldName);
 	
 	/**
-	 * Write player death location into Datastore
-	 * @param player
-	 * @throws Exception
+	 * Store record
+	 * @param destination
 	 */
-	abstract void putRecord(Player player);
+	abstract void putRecord(DeathRecord deathRecord);
 
 	/**
-	 * Close Datastore
-	 * @throws Exception
+	 * get all records
+	 * @return
+	 */
+	abstract List<DeathRecord> getAllRecords();
+
+	/**
+	 * Delete record
+	 * @param warpName
+	 * @return 
+	 */	
+	abstract DeathRecord deleteRecord(String playerId, String worldName);
+	
+	/**
+	 * Close storage
 	 */
 	abstract void close();
 
+	abstract void save();
+	
+	abstract void delete();
+	
+	abstract boolean exists();
+	
+	abstract String getFilename();
+	
+	abstract DataStoreType getType();
+	
+	String getName() {
+		return this.getType().getName();
+	}
+	
+	boolean isInitialized() {
+		return this.initialized;
+	}
+	
+	void setInitialized(boolean initialized) {
+		this.initialized = initialized;
+	}
+	
 }

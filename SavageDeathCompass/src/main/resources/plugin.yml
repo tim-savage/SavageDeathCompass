@@ -6,7 +6,7 @@ main: com.winterhaven_mc.deathcompass.DeathCompassMain
 commands:
    deathcompass:
       description: show DeathCompass settings or reload configuration file
-      usage: /deathcompass <reload>
+      usage: /deathcompass help [command]
       permission: deathcompass.admin
       permission-message: You don't have the required deathcompass.admin permission.
 
