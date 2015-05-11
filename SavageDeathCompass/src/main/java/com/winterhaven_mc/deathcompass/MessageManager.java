@@ -27,6 +27,8 @@ public class MessageManager {
 	MultiverseCore mvCore;
 	Boolean mvEnabled = false;
 
+	private String language;
+
 
 	/**
 	 * Class constructor
@@ -130,53 +132,11 @@ public class MessageManager {
 	}
 
 	
-	/**
-	 * Install localization files from <em>language</em> directory in jar 
-	 */
-	private void installLocalizationFiles() {
-
-		List<String> filelist = new ArrayList<String>();
-
-		// get the absolute path to this plugin as URL
-		URL pluginURL = plugin.getServer().getPluginManager().getPlugin(plugin.getName()).getClass().getProtectionDomain().getCodeSource().getLocation();
-
-		// read files contained in jar, adding language/*.yml files to list
-		ZipInputStream zip;
-		try {
-			zip = new ZipInputStream(pluginURL.openStream());
-			while (true) {
-				ZipEntry e = zip.getNextEntry();
-				if (e == null) {
-					break;
-				}
-				String name = e.getName();
-				if (name.startsWith("language" + '/') && name.endsWith(".yml")) {
-					filelist.add(name);
-				}
-			}
-		} catch (IOException e1) {
-			plugin.getLogger().warning("Could not read language files from jar.");
-		}
-
-		// iterate over list of language files and install from jar if not already present
-		for (String filename : filelist) {
-			if (new File(plugin.getDataFolder() + File.separator + filename).exists()) {
-				continue;
-			}
-			plugin.saveResource(filename, false);
-			plugin.getLogger().info("Installed localization file:  " + filename);
-		}
+	public String getLanguage() {
+		return this.language;
 	}
 
-	
-	/**
-	 * Reload messages file
-	 */
-	public void reloadMessages() {
-		messages.reloadConfig();
-	}
 
-	
 	/**
 	 * Get item name from language specific messages file
 	 * @return String itemname
@@ -209,6 +169,81 @@ public class MessageManager {
 		}
 		return worldName;
 
+	}
+
+
+	void reload() {
+		
+		// reinstall message files if necessary
+		installLocalizationFiles();
+		
+		// get currently configured language
+		String newLanguage = languageFileExists(plugin.getConfig().getString("language"));
+		
+		// if configured language has changed, instantiate new messages object
+		if (!newLanguage.equals(this.language)) {
+			this.messages = new ConfigAccessor(plugin, "language" + File.separator + newLanguage + ".yml");
+			this.language = newLanguage;
+			plugin.getLogger().info("New language " + this.language + " enabled.");
+		}
+		
+		// reload language file
+		messages.reloadConfig();
+	}
+
+
+	/**
+	 * Install localization files from <em>language</em> directory in jar 
+	 */
+	private void installLocalizationFiles() {
+	
+		List<String> filelist = new ArrayList<String>();
+	
+		// get the absolute path to this plugin as URL
+		URL pluginURL = plugin.getServer().getPluginManager().getPlugin(plugin.getName()).getClass().getProtectionDomain().getCodeSource().getLocation();
+	
+		// read files contained in jar, adding language/*.yml files to list
+		ZipInputStream zip;
+		try {
+			zip = new ZipInputStream(pluginURL.openStream());
+			while (true) {
+				ZipEntry e = zip.getNextEntry();
+				if (e == null) {
+					break;
+				}
+				String name = e.getName();
+				if (name.startsWith("language" + '/') && name.endsWith(".yml")) {
+					filelist.add(name);
+				}
+			}
+		} catch (IOException e1) {
+			plugin.getLogger().warning("Could not read language files from jar.");
+		}
+	
+		// iterate over list of language files and install from jar if not already present
+		for (String filename : filelist) {
+			// this check prevents a warning message when files are already installed
+			if (new File(plugin.getDataFolder() + File.separator + filename).exists()) {
+				continue;
+			}
+			plugin.saveResource(filename, false);
+			plugin.getLogger().info("Installed localization file:  " + filename);
+		}
+	}
+
+
+	private String languageFileExists(String language) {
+		
+		// check if localization file for configured language exists, if not then fallback to en-US
+		File languageFile = new File(plugin.getDataFolder() 
+				+ File.separator + "language" 
+				+ File.separator + language + ".yml");
+		
+		if (languageFile.exists()) {
+			return language;
+	    }
+		plugin.getLogger().info("Language file " + language + ".yml does not exist. Defaulting to en-US.");
+		return "en-US";
 	}
 }
 

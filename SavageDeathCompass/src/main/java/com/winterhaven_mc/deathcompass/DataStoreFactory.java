@@ -86,21 +86,11 @@ public class DataStoreFactory {
 		try {
 			newDataStore.initialize();
 		}
-		catch (IllegalArgumentException e) {
-			// cannot load embedded default file. Not a deal-breaker, so just log it.
-			plugin.getLogger().warning(e.getLocalizedMessage());
-		}
-		catch (IllegalStateException e) {
-			// cannot access plugin data folder. this is critical, so disable plugin.
-			plugin.getLogger().severe("Cannot access plugin data folder. Disabling plugin.");
-			plugin.getPluginLoader().disablePlugin(plugin);
-			return null;
-		}
 		catch (Exception e) {
-			// unforeseen error initializing yaml datastore, so disable plugin.
+			// error initializing yaml datastore, so disable plugin.
 			plugin.getLogger().severe("An error occurred while trying to initialize the yaml datastore.");
 			plugin.getLogger().severe(e.getLocalizedMessage());
-			plugin.getLogger().severe("Disabling plugin...");
+			plugin.getLogger().severe("Disabling plugin.");
 			plugin.getPluginLoader().disablePlugin(plugin);
 			return null;
 		}
@@ -238,6 +228,26 @@ public class DataStoreFactory {
 				convertDataStore(oldDataStore, newDataStore);
 			}
 		}
+	}
+
+	static void reload() {
+		
+		// get current datastore type
+		DataStoreType currentType = plugin.dataStore.getType();
+		
+		// get configured datastore type
+		DataStoreType newType = DataStoreType.match(plugin.getConfig().getString("storage-type"));
+				
+		// if current datastore type does not match configured datastore type, create new datastore
+		if (!currentType.equals(newType)) {
+			
+			// save current datastore
+			plugin.dataStore.save();
+			
+			// create new datastore
+			plugin.dataStore = create(newType,plugin.dataStore);
+		}
+		
 	}
 	
 }

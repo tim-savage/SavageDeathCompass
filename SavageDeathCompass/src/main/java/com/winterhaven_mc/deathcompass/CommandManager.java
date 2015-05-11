@@ -86,35 +86,17 @@ public class CommandManager implements CommandExecutor {
 			return true;
 		}
 	
-		// get original datastore type
-		DataStoreType oldDataStoreType = DataStoreType.match(plugin.getConfig().getString("storage-type"));
-	
-		// if no matching datastore type default to sqlite
-		if (oldDataStoreType == null) {
-			oldDataStoreType = DataStoreType.SQLITE;
-		}
-	
 		// reload config.yml
 		plugin.reloadConfig();
 	
 		// update enabledWorlds field
 		updateEnabledWorlds();
 	
-		// reload the messages file to pull in any changes
-			plugin.messageManager.reloadMessages();
+		// reload messages
+		plugin.messageManager.reload();
 	
-		// get current datastore type
-		DataStoreType newDataStoreType = DataStoreType.match(plugin.getConfig().getString("storage-type"));
-	
-		// if datastore type has changed, create new datastore and convert records from existing datastore
-		if (!oldDataStoreType.equals(newDataStoreType)) {
-	
-			// create new data store
-			DataStore newDataStore = DataStoreFactory.create(newDataStoreType,plugin.dataStore);
-	
-			// set plugin.dataStore to reference new data store
-			plugin.dataStore = newDataStore;
-		}
+		// reload datastore
+		DataStoreFactory.reload();
 	
 		// send reloaded message to command sender
 		sender.sendMessage(ChatColor.AQUA + "[DeathCompass] config reloaded.");
@@ -136,7 +118,8 @@ public class CommandManager implements CommandExecutor {
 			return true;
 		}
 		
-		sender.sendMessage((Object)ChatColor.AQUA + "[SavageDeathCompass] Version " + plugin.getDescription().getVersion());
+		sender.sendMessage((Object)ChatColor.DARK_AQUA + "[" + plugin.getName() +  "] " 
+				+ ChatColor.AQUA + "Version: " + ChatColor.RESET + plugin.getDescription().getVersion());
 		sender.sendMessage(ChatColor.GREEN + "Language: " + ChatColor.RESET + plugin.getConfig().getString("language"));
 		sender.sendMessage(ChatColor.GREEN + "Storage type: " + ChatColor.RESET + plugin.dataStore.getName());
 		if (plugin.dataStore.getType().equals(DataStoreType.YAML)) {
@@ -195,20 +178,19 @@ public class CommandManager implements CommandExecutor {
 			command = "all";
 		}
 
-		if ((command.equalsIgnoreCase("status")	
-				|| command.equalsIgnoreCase("all"))
-				&& sender.hasPermission("deathcompass.status")) {
-			sender.sendMessage(usageColor + "/deathcompass status");
+		if ((command.equalsIgnoreCase("help") 
+				|| command.equalsIgnoreCase("all"))) {
+			sender.sendMessage(usageColor + "/deathcompass help [command]");
 		}
 		if ((command.equalsIgnoreCase("reload") 
 				|| command.equalsIgnoreCase("all"))
 				&& sender.hasPermission("deathcompass.reload")) {
 			sender.sendMessage(usageColor + "/deathcompass reload");
 		}
-		if ((command.equalsIgnoreCase("help") 
-				|| command.equalsIgnoreCase("all"))) {
-			sender.sendMessage((Object)ChatColor.AQUA + "[SavageDeathCompass] Version " + plugin.getDescription().getVersion());
-			sender.sendMessage(usageColor + "/deathcompass help [command]");
+		if ((command.equalsIgnoreCase("status")	
+				|| command.equalsIgnoreCase("all"))
+				&& sender.hasPermission("deathcompass.status")) {
+			sender.sendMessage(usageColor + "/deathcompass status");
 		}
 	}
 	
