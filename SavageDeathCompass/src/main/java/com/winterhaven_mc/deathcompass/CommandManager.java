@@ -13,7 +13,7 @@ import org.bukkit.command.CommandSender;
 
 public class CommandManager implements CommandExecutor {
 	
-	private DeathCompassMain plugin;
+	private PluginMain plugin;
 	private ArrayList<String> enabledWorlds;
 	
 	private final ChatColor helpColor = ChatColor.YELLOW;
@@ -25,7 +25,7 @@ public class CommandManager implements CommandExecutor {
 	 * Class constructor
 	 * @param plugin
 	 */
-	public CommandManager(DeathCompassMain plugin) {
+	public CommandManager(PluginMain plugin) {
 		
 		this.plugin = plugin;
 		plugin.getCommand("deathcompass").setExecutor(this);
@@ -89,6 +89,9 @@ public class CommandManager implements CommandExecutor {
 		// reload config.yml
 		plugin.reloadConfig();
 	
+		// update debug field
+		plugin.debug = plugin.getConfig().getBoolean("debug");
+		
 		// update enabledWorlds field
 		updateEnabledWorlds();
 	
@@ -203,14 +206,14 @@ public class CommandManager implements CommandExecutor {
 		// copy list of enabled worlds from config into enabledWorlds ArrayList field
 		this.enabledWorlds = new ArrayList<String>(plugin.getConfig().getStringList("enabled-worlds"));
 		
-		// if enabledWorlds ArrayList is empty, add all worlds to ArrayList
+		// if enabledWorlds ArrayList is empty, add all server worlds to ArrayList
 		if (this.enabledWorlds.isEmpty()) {
 			for (World world : plugin.getServer().getWorlds()) {
 				enabledWorlds.add(world.getName());
 			}
 		}
 		
-		// remove each disabled world from enabled worlds field
+		// remove each disabled world from enabled worlds ArrayList
 		for (String disabledWorld : plugin.getConfig().getStringList("disabled-worlds")) {
 			this.enabledWorlds.remove(disabledWorld);
 		}

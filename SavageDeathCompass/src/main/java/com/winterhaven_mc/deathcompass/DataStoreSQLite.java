@@ -18,21 +18,26 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class DataStoreSQLite extends DataStore {
 
 	// reference to main class
-	private final DeathCompassMain plugin;
+	private final PluginMain plugin;
 	
 	// database connection object
 	private Connection connection;
-	
-	// data store file name
-	private static final String FILENAME = "deathlocations.db";
 
-	// data store type
-	private static final DataStoreType TYPE = DataStoreType.SQLITE;
-	
-	DataStoreSQLite (DeathCompassMain plugin) {
+
+	/**
+	 * Class constructor
+	 * @param plugin
+	 */
+	DataStoreSQLite (PluginMain plugin) {
 
 		// reference to main class
-		this.plugin = plugin;	
+		this.plugin = plugin;
+		
+		// set datastore type
+		this.type = DataStoreType.SQLITE;
+		
+		// set filename
+		this.filename = "deathlocations.db";
 	}
 	
 	
@@ -62,7 +67,7 @@ public class DataStoreSQLite extends DataStore {
 		Class.forName(jdbcDriverName);
 
 		// create database url
-		String dbFile = plugin.getDataFolder() + File.separator + FILENAME;
+		String dbFile = plugin.getDataFolder() + File.separator + filename;
 		String jdbc = "jdbc:sqlite";
 		String dbUrl = jdbc + ":" + dbFile;
 
@@ -343,16 +348,6 @@ public class DataStoreSQLite extends DataStore {
 		File dataStoreFile = new File(plugin.getDataFolder() + File.separator + this.getFilename());
 		return dataStoreFile.exists();
 
-	}
-	
-	@Override
-	String getFilename() {
-		return FILENAME;
-	}
-	
-	@Override
-	DataStoreType getType() {
-		return TYPE;
 	}
 
 }

@@ -5,13 +5,18 @@ import java.util.List;
 public abstract class DataStore {
 
 	protected boolean initialized;
-	
+
+	protected DataStoreType type;
+
+	protected String filename;
+
+
 	/**
 	 * Initialize storage
 	 * @throws Exception
 	 */
 	abstract void initialize() throws Exception;
-	
+
 	/**
 	 * Get record
 	 * @param playerId
@@ -19,7 +24,7 @@ public abstract class DataStore {
 	 * @return death record or null if no matching record
 	 */
 	abstract DeathRecord getRecord(String playerId, String worldName);
-	
+
 	/**
 	 * Store record
 	 * @param destination
@@ -38,32 +43,36 @@ public abstract class DataStore {
 	 * @return 
 	 */	
 	abstract DeathRecord deleteRecord(String playerId, String worldName);
-	
+
 	/**
 	 * Close storage
 	 */
 	abstract void close();
 
 	abstract void save();
-	
+
 	abstract void delete();
-	
+
 	abstract boolean exists();
-	
-	abstract String getFilename();
-	
-	abstract DataStoreType getType();
-	
+
+	String getFilename() {
+		return this.filename;
+	}
+
+	DataStoreType getType() {
+		return this.type;
+	}
+
 	String getName() {
 		return this.getType().getName();
 	}
-	
+
 	boolean isInitialized() {
 		return this.initialized;
 	}
-	
+
 	void setInitialized(boolean initialized) {
 		this.initialized = initialized;
 	}
-	
+
 }

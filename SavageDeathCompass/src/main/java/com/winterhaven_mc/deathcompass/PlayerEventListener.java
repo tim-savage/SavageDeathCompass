@@ -1,6 +1,6 @@
 package com.winterhaven_mc.deathcompass;
 
-import com.winterhaven_mc.deathcompass.DeathCompassMain;
+import com.winterhaven_mc.deathcompass.PluginMain;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -30,7 +30,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class PlayerEventListener implements Listener {
 	
-	private final DeathCompassMain plugin;
+	private final PluginMain plugin;
 	private HashSet<String> deathTriggeredRespawn = new HashSet<String>();
 
 	
@@ -38,7 +38,7 @@ public class PlayerEventListener implements Listener {
 	 * Class constructor
 	 * @param plugin
 	 */
-	public PlayerEventListener(DeathCompassMain plugin) {
+	public PlayerEventListener(PluginMain plugin) {
 		this.plugin = plugin;
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
@@ -75,7 +75,7 @@ public class PlayerEventListener implements Listener {
 		deathTriggeredRespawn.add(playeruuid);
 		
 		// if destroy-on-drop is enabled in configuration, remove any death compasses from player drops on death
-		if (plugin.getConfig().getBoolean("destroy-on-drop",true)) {
+		if (plugin.getConfig().getBoolean("destroy-on-drop")) {
 
 			// get death drops as list
 			List<ItemStack> drops = event.getDrops();
@@ -278,7 +278,7 @@ public class PlayerEventListener implements Listener {
 		ItemStack dc = createDeathCompassStack(droppeditemstack.getAmount());
 		
 		// if dropped itemstack is not deathcompass or destroy-on-drop config is not true, do nothing and return 
-		if (!droppeditemstack.equals(dc) || !plugin.getConfig().getBoolean("destroy-on-drop", true)) {
+		if (!droppeditemstack.equals(dc) || !plugin.getConfig().getBoolean("destroy-on-drop")) {
 			return;
 		}
 		
@@ -433,7 +433,7 @@ public class PlayerEventListener implements Listener {
 		String playerId = player.getName();
 		
 		// if use-uuid is enabled in config, set playerid to player uuid
-		if (plugin.getConfig().getBoolean("use-uuid", true)) {
+		if (plugin.getConfig().getBoolean("use-uuid")) {
 			playerId = player.getUniqueId().toString();
 		}
 		

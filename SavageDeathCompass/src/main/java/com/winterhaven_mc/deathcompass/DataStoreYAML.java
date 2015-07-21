@@ -12,24 +12,24 @@ import org.bukkit.World;
 
 public class DataStoreYAML extends DataStore {
 
-	private final DeathCompassMain plugin; // reference to main class
+	private final PluginMain plugin; // reference to main class
 	private ConfigAccessor deathLocationFile;
-	
-	// data store filename
-	private static final String FILENAME = "deathlocations.yml";
-	
-	// data store type
-	private static final DataStoreType TYPE = DataStoreType.YAML;
 	
 
 	/**
 	 * Class constructor
 	 * @param plugin
 	 */
-	DataStoreYAML(DeathCompassMain plugin) {
+	DataStoreYAML(PluginMain plugin) {
 		
 		// reference to main class
-		this.plugin = plugin;	
+		this.plugin = plugin;
+		
+		// set datastore type
+		this.type = DataStoreType.YAML;
+		
+		// set filename
+		this.filename = "deathlocations.yml";
 	}
 	
 	
@@ -38,11 +38,14 @@ public class DataStoreYAML extends DataStore {
 		
 		// if data store is already initialized, do nothing and return
 		if (this.isInitialized()) {
+			if (plugin.debug) {
+				plugin.getLogger().info("yaml datastore already initialized.");
+			}
 			return;
 		}
-		
+
 		// create new ConfigAccessor object
-		deathLocationFile = new ConfigAccessor(plugin, FILENAME);
+		deathLocationFile = new ConfigAccessor(plugin, filename);
 		
 		// copy embedded default file if necessary
 		deathLocationFile.saveDefaultConfig();
@@ -170,7 +173,11 @@ public class DataStoreYAML extends DataStore {
 
 	@Override
 	void close() {
+		
+		// save data to file
 		deathLocationFile.saveConfig();
+		
+		// set initialized to false
 		setInitialized(false);
 	}
 	
@@ -195,16 +202,6 @@ public class DataStoreYAML extends DataStore {
 		File dataStoreFile = new File(plugin.getDataFolder() + File.separator + this.getFilename());
 		return dataStoreFile.exists();
 
-	}
-
-	@Override
-	String getFilename() {
-		return FILENAME;
-	}
-	
-	@Override
-	DataStoreType getType() {
-		return TYPE;
 	}
 	
 }

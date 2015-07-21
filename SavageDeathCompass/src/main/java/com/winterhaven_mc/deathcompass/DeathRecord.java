@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 
 public class DeathRecord {
 
-	DeathCompassMain plugin = DeathCompassMain.instance;
+	PluginMain plugin = PluginMain.instance;
 	
 	private String playerId;
 	private Location location;

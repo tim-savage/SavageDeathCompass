@@ -9,9 +9,9 @@ import org.bukkit.plugin.java.JavaPlugin;
  * @author      Tim Savage
  * @version		1.2
  */
-public final class DeathCompassMain extends JavaPlugin {
+public final class PluginMain extends JavaPlugin {
 
-	public static DeathCompassMain instance;
+	public static PluginMain instance;
 
 	Boolean debug = this.getConfig().getBoolean("debug", false);
 
@@ -27,9 +27,6 @@ public final class DeathCompassMain extends JavaPlugin {
 		// Save a copy of the default config.yml if file does not already exist
 		saveDefaultConfig();
 		
-		// load config.yml settings
-		reloadConfig();
-
 		// instantiate message manager
 		messageManager = new MessageManager(this);
 
@@ -37,10 +34,9 @@ public final class DeathCompassMain extends JavaPlugin {
 		commandManager = new CommandManager(this);
 		
 		// instantiate datastore
-		//datastore = initializeDatastore();
 		dataStore = DataStoreFactory.create();
 
-		// instantiate listener object
+		// instantiate event listener
 		new PlayerEventListener(this);
 	}
 

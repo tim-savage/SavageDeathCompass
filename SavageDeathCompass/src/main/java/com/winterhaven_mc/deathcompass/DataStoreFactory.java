@@ -7,7 +7,7 @@ import java.util.List;
 
 public class DataStoreFactory {
 	
-	static DeathCompassMain plugin = DeathCompassMain.instance;
+	static PluginMain plugin = PluginMain.instance;
 
 	/**
 	 * Create new data store of given type.<br>

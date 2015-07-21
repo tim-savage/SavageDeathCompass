@@ -2,7 +2,7 @@ package com.winterhaven_mc.deathcompass;
 
 import com.onarandombox.MultiverseCore.MultiverseCore;
 import com.winterhaven_mc.deathcompass.ConfigAccessor;
-import com.winterhaven_mc.deathcompass.DeathCompassMain;
+import com.winterhaven_mc.deathcompass.PluginMain;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,7 +19,7 @@ import org.bukkit.entity.Player;
 public class MessageManager {
 
 	// reference to main class
-	private DeathCompassMain plugin;
+	private PluginMain plugin;
 	
 	// config accessor object for messages
 	private ConfigAccessor messages;
@@ -34,7 +34,7 @@ public class MessageManager {
 	 * Class constructor
 	 * @param plugin
 	 */
-	public MessageManager(DeathCompassMain plugin) {
+	public MessageManager(PluginMain plugin) {
 		
 		this.plugin = plugin;
 
@@ -42,7 +42,7 @@ public class MessageManager {
 		installLocalizationFiles();
 
 		// get configured language
-		String language = plugin.getConfig().getString("language","en-US");
+		String language = plugin.getConfig().getString("language");
 
 		// check if localization file for configured language exists, if not then fallback to en-US
 		if (!new File(plugin.getDataFolder() 
@@ -117,7 +117,7 @@ public class MessageManager {
 		
 		if (messages.getConfig().getBoolean("messages." + messageID + ".enabled", false)) {
 			String message = messages.getConfig().getString("messages." + messageID + ".string");
-			String itemname = messages.getConfig().getString("itemname", "Death Compass").replaceAll("&[0-9A-Za-zK-Ok-oRr]", "");
+			String itemname = messages.getConfig().getString("itemname").replaceAll("&[0-9A-Za-zK-Ok-oRr]", "");
 			String playername = sender.getName().replaceAll("&[0-9A-Za-zK-Ok-oRr]", "");
 			String playernickname = sender.getPlayerListName().replaceAll("&[0-9A-Za-zK-Ok-oRr]", "");
 			String playerdisplayname = sender.getDisplayName();
@@ -142,7 +142,7 @@ public class MessageManager {
 	 * @return String itemname
 	 */
 	public String getItemName() {
-		String itemname = messages.getConfig().getString("itemname","SpawnStar");
+		String itemname = messages.getConfig().getString("itemname");
 		return itemname;
 	}
 
