@@ -167,12 +167,8 @@ public class PlayerEventListener implements Listener {
 		// create 1 compass itemstack with configured settings
 		ItemStack deathcompass = createDeathCompassStack(1);
 		
-		// get player last death location from hashmap
-		//plugin.deathlocations.loadDeathLocation(player);
-		
-		Location lastdeathloc = null;
-
-		lastdeathloc = getDeathLocation(player);
+		// get player last death location
+		Location lastdeathloc = getDeathLocation(player);
 		
 		// if player does not have at least one death compass in inventory or
 		// saved death location in current world, do nothing and return
@@ -285,8 +281,10 @@ public class PlayerEventListener implements Listener {
 		// remove dropped item
 		event.getItemDrop().remove();
 		
-		// play item_break sound to player
-		player.playSound(player.getLocation(), Sound.ITEM_BREAK, 1, 1);
+		// play item_break sound to player if sound effects enabled in config
+		if (plugin.getConfig().getBoolean("sound-effects")) {
+			player.playSound(player.getLocation(), Sound.ITEM_BREAK, 1, 1);
+		}
 		
 		// if inventory does not contain at least 1 death compass, reset compass target
 		if (!player.getInventory().containsAtLeast(dc, 1)) {

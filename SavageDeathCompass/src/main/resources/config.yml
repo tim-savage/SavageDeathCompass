@@ -3,7 +3,7 @@
 # Localization language
 language: en-US
 
-# Note: use only one enabled/disabled list, and comment out or remove the other
+# Note: use only one enabled/disabled list, and comment out or remove the other list
 # enabled worlds list (use this list for a default-deny world policy)
 
 #enabled-worlds:
@@ -27,3 +27,6 @@ storage-type: sqlite
 
 # Time interval (in minutes) to sync file to disk (for StorageType 'file' only)
 file-sync-interval: 5
+
+# play sound effects
+sound-effects: true
