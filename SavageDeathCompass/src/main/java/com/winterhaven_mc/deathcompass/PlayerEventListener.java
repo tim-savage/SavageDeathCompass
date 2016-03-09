@@ -283,7 +283,7 @@ public class PlayerEventListener implements Listener {
 		
 		// play item_break sound to player if sound effects enabled in config
 		if (plugin.getConfig().getBoolean("sound-effects")) {
-			player.playSound(player.getLocation(), Sound.ITEM_BREAK, 1, 1);
+			player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 1);
 		}
 		
 		// if inventory does not contain at least 1 death compass, reset compass target
