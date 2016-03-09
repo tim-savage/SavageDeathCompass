@@ -3,10 +3,18 @@
 # Localization language
 language: en-US
 
-# Enabled Worlds
-enabled-worlds:
-  - world
-  - another_world
+# Note: use only one enabled/disabled list, and comment out or remove the other list
+# enabled worlds list (use this list for a default-deny world policy)
+
+#enabled-worlds:
+#  - enabled_world1
+#  - enabled_world2
+
+# disabled worlds list (use this list for a default-allow world policy)
+
+disabled-worlds:
+  - disabled_world1
+  - disabled_world2
 
 # Destroy compass on drop
 destroy-on-drop: true
@@ -14,8 +22,11 @@ destroy-on-drop: true
 # Use UUID instead of player name
 use-uuid: true
 
-# Storage type ( file | sqlite )
+# Storage type ( yaml | sqlite )
 storage-type: sqlite
 
 # Time interval (in minutes) to sync file to disk (for StorageType 'file' only)
 file-sync-interval: 5
+
+# play sound effects
+sound-effects: true
