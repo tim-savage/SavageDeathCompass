@@ -1,8 +1,10 @@
 package com.winterhaven_mc.deathcompass;
 
-import com.onarandombox.MultiverseCore.MultiverseCore;
-import com.winterhaven_mc.deathcompass.ConfigAccessor;
-import com.winterhaven_mc.deathcompass.PluginMain;
+import com.winterhaven_mc.util.ConfigAccessor;
+import com.winterhaven_mc.util.StringUtil;
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,20 +14,14 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 public class MessageManager {
 
 	// reference to main class
 	private PluginMain plugin;
-	
+
 	// config accessor object for messages
 	private ConfigAccessor messages;
-
-	MultiverseCore mvCore;
-	Boolean mvEnabled = false;
 
 	private String language;
 
@@ -35,7 +31,7 @@ public class MessageManager {
 	 * @param plugin
 	 */
 	public MessageManager(PluginMain plugin) {
-		
+
 		this.plugin = plugin;
 
 		// install any embedded resource localization files that are not already present
@@ -54,17 +50,9 @@ public class MessageManager {
 
 		// instantiate custom configuration manager for language file
 		messages = new ConfigAccessor(plugin, "language" + File.separator + language + ".yml");
-		
-		// get reference to Multiverse-Core if installed
-		mvCore = (MultiverseCore) plugin.getServer().getPluginManager().getPlugin("Multiverse-Core");
-		if (mvCore != null && mvCore.isEnabled()) {
-			plugin.getLogger().info("Multiverse-Core detected.");
-			this.mvEnabled = true;
-		}
-
 	}
 
-	
+
 	/**
 	 * Send a predefined message to a player
 	 * @param sender
@@ -82,9 +70,18 @@ public class MessageManager {
 
 			// if sender is a player then get nickname, display name and world name
 			if (sender instanceof Player) {
-				playerNickname = ((Player) sender).getPlayerListName();
-				playerDisplayName = ((Player) sender).getDisplayName();
-				worldName = getWorldAlias(((Player) sender).getWorld().getName());
+
+				// get player for sender
+				Player player = (Player) sender;
+
+				// get player short name
+				playerNickname = player.getPlayerListName();
+
+				// get player display name
+				playerDisplayName = player.getDisplayName();
+
+				// get player world name
+				worldName = plugin.worldManager.getWorldName(player.getWorld());
 			}
 
 			// get message string from localization file
@@ -94,27 +91,29 @@ public class MessageManager {
 			String itemName = messages.getConfig().getString("itemname").replaceAll("[&§][0-9A-Za-zK-Ok-oRr]", "");
 			playerName = playerName.replaceAll("[&§][0-9A-Za-zK-Ok-oRr]", "");
 			playerNickname = playerNickname.replaceAll("[&§][0-9A-Za-zK-Ok-oRr]", "");
-			
+
 			// do variable substitutions
-			message = message.replaceAll("%itemname%", itemName);
-			message = message.replaceAll("%playername%", playerName);
-			message = message.replaceAll("%playerdisplayname%", playerDisplayName);
-			message = message.replaceAll("%playernickname%", playerNickname);
-			message = message.replaceAll("%worldname%", worldName);
+			if (message.contains("%")) {
+				message = StringUtil.replace(message,"%itemname%", itemName);
+				message = StringUtil.replace(message,"%playername%", playerName);
+				message = StringUtil.replace(message,"%playerdisplayname%", playerDisplayName);
+				message = StringUtil.replace(message,"%playernickname%", playerNickname);
+				message = StringUtil.replace(message,"%worldname%", worldName);
+			}
 			
 			// send message
 			sender.sendMessage(ChatColor.translateAlternateColorCodes((char)'&', message));
 		}
 	}
 
-	
+
 	/**
 	 * Broadcast a predefined message
 	 * @param sender
 	 * @param messageID
 	 */
 	public void broadcastMessage(Player sender, String messageID) {
-		
+
 		if (messages.getConfig().getBoolean("messages." + messageID + ".enabled", false)) {
 			String message = messages.getConfig().getString("messages." + messageID + ".string");
 			String itemname = messages.getConfig().getString("itemname").replaceAll("&[0-9A-Za-zK-Ok-oRr]", "");
@@ -122,16 +121,20 @@ public class MessageManager {
 			String playernickname = sender.getPlayerListName().replaceAll("&[0-9A-Za-zK-Ok-oRr]", "");
 			String playerdisplayname = sender.getDisplayName();
 			String worldname = getWorldAlias(sender.getWorld().getName());
-			message = message.replaceAll("%itemname%", itemname);
-			message = message.replaceAll("%playername%", playername);
-			message = message.replaceAll("%playerdisplayname%", playerdisplayname);
-			message = message.replaceAll("%playernickname%", playernickname);
-			message = message.replaceAll("%worldname%", worldname);
+
+			if (message.contains("%")) {
+				message = StringUtil.replace(message,"%itemname%", itemname);
+				message = StringUtil.replace(message,"%playername%", playername);
+				message = StringUtil.replace(message,"%playerdisplayname%", playerdisplayname);
+				message = StringUtil.replace(message,"%playernickname%", playernickname);
+				message = StringUtil.replace(message,"%worldname%", worldname);
+			}
+
 			this.plugin.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes((char)'&', (String)message));
 		}
 	}
 
-	
+
 	public String getLanguage() {
 		return this.language;
 	}
@@ -142,51 +145,39 @@ public class MessageManager {
 	 * @return String itemname
 	 */
 	public String getItemName() {
-		String itemname = messages.getConfig().getString("itemname");
-		return itemname;
+		return messages.getConfig().getString("itemname");
 	}
 
-	
+
 	/**
 	 * Get item lore from language specific messages file
 	 * @return List of strings, one string for each line of lore
 	 */
 	public List<String> getItemLore() {
-		List<String> itemlore = messages.getConfig().getStringList("itemlore");
-		return itemlore;
+		return messages.getConfig().getStringList("itemlore");
 	}   	
 
-	
-	private String getWorldAlias(String worldName) {
-		
-		// if Multiverse is installed, use Multiverse world alias for world name
-		if (mvEnabled && mvCore.getMVWorldManager().getMVWorld(worldName) != null) {
-			
-			// if Multiverse alias is not blank, set world name to alias
-			if (!mvCore.getMVWorldManager().getMVWorld(worldName).getAlias().isEmpty()) {
-				worldName = mvCore.getMVWorldManager().getMVWorld(worldName).getAlias();
-			}
-		}
-		return worldName;
 
+	private String getWorldAlias(String worldName) {
+		return plugin.worldManager.getWorldName(worldName);
 	}
 
 
 	void reload() {
-		
+
 		// reinstall message files if necessary
 		installLocalizationFiles();
-		
+
 		// get currently configured language
 		String newLanguage = languageFileExists(plugin.getConfig().getString("language"));
-		
+
 		// if configured language has changed, instantiate new messages object
 		if (!newLanguage.equals(this.language)) {
 			this.messages = new ConfigAccessor(plugin, "language" + File.separator + newLanguage + ".yml");
 			this.language = newLanguage;
 			plugin.getLogger().info("New language " + this.language + " enabled.");
 		}
-		
+
 		// reload language file
 		messages.reloadConfig();
 	}
@@ -196,12 +187,12 @@ public class MessageManager {
 	 * Install localization files from <em>language</em> directory in jar 
 	 */
 	private void installLocalizationFiles() {
-	
+
 		List<String> filelist = new ArrayList<String>();
-	
+
 		// get the absolute path to this plugin as URL
 		URL pluginURL = plugin.getServer().getPluginManager().getPlugin(plugin.getName()).getClass().getProtectionDomain().getCodeSource().getLocation();
-	
+
 		// read files contained in jar, adding language/*.yml files to list
 		ZipInputStream zip;
 		try {
@@ -219,7 +210,7 @@ public class MessageManager {
 		} catch (IOException e1) {
 			plugin.getLogger().warning("Could not read language files from jar.");
 		}
-	
+
 		// iterate over list of language files and install from jar if not already present
 		for (String filename : filelist) {
 			// this check prevents a warning message when files are already installed
@@ -233,15 +224,15 @@ public class MessageManager {
 
 
 	private String languageFileExists(String language) {
-		
+
 		// check if localization file for configured language exists, if not then fallback to en-US
 		File languageFile = new File(plugin.getDataFolder() 
 				+ File.separator + "language" 
 				+ File.separator + language + ".yml");
-		
+
 		if (languageFile.exists()) {
 			return language;
-	    }
+		}
 		plugin.getLogger().info("Language file " + language + ".yml does not exist. Defaulting to en-US.");
 		return "en-US";
 	}

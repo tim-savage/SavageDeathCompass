@@ -1,9 +1,9 @@
-package com.winterhaven_mc.deathcompass;
+package com.winterhaven_mc.deathcompass.storage;
 
 public enum DataStoreType {
 
 	YAML("yaml"),
-	SQLITE("sqlite");
+	SQLITE("SQLite");
 
 	private String name;
 	

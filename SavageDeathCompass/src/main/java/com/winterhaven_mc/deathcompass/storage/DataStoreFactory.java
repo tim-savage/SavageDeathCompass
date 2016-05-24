@@ -1,4 +1,6 @@
-package com.winterhaven_mc.deathcompass;
+package com.winterhaven_mc.deathcompass.storage;
+
+import com.winterhaven_mc.deathcompass.PluginMain;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,7 +17,7 @@ public class DataStoreFactory {
 	 * and new datastore type is to be read from configuration file
 	 * @return new datastore of configured type
 	 */
-	static DataStore create() {
+	public static DataStore create() {
 		
 		// get data store type from config
 		DataStoreType dataStoreType = DataStoreType.match(plugin.getConfig().getString("storage-type"));
@@ -230,7 +232,7 @@ public class DataStoreFactory {
 		}
 	}
 
-	static void reload() {
+	public static void reload() {
 		
 		// get current datastore type
 		DataStoreType currentType = plugin.dataStore.getType();

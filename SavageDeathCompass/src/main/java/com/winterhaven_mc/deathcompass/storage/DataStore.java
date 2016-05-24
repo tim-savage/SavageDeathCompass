@@ -1,6 +1,7 @@
-package com.winterhaven_mc.deathcompass;
+package com.winterhaven_mc.deathcompass.storage;
 
 import java.util.List;
+import java.util.UUID;
 
 public abstract class DataStore {
 
@@ -19,17 +20,17 @@ public abstract class DataStore {
 
 	/**
 	 * Get record
-	 * @param playerId
+	 * @param playerUUID
 	 * @param worldName
 	 * @return death record or null if no matching record
 	 */
-	abstract DeathRecord getRecord(String playerId, String worldName);
+	public abstract DeathRecord getRecord(UUID playerUUID, String worldName);
 
 	/**
 	 * Store record
-	 * @param destination
+	 * @param deathRecord
 	 */
-	abstract void putRecord(DeathRecord deathRecord);
+	public abstract void putRecord(DeathRecord deathRecord);
 
 	/**
 	 * get all records
@@ -39,15 +40,16 @@ public abstract class DataStore {
 
 	/**
 	 * Delete record
-	 * @param warpName
+	 * @param playerUUID
+	 * @param worldName
 	 * @return 
 	 */	
-	abstract DeathRecord deleteRecord(String playerId, String worldName);
+	abstract DeathRecord deleteRecord(UUID playerUUID, String worldName);
 
 	/**
 	 * Close storage
 	 */
-	abstract void close();
+	public abstract void close();
 
 	abstract void save();
 
@@ -59,11 +61,11 @@ public abstract class DataStore {
 		return this.filename;
 	}
 
-	DataStoreType getType() {
+	public DataStoreType getType() {
 		return this.type;
 	}
 
-	String getName() {
+	public String getName() {
 		return this.getType().getName();
 	}
 

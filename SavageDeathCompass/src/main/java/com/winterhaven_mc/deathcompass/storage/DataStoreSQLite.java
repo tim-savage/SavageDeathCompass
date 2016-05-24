@@ -1,18 +1,15 @@
-package com.winterhaven_mc.deathcompass;
+package com.winterhaven_mc.deathcompass.storage;
 
-import java.io.File;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.winterhaven_mc.deathcompass.PluginMain;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import java.io.File;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 
 public class DataStoreSQLite extends DataStore {
@@ -87,12 +84,15 @@ public class DataStoreSQLite extends DataStore {
 	}
 	
 	@Override
-	DeathRecord getRecord(String playerId, String worldName) {
+	public DeathRecord getRecord(UUID playerUUID, String worldName) {
 		
 		// if key is null return null record
-		if (playerId == null) {
+		if (playerUUID == null) {
 			return null;
 		}
+
+		// convert playerUUID to string
+		String playerUUIDString = playerUUID.toString();
 		
 		DeathRecord deathRecord = null;
 		World world = null;
@@ -102,7 +102,7 @@ public class DataStoreSQLite extends DataStore {
 		try {
 			PreparedStatement preparedStatement = connection.prepareStatement(sqlGetDestination);
 			
-			preparedStatement.setString(1, playerId);
+			preparedStatement.setString(1, playerUUIDString);
 			preparedStatement.setString(2, worldName);
 
 			// execute sql query
@@ -112,7 +112,7 @@ public class DataStoreSQLite extends DataStore {
 			if (rs.next()) {
 			
 				// get stored world and coordinates
-				preparedStatement.setString(1, playerId);
+				preparedStatement.setString(1, playerUUIDString);
 				Double x = rs.getDouble("x");
 				Double y = rs.getDouble("y");
 				Double z = rs.getDouble("z");
@@ -123,7 +123,7 @@ public class DataStoreSQLite extends DataStore {
 				}
 				world = plugin.getServer().getWorld(worldName);
 				Location location = new Location(world,x,y,z);
-				deathRecord = new DeathRecord(playerId,location);
+				deathRecord = new DeathRecord(playerUUID,location);
 			}
 		}
 		catch (SQLException e) {
@@ -142,15 +142,15 @@ public class DataStoreSQLite extends DataStore {
 	}
 	
 	@Override
-	void putRecord(DeathRecord deathRecord) {
+	public void putRecord(DeathRecord deathRecord) {
 		
 		// if record is null do nothing and return
 		if (deathRecord == null) {
 			return;
 		}
 		
-		// get key
-		final String playerId = deathRecord.getPlayerId();
+		// get playerUUID as string
+		final String playerUUIDString = deathRecord.getPlayerUUID().toString();
 		
 		// get location
 		final Location location = deathRecord.getLocation();
@@ -184,7 +184,7 @@ public class DataStoreSQLite extends DataStore {
 					// create prepared statement
 					PreparedStatement preparedStatement = connection.prepareStatement(sqlInsertRecord);
 
-					preparedStatement.setString(1, playerId);
+					preparedStatement.setString(1, playerUUIDString);
 					preparedStatement.setString(2, worldName);
 					preparedStatement.setDouble(3, location.getX());
 					preparedStatement.setDouble(4, location.getY());
@@ -239,9 +239,22 @@ public class DataStoreSQLite extends DataStore {
 					continue;
 				}
 				
-				Location location = new Location(world,x,y,z);
-				DeathRecord deathRecord = new DeathRecord(key,location);
-				returnList.add(deathRecord);
+				// convert key string to UUID
+				UUID playerUUID = null;
+				try {
+					playerUUID = UUID.fromString(key);
+				} catch (Exception e) {
+					if (plugin.debug) {
+						plugin.getLogger().warning("Player UUID in datastore is invalid!");
+					}
+				}
+				
+				// if playerUUID is null, do not add record to return list
+				if (playerUUID != null) {
+					Location location = new Location(world,x,y,z);
+					DeathRecord deathRecord = new DeathRecord(playerUUID,location);
+					returnList.add(deathRecord);
+				}
 			}
 		}
 		catch (Exception e) {
@@ -262,15 +275,15 @@ public class DataStoreSQLite extends DataStore {
 	}
 	
 	@Override
-	DeathRecord deleteRecord(String playerId, String worldName) {
+	DeathRecord deleteRecord(UUID playerUUID, String worldName) {
 		
 		// if key is null return null record
-		if (playerId == null || playerId.isEmpty() || worldName == null || worldName.isEmpty()) {
+		if (playerUUID == null || worldName == null || worldName.isEmpty()) {
 			return null;
 		}
 
 		// get destination record to be deleted, for return
-		DeathRecord deathRecord = getRecord(playerId,worldName);
+		DeathRecord deathRecord = getRecord(playerUUID,worldName);
 
 		final String sqlDeleteDestination = "DELETE FROM deathlocations "
 				+ "WHERE playerid = ? AND worldname = ?";
@@ -279,7 +292,7 @@ public class DataStoreSQLite extends DataStore {
 			// create prepared statement
 			PreparedStatement preparedStatement = connection.prepareStatement(sqlDeleteDestination);
 
-			preparedStatement.setString(1, playerId);
+			preparedStatement.setString(1, playerUUID.toString());
 			preparedStatement.setString(1, worldName);
 
 			// execute prepared statement
@@ -305,7 +318,7 @@ public class DataStoreSQLite extends DataStore {
 	}
 
 	@Override
-	void close() {
+	public void close() {
 
 		try {
 			connection.close();

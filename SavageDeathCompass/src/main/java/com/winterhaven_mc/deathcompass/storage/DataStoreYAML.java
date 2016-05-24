@@ -1,14 +1,14 @@
-package com.winterhaven_mc.deathcompass;
+package com.winterhaven_mc.deathcompass.storage;
+
+import com.winterhaven_mc.deathcompass.PluginMain;
+import com.winterhaven_mc.util.ConfigAccessor;
+import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 
-import org.bukkit.Location;
-import org.bukkit.World;
 
 public class DataStoreYAML extends DataStore {
 
@@ -58,18 +58,20 @@ public class DataStoreYAML extends DataStore {
 	}
 
 	@Override
-	DeathRecord getRecord(String playerId, String worldName) {
+	public DeathRecord getRecord(UUID playerUUID, String worldName) {
 		
 		// if passed key is null return null record
-		if (playerId == null 
+		if (playerUUID == null 
 				|| worldName == null 
-				|| playerId.isEmpty() 
 				|| worldName.isEmpty()) {
 			return null;
 		}
 		
+		// convert playerUUID to string
+		String playerUUIDString = playerUUID.toString();
+		
 		// if record is not in data file, return null
-		if (!deathLocationFile.getConfig().getConfigurationSection(playerId).contains(worldName)) {
+		if (!deathLocationFile.getConfig().getConfigurationSection(playerUUIDString).contains(worldName)) {
 			return null;
 		}
 
@@ -82,27 +84,27 @@ public class DataStoreYAML extends DataStore {
 		World world = plugin.getServer().getWorld(worldName);
 
 		// get location coordinates
-		double x = deathLocationFile.getConfig().getDouble(playerId + "." + worldName + ".x",0);
-		double y = deathLocationFile.getConfig().getDouble(playerId + "." + worldName + ".y",0);
-		double z = deathLocationFile.getConfig().getDouble(playerId + "." + worldName + ".z",0);
+		double x = deathLocationFile.getConfig().getDouble(playerUUIDString + "." + worldName + ".x",0);
+		double y = deathLocationFile.getConfig().getDouble(playerUUIDString + "." + worldName + ".y",0);
+		double z = deathLocationFile.getConfig().getDouble(playerUUIDString + "." + worldName + ".z",0);
 
 		// create location
 		Location location = new Location(world,x,y,z);
 
 		// return destination object
-		return new DeathRecord(playerId,location);
+		return new DeathRecord(playerUUID,location);
 	}
 
 	@Override
-	void putRecord(DeathRecord deathRecord) {
+	public void putRecord(DeathRecord deathRecord) {
 		
 		// if destination is null do nothing and return
 		if (deathRecord == null) {
 			return;
 		}
 		
-		// get player id
-		String playerId = deathRecord.getPlayerId();
+		// get player UUID as string
+		String playerUUIDString = deathRecord.getPlayerUUID().toString();
 		
 		// get death location
 		Location location = deathRecord.getLocation();
@@ -116,20 +118,44 @@ public class DataStoreYAML extends DataStore {
 		String worldName = deathRecord.getLocation().getWorld().getName();
 		
 		// save location in data file
-		deathLocationFile.getConfig().set(playerId + "." + worldName + ".x", location.getX());
-		deathLocationFile.getConfig().set(playerId + "." + worldName + ".y", location.getY());
-		deathLocationFile.getConfig().set(playerId + "." + worldName + ".z", location.getZ());
+		deathLocationFile.getConfig().set(playerUUIDString + "." + worldName + ".x", location.getX());
+		deathLocationFile.getConfig().set(playerUUIDString + "." + worldName + ".y", location.getY());
+		deathLocationFile.getConfig().set(playerUUIDString + "." + worldName + ".z", location.getZ());
 		
 		// write in memory destination file to disk
 		deathLocationFile.saveConfig();
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	List<DeathRecord> getAllRecords() {
 		
 		List<DeathRecord> returnList = new ArrayList<DeathRecord>();
 		SortedSet<String> playerIds = new TreeSet<String>(deathLocationFile.getConfig().getKeys(false));
+		
 		for (String playerId : playerIds) {
+			
+			// convert playerId to UUID
+			UUID playerUUID = null;
+			try {
+				playerUUID = UUID.fromString(playerId);
+			} catch (Exception e) {
+				if (plugin.debug) {
+					plugin.getLogger().warning("Could not convert playerUUID from string.");
+				}
+				
+				// try retrieve player using playerId as name
+				OfflinePlayer player = plugin.getServer().getOfflinePlayer(playerId);
+				if (player != null) {
+					playerUUID = player.getUniqueId();
+				}
+				
+			}
+
+			// if no match for player was found, skip to next record
+			if (playerUUID == null) {
+				continue;
+			}
 			
 			DeathRecord record = null;
 			
@@ -138,7 +164,7 @@ public class DataStoreYAML extends DataStore {
 
 			for (String worldName : worldNames) {
 				
-				record = getRecord(playerId,worldName);
+				record = getRecord(playerUUID,worldName);
 				if (record == null) {
 					continue;
 				}
@@ -149,21 +175,20 @@ public class DataStoreYAML extends DataStore {
 	}
 	
 	@Override
-	DeathRecord deleteRecord(String playerId,String worldName) {
+	DeathRecord deleteRecord(UUID playerUUID,String worldName) {
 		
 		// if key is null return null record
-		if (playerId == null 
+		if (playerUUID == null 
 				|| worldName == null 
-				|| playerId.isEmpty() 
 				|| worldName.isEmpty()) {
 			return null;
 		}
 		
 		// fetch death record, for return
-		DeathRecord deathRecord = getRecord(playerId,worldName);
+		DeathRecord deathRecord = getRecord(playerUUID,worldName);
 
 		// delete destination from storage
-		deathLocationFile.getConfig().set(playerId + "." + worldName, null);
+		deathLocationFile.getConfig().set(playerUUID.toString() + "." + worldName, null);
 		
 		// save in memory destination file to disk
 		deathLocationFile.saveConfig();
@@ -172,7 +197,7 @@ public class DataStoreYAML extends DataStore {
 	}
 
 	@Override
-	void close() {
+	public void close() {
 		
 		// save data to file
 		deathLocationFile.saveConfig();
@@ -201,7 +226,6 @@ public class DataStoreYAML extends DataStore {
 		// get path name to this data store file
 		File dataStoreFile = new File(plugin.getDataFolder() + File.separator + this.getFilename());
 		return dataStoreFile.exists();
-
 	}
 	
 }
