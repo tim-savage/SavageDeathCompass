@@ -1,5 +1,6 @@
-package com.winterhaven_mc.deathcompass;
+package com.winterhaven_mc.deathcompass.util;
 
+import com.winterhaven_mc.deathcompass.PluginMain;
 import com.winterhaven_mc.util.ConfigAccessor;
 import com.winterhaven_mc.util.StringUtil;
 import org.bukkit.ChatColor;
@@ -28,7 +29,7 @@ public class MessageManager {
 
 	/**
 	 * Class constructor
-	 * @param plugin
+	 * @param plugin reference to plugin main class
 	 */
 	public MessageManager(PluginMain plugin) {
 
@@ -55,8 +56,8 @@ public class MessageManager {
 
 	/**
 	 * Send a predefined message to a player
-	 * @param sender
-	 * @param messageID
+	 * @param sender the command sender for whom to display message
+	 * @param messageID the message identifier
 	 */
 	public void sendPlayerMessage(CommandSender sender, String messageID) {
 
@@ -102,16 +103,17 @@ public class MessageManager {
 			}
 			
 			// send message
-			sender.sendMessage(ChatColor.translateAlternateColorCodes((char)'&', message));
+			sender.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
 		}
 	}
 
 
 	/**
 	 * Broadcast a predefined message
-	 * @param sender
-	 * @param messageID
+	 * @param sender the command sender whose name will be used in the message
+	 * @param messageID the message identifier
 	 */
+	@SuppressWarnings("unused")
 	public void broadcastMessage(Player sender, String messageID) {
 
 		if (messages.getConfig().getBoolean("messages." + messageID + ".enabled", false)) {
@@ -130,11 +132,12 @@ public class MessageManager {
 				message = StringUtil.replace(message,"%worldname%", worldname);
 			}
 
-			this.plugin.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes((char)'&', (String)message));
+			this.plugin.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&',message));
 		}
 	}
 
 
+	@SuppressWarnings("unused")
 	public String getLanguage() {
 		return this.language;
 	}
@@ -163,7 +166,7 @@ public class MessageManager {
 	}
 
 
-	void reload() {
+	public void reload() {
 
 		// reinstall message files if necessary
 		installLocalizationFiles();

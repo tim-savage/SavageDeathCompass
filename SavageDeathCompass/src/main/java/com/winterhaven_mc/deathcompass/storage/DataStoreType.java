@@ -9,9 +9,9 @@ public enum DataStoreType {
 	
 	/**
 	 * Class constructor
-	 * @param name
+	 * @param name the display name of the datastore type
 	 */
-	private DataStoreType(String name) {
+	DataStoreType(String name) {
 		this.setName(name);
 	}
 	

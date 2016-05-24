@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 
-public class DataStoreSQLite extends DataStore {
+class DataStoreSQLite extends DataStore {
 
 	// reference to main class
 	private final PluginMain plugin;
@@ -23,7 +23,7 @@ public class DataStoreSQLite extends DataStore {
 
 	/**
 	 * Class constructor
-	 * @param plugin
+	 * @param plugin reference to plugin main class
 	 */
 	DataStoreSQLite (PluginMain plugin) {
 
@@ -95,7 +95,7 @@ public class DataStoreSQLite extends DataStore {
 		String playerUUIDString = playerUUID.toString();
 		
 		DeathRecord deathRecord = null;
-		World world = null;
+		World world;
 		
 		final String sqlGetDestination = "SELECT * FROM deathlocations WHERE playerid = ? AND worldname = ?";
 
@@ -156,7 +156,7 @@ public class DataStoreSQLite extends DataStore {
 		final Location location = deathRecord.getLocation();
 		
 		// get world name
-		String testWorldName = null;
+		String testWorldName;
 
 		// test that world in destination location is valid
 		try {
@@ -346,12 +346,14 @@ public class DataStoreSQLite extends DataStore {
 	}
 	
 	@Override
-	void delete() {
-		
+	boolean delete() {
+
+		boolean result = false;
 		File dataStoreFile = new File(plugin.getDataFolder() + File.separator + this.getFilename());
 		if (dataStoreFile.exists()) {
-			dataStoreFile.delete();
+			result = dataStoreFile.delete();
 		}
+		return result;
 	}
 	
 	@Override

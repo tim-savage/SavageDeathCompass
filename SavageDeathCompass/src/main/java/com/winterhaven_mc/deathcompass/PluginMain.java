@@ -1,7 +1,10 @@
 package com.winterhaven_mc.deathcompass;
 
+import com.winterhaven_mc.deathcompass.commands.CommandManager;
+import com.winterhaven_mc.deathcompass.listeners.PlayerEventListener;
 import com.winterhaven_mc.deathcompass.storage.DataStore;
 import com.winterhaven_mc.deathcompass.storage.DataStoreFactory;
+import com.winterhaven_mc.deathcompass.util.MessageManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.winterhaven_mc.util.WorldManager;
@@ -19,8 +22,8 @@ public final class PluginMain extends JavaPlugin {
 
 	public Boolean debug = this.getConfig().getBoolean("debug");
 
-	MessageManager messageManager;
-	WorldManager worldManager;
+	public MessageManager messageManager;
+	public WorldManager worldManager;
 	public DataStore dataStore;
 
 	public void onEnable() {

@@ -1,5 +1,6 @@
-package com.winterhaven_mc.deathcompass;
+package com.winterhaven_mc.deathcompass.commands;
 
+import com.winterhaven_mc.deathcompass.PluginMain;
 import com.winterhaven_mc.deathcompass.storage.DataStoreFactory;
 import com.winterhaven_mc.deathcompass.storage.DataStoreType;
 import org.bukkit.ChatColor;
@@ -50,15 +51,16 @@ public class CommandManager implements CommandExecutor {
 
 		// reload command
 		if (subcommand.equalsIgnoreCase("reload")) {
-			return reloadCommand(sender,args);
+			return reloadCommand(sender);
 		}
 
 		// status command
 		if (subcommand.equalsIgnoreCase("status")) {
-			return statusCommand(sender,args);
+			return statusCommand(sender);
 		}
 
 		// help command
+		//noinspection SimplifiableIfStatement
 		if (subcommand.equalsIgnoreCase("help")) {
 			return helpCommand(sender,args);
 		}
@@ -69,10 +71,9 @@ public class CommandManager implements CommandExecutor {
 	/**
 	 * Reload command
 	 * @param sender the command sender
-	 * @param args the command arguments
 	 * @return always returns {@code true}, to prevent display of bukkit usage string
 	 */
-	private boolean reloadCommand(CommandSender sender, String args[]) {
+	private boolean reloadCommand(CommandSender sender) {
 		
 		// if sender does not have reload permission, send error message
 		if (!sender.hasPermission("deathcompass.reload")) {
@@ -104,10 +105,9 @@ public class CommandManager implements CommandExecutor {
 	/**
 	 * Status command
 	 * @param sender the command sender
-	 * @param args the command arguments
 	 * @return always returns {@code true}, to prevent display of bukkit usage string
 	 */
-	private boolean statusCommand(CommandSender sender, String args[]) {
+	private boolean statusCommand(CommandSender sender) {
 		
 		// if sender does not have status permission, send message
 		if (!sender.hasPermission("deathcompass.status")) {

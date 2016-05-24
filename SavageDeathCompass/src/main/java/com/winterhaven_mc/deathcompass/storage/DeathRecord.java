@@ -5,55 +5,46 @@ import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
-public class DeathRecord {
+public final class DeathRecord {
 
-	private UUID playerUUID;
-	private Location location;
+	private final UUID playerUUID;
+	private final Location location;
 
 	
 	/**
 	 * Class constructor
-	 * @param playerUUID
-	 * @param location
+	 * @param playerUUID the player UUID for the DeathRecord
+	 * @param location the player death location for the DeathRecord
 	 */
 	DeathRecord(UUID playerUUID, Location location) {
-		
-		setPlayerUUID(playerUUID);
-		setLocation(location);	
+
+		this.playerUUID = playerUUID;
+		this.location = location;
 	}
 	
 
 	/**
 	 * Class constructor
-	 * @param player
+	 * @param player the player whose UUID and location will be used to create the DeathRecord
 	 */
 	public DeathRecord(Player player) {
 		
 		// set playerUUID
-		setPlayerUUID(player.getUniqueId());
-		
+		this.playerUUID = player.getUniqueId();
+
 		// set location
-		setLocation(player.getLocation());
+		this.location = player.getLocation();
 	}
 
 	
+	@SuppressWarnings("WeakerAccess")
 	public UUID getPlayerUUID() {
 		return playerUUID;
-	}
-
-	
-	public void setPlayerUUID(UUID playerUUID) {
-		this.playerUUID = playerUUID;
 	}
 
 	
 	public Location getLocation() {
 		return location;
 	}
-	
 
-	public void setLocation(Location location) {
-		this.location = location;
-	}
-	
 }

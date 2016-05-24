@@ -10,7 +10,7 @@ import java.io.File;
 import java.util.*;
 
 
-public class DataStoreYAML extends DataStore {
+class DataStoreYAML extends DataStore {
 
 	private final PluginMain plugin; // reference to main class
 	private ConfigAccessor deathLocationFile;
@@ -18,7 +18,7 @@ public class DataStoreYAML extends DataStore {
 
 	/**
 	 * Class constructor
-	 * @param plugin
+	 * @param plugin reference to plugin main class
 	 */
 	DataStoreYAML(PluginMain plugin) {
 		
@@ -157,9 +157,9 @@ public class DataStoreYAML extends DataStore {
 				continue;
 			}
 			
-			DeathRecord record = null;
+			DeathRecord record;
 			
-			HashSet<String> worldNames = new HashSet<String>(deathLocationFile
+			Set<String> worldNames = new HashSet<String>(deathLocationFile
 					.getConfig().getConfigurationSection(playerId).getKeys(false));
 
 			for (String worldName : worldNames) {
@@ -168,9 +168,9 @@ public class DataStoreYAML extends DataStore {
 				if (record == null) {
 					continue;
 				}
+				returnList.add(record);
 			}
-			returnList.add(record);
-		}	
+		}
 		return returnList;
 	}
 	
@@ -212,12 +212,14 @@ public class DataStoreYAML extends DataStore {
 	}
 	
 	@Override
-	void delete() {
-		
+	boolean delete() {
+
+		Boolean deleteResult = false;
 		File dataStoreFile = new File(plugin.getDataFolder() + File.separator + this.getFilename());
 		if (dataStoreFile.exists()) {
-			dataStoreFile.delete();
+			deleteResult = dataStoreFile.delete();
 		}
+		return deleteResult;
 	}
 	
 	@Override

@@ -5,11 +5,11 @@ import java.util.UUID;
 
 public abstract class DataStore {
 
-	protected boolean initialized;
+	private boolean initialized;
 
-	protected DataStoreType type;
+	DataStoreType type;
 
-	protected String filename;
+	String filename;
 
 
 	/**
@@ -19,31 +19,32 @@ public abstract class DataStore {
 	abstract void initialize() throws Exception;
 
 	/**
-	 * Get record
-	 * @param playerUUID
-	 * @param worldName
+	 * Get record from datastore
+	 * @param playerUUID the player UUID for the record to be retrieved
+	 * @param worldName the world name for the record to be retrieved
 	 * @return death record or null if no matching record
 	 */
 	public abstract DeathRecord getRecord(UUID playerUUID, String worldName);
 
 	/**
-	 * Store record
-	 * @param deathRecord
+	 * Store record in datastore
+	 * @param deathRecord the DeathRecord to be stored
 	 */
 	public abstract void putRecord(DeathRecord deathRecord);
 
 	/**
-	 * get all records
-	 * @return
+	 * get all records from datastore
+	 * @return List of all DeathRecords
 	 */
 	abstract List<DeathRecord> getAllRecords();
 
 	/**
 	 * Delete record
-	 * @param playerUUID
-	 * @param worldName
-	 * @return 
+	 * @param playerUUID the player uuid of the record to delete
+	 * @param worldName the world name of the record to delete
+	 * @return the DeathRecord that was deleted from datastore
 	 */	
+	@SuppressWarnings("unused")
 	abstract DeathRecord deleteRecord(UUID playerUUID, String worldName);
 
 	/**
@@ -53,7 +54,7 @@ public abstract class DataStore {
 
 	abstract void save();
 
-	abstract void delete();
+	abstract boolean delete();
 
 	abstract boolean exists();
 

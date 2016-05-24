@@ -1,5 +1,6 @@
-package com.winterhaven_mc.deathcompass;
+package com.winterhaven_mc.deathcompass.listeners;
 
+import com.winterhaven_mc.deathcompass.PluginMain;
 import com.winterhaven_mc.deathcompass.storage.DeathRecord;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -19,7 +20,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 
-class PlayerEventListener implements Listener {
+public class PlayerEventListener implements Listener {
 
 	// reference to main class
 	private final PluginMain plugin;
@@ -32,7 +33,7 @@ class PlayerEventListener implements Listener {
 	 * Class constructor
 	 * @param plugin reference to main class
 	 */
-	PlayerEventListener(PluginMain plugin) {
+	public PlayerEventListener(PluginMain plugin) {
 
 		// set reference to main class
 		this.plugin = plugin;

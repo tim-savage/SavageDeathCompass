@@ -9,7 +9,7 @@ import java.util.List;
 
 public class DataStoreFactory {
 	
-	static PluginMain plugin = PluginMain.instance;
+	private static PluginMain plugin = PluginMain.instance;
 
 	/**
 	 * Create new data store of given type.<br>
@@ -31,8 +31,8 @@ public class DataStoreFactory {
 	 * Create new data store of given type.<br>
 	 * Single parameter version used when no current datastore instance exists
 	 * and new datastore type is passed as parameter
-	 * @param dataStoreType
-	 * @return
+	 * @param dataStoreType the datastore type to be created
+	 * @return new instance of datastore of specified type
 	 */
 	static DataStore create(DataStoreType dataStoreType) {
 		return create(dataStoreType, null);
@@ -41,9 +41,9 @@ public class DataStoreFactory {
 	/**
 	 * Create new data store of given type and convert old data store.<br>
 	 * Two parameter version used when a datastore instance already exists
-	 * @param dataStoreType
-	 * @param oldDataStore
-	 * @return
+	 * @param dataStoreType new datastore to be created
+	 * @param oldDataStore the old datastore being replaced
+	 * @return reference to the new instance of a datastore
 	 */
 	static DataStore create(DataStoreType dataStoreType, DataStore oldDataStore) {
 	
