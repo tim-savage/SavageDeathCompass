@@ -43,7 +43,7 @@ public abstract class DataStore {
 	 * @param playerUUID the player uuid of the record to delete
 	 * @param worldName the world name of the record to delete
 	 * @return the DeathRecord that was deleted from datastore
-	 */	
+	 */
 	@SuppressWarnings("unused")
 	abstract DeathRecord deleteRecord(UUID playerUUID, String worldName);
 
@@ -66,8 +66,12 @@ public abstract class DataStore {
 		return this.type;
 	}
 
-	public String getName() {
-		return this.getType().getName();
+	/**
+	 * Get datastore name, formatted for display
+	 * @return String containing datastore name
+	 */
+	public String getDisplayName() {
+		return this.getType().toString();
 	}
 
 	boolean isInitialized() {

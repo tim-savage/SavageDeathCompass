@@ -122,7 +122,7 @@ public class CommandManager implements CommandExecutor {
 				+ ChatColor.RESET + plugin.getConfig().getString("language"));
 
 		sender.sendMessage(ChatColor.GREEN + "Storage type: " 
-				+ ChatColor.RESET + plugin.dataStore.getName());
+				+ ChatColor.RESET + plugin.dataStore.getDisplayName());
 		
 		if (plugin.dataStore.getType().equals(DataStoreType.YAML)) {
 			sender.sendMessage(ChatColor.GREEN + "File Sync Interval: " 

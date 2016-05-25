@@ -24,6 +24,7 @@ public class MessageManager {
 	// config accessor object for messages
 	private ConfigAccessor messages;
 
+	// the currently selected language
 	private String language;
 
 

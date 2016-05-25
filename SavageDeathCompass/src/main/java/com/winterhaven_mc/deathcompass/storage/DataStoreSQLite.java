@@ -20,6 +20,8 @@ class DataStoreSQLite extends DataStore {
 	// database connection object
 	private Connection connection;
 
+	// default datastore type
+	private final static DataStoreType defaultType = DataStoreType.SQLITE;
 
 	/**
 	 * Class constructor
@@ -36,8 +38,8 @@ class DataStoreSQLite extends DataStore {
 		// set filename
 		this.filename = "deathlocations.db";
 	}
-	
-	
+
+
 	@Override
 	void initialize() throws SQLException, ClassNotFoundException {
 		

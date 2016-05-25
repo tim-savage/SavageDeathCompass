@@ -1,28 +1,49 @@
 package com.winterhaven_mc.deathcompass.storage;
 
+import com.winterhaven_mc.deathcompass.PluginMain;
+
 public enum DataStoreType {
 
-	YAML("yaml"),
-	SQLITE("SQLite");
+	YAML("yaml") {
 
-	private String name;
-	
+		@Override
+		public DataStore create() {
+
+			// create new yaml datastore
+			return new DataStoreYAML(plugin);
+		}
+	},
+
+	SQLITE("SQLite") {
+
+		@Override
+		public DataStore create() {
+
+			// create new sqlite datastore object
+			return new DataStoreSQLite(plugin);
+		}
+	};
+
+	private final static PluginMain plugin = PluginMain.instance;
+
+	private String displayName;
+
+	private final static DataStoreType defaultType = DataStoreType.SQLITE;
+
+	public abstract DataStore create();
+
 	/**
 	 * Class constructor
-	 * @param name the display name of the datastore type
+	 * @param displayName the display name of the datastore type
 	 */
-	DataStoreType(String name) {
-		this.setName(name);
-	}
-	
-	public String getName() {
-		return name;
+	DataStoreType(String displayName) {
+		this.displayName = displayName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public String getDisplayName() {
+		return displayName;
 	}
-	
+
 	public static DataStoreType match(String name) {
 		
 		// account for old config setting 'file', map to yaml
@@ -32,12 +53,16 @@ public enum DataStoreType {
 		
 		// try to match data store type to name
 		for (DataStoreType type : DataStoreType.values()) {
-			if (type.getName().equalsIgnoreCase(name)) {
+			if (type.getDisplayName().equalsIgnoreCase(name)) {
 				return type;
 			}
 		}
 		// no match; return sqlite
 		return DataStoreType.SQLITE;
+	}
+
+	public static DataStoreType getDefaultType() {
+		return defaultType;
 	}
 
 }
