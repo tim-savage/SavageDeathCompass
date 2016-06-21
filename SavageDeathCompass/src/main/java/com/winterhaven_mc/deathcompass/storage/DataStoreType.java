@@ -30,8 +30,6 @@ public enum DataStoreType {
 
 	private final static DataStoreType defaultType = DataStoreType.SQLITE;
 
-	public abstract DataStore create();
-
 	/**
 	 * Class constructor
 	 * @param displayName the display name of the datastore type
@@ -42,6 +40,10 @@ public enum DataStoreType {
 
 	public String getDisplayName() {
 		return displayName;
+	}
+
+	public static DataStoreType getDefaultType() {
+		return defaultType;
 	}
 
 	public static DataStoreType match(String name) {
@@ -61,8 +63,6 @@ public enum DataStoreType {
 		return DataStoreType.SQLITE;
 	}
 
-	public static DataStoreType getDefaultType() {
-		return defaultType;
-	}
+	public abstract DataStore create();
 
 }

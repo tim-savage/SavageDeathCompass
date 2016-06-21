@@ -94,6 +94,11 @@
 			<artifactId>string-util-lib</artifactId>
 			<version>1.0.0</version>
 		</dependency>
+		<dependency>
+			<groupId>com.winterhaven-mc</groupId>
+			<artifactId>language-manager-lib</artifactId>
+			<version>1.0.0</version>
+		</dependency>
 	</dependencies>
 	<url>http://dev.bukkit.org/bukkit-plugins/savagedeathcompass/</url>
 	<description>An alternative to /back on death command. On death, players are given a compass that points to their death location.</description>
