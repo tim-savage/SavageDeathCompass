@@ -1,12 +1,7 @@
-package com.winterhaven_mc.deathcompass;
+package com.winterhaven_mc.deathcompass.listeners;
 
 import com.winterhaven_mc.deathcompass.PluginMain;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.ListIterator;
-
+import com.winterhaven_mc.deathcompass.storage.DeathRecord;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -17,36 +12,40 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.metadata.Metadatable;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.*;
+
 public class PlayerEventListener implements Listener {
-	
+
+	// reference to main class
 	private final PluginMain plugin;
-	private HashSet<String> deathTriggeredRespawn = new HashSet<String>();
+
+	// player death respawn map
+	private Set<String> deathTriggeredRespawn = new HashSet<String>();
 
 	
 	/**
 	 * Class constructor
-	 * @param plugin
+	 * @param plugin reference to main class
 	 */
 	public PlayerEventListener(PluginMain plugin) {
+
+		// set reference to main class
 		this.plugin = plugin;
+
+		// register event handlers in this class
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 
 
 	/**
 	 * Player death event handler
-	 * @param event
+	 * @param event the event handled by this method
 	 * @throws Exception 
 	 */
 	@EventHandler(priority = EventPriority.LOW)
@@ -56,7 +55,7 @@ public class PlayerEventListener implements Listener {
 		String playeruuid = player.getUniqueId().toString();
 		
 		// if player world is not enabled in config, do nothing and return
-		if (!playerWorldEnabled(player)) {
+		if (!plugin.worldManager.isEnabled(player.getWorld())) {
 			return;
 		}
 		
@@ -68,7 +67,7 @@ public class PlayerEventListener implements Listener {
 		// create new death record for player
 		DeathRecord deathRecord = new DeathRecord(player);
 		
-		// put death location in database
+		// put death record in database
 		plugin.dataStore.putRecord(deathRecord);
 		
 		// put player uuid in deathTriggeredRespawn hashset
@@ -100,7 +99,7 @@ public class PlayerEventListener implements Listener {
 	
 	/**
 	 * Player respawn event handler
-	 * @param event
+	 * @param event the event handled by this method
 	 */
 	@EventHandler
 	public void onPlayerRespawn(PlayerRespawnEvent event) {
@@ -108,7 +107,7 @@ public class PlayerEventListener implements Listener {
 		Player player = event.getPlayer();
 
 		//if player world is not enabled, do nothing and return
-		if (!playerWorldEnabled(player)) {
+		if (!plugin.worldManager.isEnabled(player.getWorld())) {
 			if (plugin.debug) {
 				plugin.getLogger().info("Player world " + player.getWorld().getName() + " not enabled.");
 			}
@@ -147,7 +146,7 @@ public class PlayerEventListener implements Listener {
 	
 	/**
 	 * Player join event handler
-	 * @param event
+	 * @param event the event handled by this method
 	 */
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
@@ -155,7 +154,7 @@ public class PlayerEventListener implements Listener {
 		Player player = event.getPlayer();
 		
 		// if player world is not enabled, do nothing and return
-		if (!playerWorldEnabled(player)) {
+		if (!plugin.worldManager.isEnabled(player.getWorld())) {
 			return;
 		}
 		
@@ -184,7 +183,7 @@ public class PlayerEventListener implements Listener {
 
 	/**
 	 * Player change world event handler
-	 * @param event
+	 * @param event the event handled by this method
 	 */
 	@EventHandler
 	public void onChangeWorld(PlayerChangedWorldEvent event) {
@@ -192,7 +191,7 @@ public class PlayerEventListener implements Listener {
 		Player player = event.getPlayer();
 		
 		// if player world is not enabled in config, do nothing and return
-		if (!playerWorldEnabled(player)) {
+		if (!plugin.worldManager.isEnabled(player.getWorld())) {
 			return;
 		}
 		
@@ -204,14 +203,14 @@ public class PlayerEventListener implements Listener {
 		// create 1 death compass itemstack
 		ItemStack deathcompass = createDeathCompassStack(1);
 		
-		Location lastdeathloc = null;
+		Location lastDeathLocation;
 		
 		// get last death location from datastore
-		lastdeathloc = getDeathLocation(player);
+		lastDeathLocation = getDeathLocation(player);
 		
 		// if player does not have a death compass or saved death location, do nothing and return
 		if (!player.getInventory().containsAtLeast(deathcompass, 1) ||
-				lastdeathloc == null) {
+				lastDeathLocation == null) {
 			return;
 		}
 		
@@ -223,7 +222,7 @@ public class PlayerEventListener implements Listener {
 	/**
 	 * Player Interact event handler
 	 * Remove all death compasses from player inventory on interaction with DeathChestBlocks
-	 * @param event
+	 * @param event the event handled by this method
 	 */
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event) {
@@ -237,7 +236,7 @@ public class PlayerEventListener implements Listener {
 		}
 		
 		// if block is not a DeathChestBlock, do nothing and return
-		if (!(block instanceof Metadatable && block.hasMetadata("deathchest-owner"))) {
+		if (!(block != null && block.hasMetadata("deathchest-owner"))) {
 			return;
 		}
 		
@@ -256,7 +255,7 @@ public class PlayerEventListener implements Listener {
 
 	/**
 	 * Item drop event handler
-	 * @param event
+	 * @param event the event handled by this method
 	 */
 	@EventHandler
 	public void onItemDrop(PlayerDropItemEvent event) {
@@ -298,7 +297,7 @@ public class PlayerEventListener implements Listener {
 	
 	/**
 	 * Give 1 death compass to player
-	 * @param player
+	 * @param player the player being given a death compass
 	 */
 	private void giveDeathCompass(Player player) {
 		
@@ -316,7 +315,7 @@ public class PlayerEventListener implements Listener {
 	
 	/**
 	 * Remove all death compasses from inventory
-	 * @param inventory
+	 * @param inventory the inventory from which to remove all death compasses
 	 */
 	private void removeDeathCompasses(Inventory inventory) {
 		ItemStack deathcompass = createDeathCompassStack(64);
@@ -326,8 +325,8 @@ public class PlayerEventListener implements Listener {
 	
 	/**
 	 * Create death compass itemstack with given quantity
-	 * @param quantity
-	 * @return
+	 * @param quantity the number of items in the ItemStack being created
+	 * @return ItemStack of death compass item(s)
 	 */
 	private ItemStack createDeathCompassStack(int quantity) {
 		if (quantity > Material.COMPASS.getMaxStackSize()) {
@@ -340,7 +339,7 @@ public class PlayerEventListener implements Listener {
 		String itemname = plugin.messageManager.getItemName();
 		
 		// allow '&' as color code character
-		itemname = ChatColor.translateAlternateColorCodes((char)'&', itemname);
+		itemname = ChatColor.translateAlternateColorCodes('&', itemname);
 		
 		// get item lore from messages file
 		List<String> itemlore = plugin.messageManager.getItemLore();
@@ -348,7 +347,7 @@ public class PlayerEventListener implements Listener {
 		// allow '&' as color code character
 		ArrayList<String> coloredlore = new ArrayList<String>();
 		for (String string : itemlore) {
-			string = ChatColor.translateAlternateColorCodes((char)'&', string);
+			string = ChatColor.translateAlternateColorCodes('&', string);
 			coloredlore.add(string);
 		}
 		
@@ -359,7 +358,7 @@ public class PlayerEventListener implements Listener {
 
 		// set item name and lore metadata
 		ItemMeta dcMeta = dc.getItemMeta();
-		dcMeta.setDisplayName((Object)ChatColor.RESET + itemname);
+		dcMeta.setDisplayName(ChatColor.RESET + itemname);
 		dcMeta.setLore(coloredlore);
 		dc.setItemMeta(dcMeta);
 		return dc;
@@ -369,18 +368,18 @@ public class PlayerEventListener implements Listener {
 	/**
 	 * Set death compass target
 	 * delay for 20 ticks to allow player to respawn
-	 * @param player
+	 * @param player the player whose death location is being set as the compass target
 	 */
 	private void setDeathCompassTarget(final Player player) {
 		new BukkitRunnable(){
 
 			public void run() {
-				Location myloc = null;
-				myloc = getDeathLocation(player);
-				if (myloc.getWorld() != player.getWorld()) {
+				Location location;
+				location = getDeathLocation(player);
+				if (location.getWorld() != player.getWorld()) {
 					return;
 				}
-				player.setCompassTarget(myloc);
+				player.setCompassTarget(location);
 			}
 		}.runTaskLater(plugin, 20);
 	}
@@ -388,7 +387,7 @@ public class PlayerEventListener implements Listener {
 	
 	/**
 	 * Reset compass target
-	 * @param player
+	 * @param player the player whose compass target is being reset
 	 */
 	private void resetDeathCompassTarget(Player player) {
 		
@@ -404,58 +403,33 @@ public class PlayerEventListener implements Listener {
 
 	
 	/**
-	 * Test if player world is enabled in config
-	 * @param player
-	 * @return boolean
-	 */
-	private boolean playerWorldEnabled(Player player) {
-		
-		// if player world is in list of enabled worlds, return true
-		if (plugin.commandManager.getEnabledWorlds().contains(player.getWorld().getName())) {
-			return true;
-		}
-		
-		// otherwise return false
-		return false;
-	}
-
-	
-	/**
 	 * Retrieve player death location from datastore
-	 * @param player
+	 * @param player the player whose death location is being retrieve
 	 * @return location
 	 */
 	private Location getDeathLocation(Player player) {
-		
-		//set playerid to player name
-		String playerId = player.getName();
-		
-		// if use-uuid is enabled in config, set playerid to player uuid
-		if (plugin.getConfig().getBoolean("use-uuid")) {
-			playerId = player.getUniqueId().toString();
-		}
 		
 		// set worldname to player current world
 		String worldName = player.getWorld().getName();
 	
 		// set lastdeathloc to player bed spawn location
-		Location lastdeathloc = player.getBedSpawnLocation();
+		Location location = player.getBedSpawnLocation();
 		
 		// if player bedspawn is null, set lastdeathloc to world spawn location
-		if (lastdeathloc == null) {
-			lastdeathloc = player.getWorld().getSpawnLocation();
+		if (location == null) {
+			location = player.getWorld().getSpawnLocation();
 		}
 		
 		// fetch death record from datastore
-		DeathRecord deathRecord = plugin.dataStore.getRecord(playerId,worldName);
+		DeathRecord deathRecord = plugin.dataStore.getRecord(player.getUniqueId(),worldName);
 		
 		if (deathRecord != null) {
 			
-			lastdeathloc = deathRecord.getLocation();
+			location = deathRecord.getLocation();
 		}
 		
 		// return location
-		return lastdeathloc;
+		return location;
 	}
 
 }

@@ -1,6 +1,13 @@
 package com.winterhaven_mc.deathcompass;
 
+import com.winterhaven_mc.deathcompass.commands.CommandManager;
+import com.winterhaven_mc.deathcompass.listeners.PlayerEventListener;
+import com.winterhaven_mc.deathcompass.storage.DataStore;
+import com.winterhaven_mc.deathcompass.storage.DataStoreFactory;
+import com.winterhaven_mc.deathcompass.util.MessageManager;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import com.winterhaven_mc.util.WorldManager;
 
 /**
  * Bukkit plugin to give a compass on death
@@ -13,11 +20,11 @@ public final class PluginMain extends JavaPlugin {
 
 	public static PluginMain instance;
 
-	Boolean debug = this.getConfig().getBoolean("debug", false);
+	public Boolean debug = this.getConfig().getBoolean("debug");
 
-	MessageManager messageManager;
-	CommandManager commandManager;
-	DataStore dataStore;
+	public MessageManager messageManager;
+	public WorldManager worldManager;
+	public DataStore dataStore;
 
 	public void onEnable() {
 
@@ -27,14 +34,17 @@ public final class PluginMain extends JavaPlugin {
 		// Save a copy of the default config.yml if file does not already exist
 		saveDefaultConfig();
 		
+		// instantiate world manager
+		worldManager = new WorldManager(this);
+		
 		// instantiate message manager
 		messageManager = new MessageManager(this);
 
-		// instantiate command handler
-		commandManager = new CommandManager(this);
-		
 		// instantiate datastore
 		dataStore = DataStoreFactory.create();
+
+		// instantiate command handler
+		new CommandManager(this);
 
 		// instantiate event listener
 		new PlayerEventListener(this);
