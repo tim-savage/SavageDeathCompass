@@ -5,6 +5,8 @@
 	<artifactId>SavageDeathCompass</artifactId>
 	<version>1.4.2</version>
 	<name>SavageDeathCompass</name>
+	<url>http://dev.bukkit.org/bukkit-plugins/savagedeathcompass/</url>
+	<description>An alternative to /back on death command. On death, players are given a compass that points to their death location.</description>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.author>Tim Savage</project.author>
@@ -100,6 +102,4 @@
 			<version>1.0.0</version>
 		</dependency>
 	</dependencies>
-	<url>http://dev.bukkit.org/bukkit-plugins/savagedeathcompass/</url>
-	<description>An alternative to /back on death command. On death, players are given a compass that points to their death location.</description>
 </project>
