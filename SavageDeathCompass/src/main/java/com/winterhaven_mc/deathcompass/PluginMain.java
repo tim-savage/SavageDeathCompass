@@ -26,6 +26,7 @@ public final class PluginMain extends JavaPlugin {
 	public WorldManager worldManager;
 	public DataStore dataStore;
 
+
 	public void onEnable() {
 
 		// static reference to main class
@@ -33,7 +34,7 @@ public final class PluginMain extends JavaPlugin {
 
 		// Save a copy of the default config.yml if file does not already exist
 		saveDefaultConfig();
-		
+
 		// instantiate world manager
 		worldManager = new WorldManager(this);
 		

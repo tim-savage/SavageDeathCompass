@@ -3,14 +3,19 @@ package com.winterhaven_mc.deathcompass.storage;
 import com.winterhaven_mc.deathcompass.PluginMain;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 
-class DataStoreSQLite extends DataStore {
+class DataStoreSQLite extends DataStore implements Listener {
 
 	// reference to main class
 	private final PluginMain plugin;
@@ -38,6 +43,9 @@ class DataStoreSQLite extends DataStore {
 
 		// initialize location cache
 		locationCache = new LocationCache();
+
+		// register event handlers in this class
+		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 
 
@@ -393,4 +401,13 @@ class DataStoreSQLite extends DataStore {
 
 	}
 
+
+	/**
+	 * Remove player from cache on player quit event
+	 * @param event event handled by this method
+	 */
+	@EventHandler
+	void onPlayerQuit(PlayerQuitEvent event) {
+		locationCache.flushPlayerMap(event.getPlayer().getUniqueId());
+	}
 }
