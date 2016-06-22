@@ -7,9 +7,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 
 class DataStoreSQLite extends DataStore {
@@ -20,8 +18,8 @@ class DataStoreSQLite extends DataStore {
 	// database connection object
 	private Connection connection;
 
-	// default datastore type
-	private final static DataStoreType defaultType = DataStoreType.SQLITE;
+	// location cache
+	private LocationCache locationCache;
 
 	/**
 	 * Class constructor
@@ -37,6 +35,9 @@ class DataStoreSQLite extends DataStore {
 		
 		// set filename
 		this.filename = "deathlocations.db";
+
+		// initialize location cache
+		locationCache = new LocationCache();
 	}
 
 
@@ -93,10 +94,24 @@ class DataStoreSQLite extends DataStore {
 			return null;
 		}
 
+		// try to get world uid from world name
+		UUID worldUID = plugin.getServer().getWorld(worldName).getUID();
+
+		// if world uid is null, return null record
+		if (worldUID == null) {
+			return null;
+		}
+
+		// try cache first
+		DeathRecord deathRecord = locationCache.fetchLocation(worldUID,playerUUID);
+
+		// if a record was returned from cache, return the record; otherwise try datastore
+		if (deathRecord != null) {
+			return deathRecord;
+		}
+
 		// convert playerUUID to string
 		String playerUUIDString = playerUUID.toString();
-		
-		DeathRecord deathRecord = null;
 		World world;
 		
 		final String sqlGetDestination = "SELECT * FROM deathlocations WHERE playerid = ? AND worldname = ?";
@@ -140,9 +155,17 @@ class DataStoreSQLite extends DataStore {
 			}
 			return null;
 		}
+
+		// if record is not null, put record in cache
+		if (deathRecord != null) {
+			locationCache.cacheLocation(deathRecord);
+		}
+
+		// return record
 		return deathRecord;
 	}
-	
+
+
 	@Override
 	public void putRecord(DeathRecord deathRecord) {
 		
@@ -150,6 +173,9 @@ class DataStoreSQLite extends DataStore {
 		if (deathRecord == null) {
 			return;
 		}
+
+		// cache death record
+		locationCache.cacheLocation(deathRecord);
 		
 		// get playerUUID as string
 		final String playerUUIDString = deathRecord.getPlayerUUID().toString();
