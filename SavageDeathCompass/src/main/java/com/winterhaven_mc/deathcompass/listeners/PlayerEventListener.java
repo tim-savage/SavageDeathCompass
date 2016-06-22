@@ -374,14 +374,13 @@ public class PlayerEventListener implements Listener {
 		new BukkitRunnable(){
 
 			public void run() {
-				Location location;
-				location = getDeathLocation(player);
+				Location location = getDeathLocation(player);
 				if (location.getWorld() != player.getWorld()) {
 					return;
 				}
 				player.setCompassTarget(location);
 			}
-		}.runTaskLater(plugin, 20);
+		}.runTaskLaterAsynchronously(plugin, plugin.getConfig().getLong("target-delay"));
 	}
 
 	

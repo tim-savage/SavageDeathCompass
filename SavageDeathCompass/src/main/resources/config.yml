@@ -19,8 +19,8 @@ disabled-worlds:
 # Destroy compass on drop
 destroy-on-drop: true
 
-# Use UUID instead of player name
-use-uuid: true
+# delay setting compass target after respawn (in ticks; 20 ticks = 1 second)
+target-delay: 20
 
 # Storage type ( yaml | sqlite )
 storage-type: sqlite

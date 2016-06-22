@@ -80,7 +80,10 @@ public class CommandManager implements CommandExecutor {
 			sender.sendMessage(errorColor + "You do not have permission for this command!");
 			return true;
 		}
-	
+
+		// reinstall config.yml if necessary
+		plugin.saveDefaultConfig();
+
 		// reload config.yml
 		plugin.reloadConfig();
 	
@@ -128,11 +131,14 @@ public class CommandManager implements CommandExecutor {
 			sender.sendMessage(ChatColor.GREEN + "File Sync Interval: " 
 					+ ChatColor.RESET + plugin.getConfig().getString("file-sync-interval"));
 		}
-		
-		sender.sendMessage(ChatColor.GREEN + "Destroy On Drop: " 
+
+		sender.sendMessage(ChatColor.GREEN + "Destroy On Drop: "
 				+ ChatColor.RESET + plugin.getConfig().getString("destroy-on-drop"));
-		
-		sender.sendMessage(ChatColor.GREEN + "Enabled Words: " 
+
+		sender.sendMessage(ChatColor.GREEN + "Set Compass Target Delay: "
+				+ ChatColor.RESET + plugin.getConfig().getString("target-delay"));
+
+		sender.sendMessage(ChatColor.GREEN + "Enabled Words: "
 				+ ChatColor.RESET + plugin.worldManager.getEnabledWorldNames().toString());
 		return true;
 	}
