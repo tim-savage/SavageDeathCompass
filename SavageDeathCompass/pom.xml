@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.winterhaven-mc</groupId>
 	<artifactId>SavageDeathCompass</artifactId>
-	<version>1.4.4</version>
+	<version>1.4.5</version>
 	<name>SavageDeathCompass</name>
 	<url>http://dev.bukkit.org/bukkit-plugins/savagedeathcompass/</url>
 	<description>An alternative to /back on death command. On death, players are given a compass that points to their death location.</description>
@@ -65,38 +65,65 @@
 			</resource>
 		</resources>
 	</build>
+
+	<!-- Repositories -->
 	<repositories>
 		<repository>
 			<id>winterhaven-repo</id>
 			<url>https://nexus-winterhaven.rhcloud.com/content/groups/public/</url>
 		</repository>
+
+		<repository>
+			<!-- exclude defunct repo -->
+			<id>vault-repo</id>
+			<url>http://nexus.theyeticave.net/content/repositories/pub_releases/</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
 	</repositories>
+
 	<dependencies>
+
+		<!-- Bukkit -->
 		<dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>bukkit</artifactId>
-			<version>1.9-R0.1-SNAPSHOT</version>
+			<version>1.11.2-R0.1-SNAPSHOT</version>
 		</dependency>
+
+		<!-- Multiverse-Core -->
 		<dependency>
 			<groupId>com.onarandombox.multiversecore</groupId>
 			<artifactId>Multiverse-Core</artifactId>
 			<version>2.5</version>
 		</dependency>
+
+		<!-- ConfigAccessorLib -->
 		<dependency>
 			<groupId>com.winterhaven-mc</groupId>
 			<artifactId>config-accessor-lib</artifactId>
 			<version>1.0.0</version>
 		</dependency>
+
+		<!-- WorldManagerLib -->
 		<dependency>
 			<groupId>com.winterhaven-mc</groupId>
 			<artifactId>world-manager-lib</artifactId>
 			<version>1.0.0</version>
 		</dependency>
+
+		<!-- StringUtilLib -->
 		<dependency>
 			<groupId>com.winterhaven-mc</groupId>
 			<artifactId>string-util-lib</artifactId>
 			<version>1.0.0</version>
 		</dependency>
+
+		<!-- LanguageManagerLib -->
 		<dependency>
 			<groupId>com.winterhaven-mc</groupId>
 			<artifactId>language-manager-lib</artifactId>
