@@ -45,7 +45,7 @@ public class CommandManager implements CommandExecutor {
 			subcommand = args[0];
 		}
 		else {
-			subcommand = "status";
+			subcommand = "help";
 		}
 
 		// reload command

@@ -60,16 +60,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 			return;
 		}
 
-		// sql statement to create table if it doesn't already exist
-		String createDeathLocationTable = "CREATE TABLE IF NOT EXISTS deathlocations (" +
-				"playerid VARCHAR(36) NOT NULL," +
-				"worldname VARCHAR(255) NOT NULL," +
-				"x INTEGER, " +
-				"y INTEGER, " +
-				"z INTEGER, " +
-				"UNIQUE (playerid,worldname) )";
-
-		// register the driver 
+		// register the driver
 		final String jdbcDriverName = "org.sqlite.JDBC";
 		
 		Class.forName(jdbcDriverName);
@@ -84,8 +75,8 @@ class DataStoreSQLite extends DataStore implements Listener {
 		Statement statement = connection.createStatement();
 
 		// execute table creation statement
-		statement.executeUpdate(createDeathLocationTable);
-		
+		statement.executeUpdate(Queries.getQuery("createDeathLocationTable"));
+
 		// set initialized true
 		setInitialized(true);
 		if (plugin.debug) {
@@ -122,11 +113,9 @@ class DataStoreSQLite extends DataStore implements Listener {
 		String playerUUIDString = playerUUID.toString();
 		World world;
 		
-		final String sqlGetDestination = "SELECT * FROM deathlocations WHERE playerid = ? AND worldname = ?";
-
 		try {
-			PreparedStatement preparedStatement = connection.prepareStatement(sqlGetDestination);
-			
+			PreparedStatement preparedStatement = connection.prepareStatement(Queries.getQuery("SelectLocation"));
+
 			preparedStatement.setString(1, playerUUIDString);
 			preparedStatement.setString(2, worldName);
 
@@ -204,21 +193,12 @@ class DataStoreSQLite extends DataStore implements Listener {
 		}
 		final String worldName = testWorldName;
 		
-		// sql statement to insert or replace record
-		final String sqlInsertRecord = "INSERT OR REPLACE INTO deathlocations ("
-				+ "playerid, "
-				+ "worldname, "
-				+ "x, "
-				+ "y, "
-				+ "z) "
-				+ "values(?,?,?,?,?)";
-
 		new BukkitRunnable() {
 			@Override
 			public void run() {
 				try {
 					// create prepared statement
-					PreparedStatement preparedStatement = connection.prepareStatement(sqlInsertRecord);
+					PreparedStatement preparedStatement = connection.prepareStatement(Queries.getQuery("InsertLocation"));
 
 					preparedStatement.setString(1, playerUUIDString);
 					preparedStatement.setString(2, worldName);
@@ -248,11 +228,8 @@ class DataStoreSQLite extends DataStore implements Listener {
 		
 		List<DeathRecord> returnList = new ArrayList<DeathRecord>();
 
-		// sql statement to retrieve all display names
-		final String sqlSelectAllRecords = "SELECT * FROM deathlocations";
-		
 		try {
-			PreparedStatement preparedStatement = connection.prepareStatement(sqlSelectAllRecords);
+			PreparedStatement preparedStatement = connection.prepareStatement(Queries.getQuery("SelectAllLocations"));
 
 			// execute sql query
 			ResultSet rs = preparedStatement.executeQuery();
@@ -321,12 +298,9 @@ class DataStoreSQLite extends DataStore implements Listener {
 		// get destination record to be deleted, for return
 		DeathRecord deathRecord = getRecord(playerUUID,worldName);
 
-		final String sqlDeleteDestination = "DELETE FROM deathlocations "
-				+ "WHERE playerid = ? AND worldname = ?";
-		
 		try {
 			// create prepared statement
-			PreparedStatement preparedStatement = connection.prepareStatement(sqlDeleteDestination);
+			PreparedStatement preparedStatement = connection.prepareStatement(Queries.getQuery("DeleteLocation"));
 
 			preparedStatement.setString(1, playerUUID.toString());
 			preparedStatement.setString(1, worldName);
