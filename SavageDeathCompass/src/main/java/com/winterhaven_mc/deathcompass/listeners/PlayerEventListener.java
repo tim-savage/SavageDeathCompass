@@ -46,10 +46,9 @@ public class PlayerEventListener implements Listener {
 	/**
 	 * Player death event handler
 	 * @param event the event handled by this method
-	 * @throws Exception 
 	 */
 	@EventHandler(priority = EventPriority.LOW)
-	public void onPlayerDeath(PlayerDeathEvent event) throws Exception {
+	public void onPlayerDeath(PlayerDeathEvent event) {
 		
 		Player player = event.getEntity();
 		String playeruuid = player.getUniqueId().toString();
@@ -203,10 +202,8 @@ public class PlayerEventListener implements Listener {
 		// create 1 death compass itemstack
 		ItemStack deathcompass = createDeathCompassStack(1);
 		
-		Location lastDeathLocation;
-		
 		// get last death location from datastore
-		lastDeathLocation = getDeathLocation(player);
+		Location lastDeathLocation = getDeathLocation(player);
 		
 		// if player does not have a death compass or saved death location, do nothing and return
 		if (!player.getInventory().containsAtLeast(deathcompass, 1) ||
@@ -390,14 +387,8 @@ public class PlayerEventListener implements Listener {
 	 */
 	private void resetDeathCompassTarget(Player player) {
 		
-		// test bed spawn location, otherwise use world spawn location
-		Location newloc = player.getBedSpawnLocation();
-		if (newloc == null) {
-			newloc = player.getWorld().getSpawnLocation();
-		}
-		
-		// set player compass target to location
-		player.setCompassTarget(newloc);
+		// set player compass target to world spawn location
+		player.setCompassTarget(player.getWorld().getSpawnLocation());
 	}
 
 	
@@ -411,19 +402,13 @@ public class PlayerEventListener implements Listener {
 		// set worldname to player current world
 		String worldName = player.getWorld().getName();
 	
-		// set lastdeathloc to player bed spawn location
-		Location location = player.getBedSpawnLocation();
-		
-		// if player bedspawn is null, set lastdeathloc to world spawn location
-		if (location == null) {
-			location = player.getWorld().getSpawnLocation();
-		}
-		
+		// set location to world spawn location
+		Location location = player.getWorld().getSpawnLocation();
+
 		// fetch death record from datastore
 		DeathRecord deathRecord = plugin.dataStore.getRecord(player.getUniqueId(),worldName);
-		
+
 		if (deathRecord != null) {
-			
 			location = deathRecord.getLocation();
 		}
 		

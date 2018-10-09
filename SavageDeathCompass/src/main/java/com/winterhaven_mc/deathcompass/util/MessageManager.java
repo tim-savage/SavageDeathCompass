@@ -1,11 +1,10 @@
 package com.winterhaven_mc.deathcompass.util;
 
 import com.winterhaven_mc.deathcompass.PluginMain;
-import com.winterhaven_mc.util.ConfigAccessor;
-import com.winterhaven_mc.util.LanguageManager;
 import com.winterhaven_mc.util.StringUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -16,11 +15,11 @@ public class MessageManager {
 	// reference to main class
 	private PluginMain plugin;
 
-	// config accessor object for messages
-	private ConfigAccessor messages;
+	// configuration object for messages
+	private YamlConfiguration messages;
 
-	// language manager
-	private LanguageManager languageManager;
+	// message file helper
+	private MessageFileHelper messageFileHelper;
 
 
 	/**
@@ -31,11 +30,12 @@ public class MessageManager {
 
 		this.plugin = plugin;
 
-		// instantiate language manager
-		languageManager = new LanguageManager(plugin);
+		// instantiate messageFileHelper
+		this.messageFileHelper = new MessageFileHelper(plugin);
 
-		// instantiate custom configuration manager for configured language file
-		this.messages = new ConfigAccessor(plugin, languageManager.getFileName());
+		// load messages from file
+		this.messages = messageFileHelper.loadMessages();
+
 	}
 
 
@@ -46,7 +46,7 @@ public class MessageManager {
 	 */
 	public void sendPlayerMessage(CommandSender sender, String messageID) {
 
-		if (messages.getConfig().getBoolean("messages." + messageID + ".enabled")) {
+		if (messages.getBoolean("messages." + messageID + ".enabled")) {
 
 			// set some string defaults in case sender is not a player
 			String playerName = sender.getName();
@@ -71,10 +71,10 @@ public class MessageManager {
 			}
 
 			// get message string from localization file
-			String message = messages.getConfig().getString("messages." + messageID + ".string");
+			String message = messages.getString("messages." + messageID + ".string");
 
 			// strip color codes
-			String itemName = messages.getConfig().getString("itemname").replaceAll("[&§][0-9A-Za-zK-Ok-oRr]", "");
+			String itemName = messages.getString("itemname").replaceAll("[&§][0-9A-Za-zK-Ok-oRr]", "");
 			playerName = playerName.replaceAll("[&§][0-9A-Za-zK-Ok-oRr]", "");
 			playerNickname = playerNickname.replaceAll("[&§][0-9A-Za-zK-Ok-oRr]", "");
 
@@ -98,7 +98,7 @@ public class MessageManager {
 	 * @return String itemname
 	 */
 	public String getItemName() {
-		return messages.getConfig().getString("itemname");
+		return messages.getString("itemname");
 	}
 
 
@@ -107,7 +107,7 @@ public class MessageManager {
 	 * @return List of strings, one string for each line of lore
 	 */
 	public List<String> getItemLore() {
-		return messages.getConfig().getStringList("itemlore");
+		return messages.getStringList("itemlore");
 	}
 
 
@@ -116,8 +116,9 @@ public class MessageManager {
 	 */
 	public void reload() {
 
-		// reload language file
-		this.languageManager.reload(messages);
+		// reload messages
+		this.messages = messageFileHelper.loadMessages();
+
 	}
 
 }

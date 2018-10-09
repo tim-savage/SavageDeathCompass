@@ -17,7 +17,6 @@ public final class DeathRecord {
 	 * @param location the player death location for the DeathRecord
 	 */
 	DeathRecord(UUID playerUUID, Location location) {
-
 		this.playerUUID = playerUUID;
 		this.location = location;
 	}

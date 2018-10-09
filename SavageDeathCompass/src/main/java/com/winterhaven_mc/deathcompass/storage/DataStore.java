@@ -14,7 +14,6 @@ public abstract class DataStore {
 
 	/**
 	 * Initialize storage
-	 * @throws Exception
 	 */
 	abstract void initialize() throws Exception;
 
@@ -53,6 +52,7 @@ public abstract class DataStore {
 	public abstract void close();
 
 	abstract void save();
+
 
 	abstract boolean delete();
 

@@ -3,14 +3,16 @@
 # Localization language
 language: en-US
 
-# Note: use only one enabled/disabled list, and comment out or remove the other list
-# enabled worlds list (use this list for a default-deny world policy)
+# enabled worlds list
+# if this list is empty, all worlds will be added to the enabled worlds list
+# otherwise, only listed worlds will be added to the enabled worlds list
 
 #enabled-worlds:
 #  - enabled_world1
 #  - enabled_world2
 
-# disabled worlds list (use this list for a default-allow world policy)
+# disabled worlds list
+# these worlds will be removed from the enabled worlds list created by the previous setting
 
 disabled-worlds:
   - disabled_world1
@@ -21,12 +23,6 @@ destroy-on-drop: true
 
 # delay setting compass target after respawn (in ticks; 20 ticks = 1 second)
 target-delay: 20
-
-# Storage type ( yaml | sqlite )
-storage-type: sqlite
-
-# Time interval (in minutes) to sync file to disk (for StorageType 'yaml' only)
-file-sync-interval: 5
 
 # play sound effects
 sound-effects: true

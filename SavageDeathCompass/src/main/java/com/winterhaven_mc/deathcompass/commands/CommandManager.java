@@ -2,7 +2,6 @@ package com.winterhaven_mc.deathcompass.commands;
 
 import com.winterhaven_mc.deathcompass.PluginMain;
 import com.winterhaven_mc.deathcompass.storage.DataStoreFactory;
-import com.winterhaven_mc.deathcompass.storage.DataStoreType;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -123,14 +122,6 @@ public class CommandManager implements CommandExecutor {
 		
 		sender.sendMessage(ChatColor.GREEN + "Language: " 
 				+ ChatColor.RESET + plugin.getConfig().getString("language"));
-
-		sender.sendMessage(ChatColor.GREEN + "Storage type: " 
-				+ ChatColor.RESET + plugin.dataStore.getDisplayName());
-		
-		if (plugin.dataStore.getType().equals(DataStoreType.YAML)) {
-			sender.sendMessage(ChatColor.GREEN + "File Sync Interval: " 
-					+ ChatColor.RESET + plugin.getConfig().getString("file-sync-interval"));
-		}
 
 		sender.sendMessage(ChatColor.GREEN + "Destroy On Drop: "
 				+ ChatColor.RESET + plugin.getConfig().getString("destroy-on-drop"));

@@ -18,8 +18,10 @@ import com.winterhaven_mc.util.WorldManager;
  */
 public final class PluginMain extends JavaPlugin {
 
+	// static reference to main class
 	public static PluginMain instance;
 
+	// global debug setting read from config file
 	public Boolean debug = this.getConfig().getBoolean("debug");
 
 	public MessageManager messageManager;
