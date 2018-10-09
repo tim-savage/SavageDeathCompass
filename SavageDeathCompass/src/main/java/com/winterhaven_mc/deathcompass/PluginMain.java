@@ -14,7 +14,7 @@ import com.winterhaven_mc.util.WorldManager;
  * that points to players death location.
  * 
  * @author      Tim Savage
- * @version		1.2
+ * @version		1.13.1
  */
 public final class PluginMain extends JavaPlugin {
 
@@ -53,9 +53,9 @@ public final class PluginMain extends JavaPlugin {
 		new PlayerEventListener(this);
 	}
 
+
 	public void onDisable() {
 		dataStore.close();
 	}
 
 }
-

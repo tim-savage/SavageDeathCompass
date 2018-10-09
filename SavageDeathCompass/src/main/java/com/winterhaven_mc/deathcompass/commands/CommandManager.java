@@ -134,7 +134,7 @@ public class CommandManager implements CommandExecutor {
 		return true;
 	}
 
-	
+
 	/**
 	 * Help command
 	 * @param sender the command sender

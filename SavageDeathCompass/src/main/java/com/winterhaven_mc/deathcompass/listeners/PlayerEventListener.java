@@ -92,7 +92,6 @@ public class PlayerEventListener implements Listener {
 				}
 			}
 		}
-		
 	}
 
 	
@@ -105,7 +104,7 @@ public class PlayerEventListener implements Listener {
 		
 		Player player = event.getPlayer();
 
-		//if player world is not enabled, do nothing and return
+		// if player world is not enabled, do nothing and return
 		if (!plugin.worldManager.isEnabled(player.getWorld())) {
 			if (plugin.debug) {
 				plugin.getLogger().info("Player world " + player.getWorld().getName() + " not enabled.");
@@ -231,7 +230,7 @@ public class PlayerEventListener implements Listener {
 		if (event.isCancelled()) {
 			return;
 		}
-		
+
 		// if block is not a DeathChestBlock, do nothing and return
 		if (!(block != null && block.hasMetadata("deathchest-owner"))) {
 			return;
@@ -245,7 +244,7 @@ public class PlayerEventListener implements Listener {
 		// remove all death compasses from player inventory
 		removeDeathCompasses(player.getInventory());
 		
-		// reset compass target to home or spawn
+		// reset compass target to world spawn
 		resetDeathCompassTarget(player);
 	}
 
@@ -261,6 +260,7 @@ public class PlayerEventListener implements Listener {
 		if (event.isCancelled()) {
 			return;
 		}
+
 		Player player = event.getPlayer();
 		
 		// get itemstack that was dropped
