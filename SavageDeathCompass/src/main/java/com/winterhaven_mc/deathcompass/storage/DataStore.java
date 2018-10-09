@@ -54,6 +54,7 @@ public abstract class DataStore {
 	abstract void save();
 
 
+	@SuppressWarnings("UnusedReturnValue")
 	abstract boolean delete();
 
 	abstract boolean exists();
@@ -62,6 +63,7 @@ public abstract class DataStore {
 		return this.filename;
 	}
 
+	@SuppressWarnings("WeakerAccess")
 	public DataStoreType getType() {
 		return this.type;
 	}
@@ -70,6 +72,7 @@ public abstract class DataStore {
 	 * Get datastore name, formatted for display
 	 * @return String containing datastore name
 	 */
+	@SuppressWarnings("WeakerAccess")
 	public String getDisplayName() {
 		return this.getType().toString();
 	}
