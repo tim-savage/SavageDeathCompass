@@ -1,6 +1,7 @@
 package com.winterhaven_mc.deathcompass;
 
 import com.winterhaven_mc.deathcompass.commands.CommandManager;
+import com.winterhaven_mc.deathcompass.listeners.InventoryEventListener;
 import com.winterhaven_mc.deathcompass.listeners.PlayerEventListener;
 import com.winterhaven_mc.deathcompass.storage.DataStore;
 import com.winterhaven_mc.deathcompass.storage.DataStoreFactory;
@@ -49,8 +50,11 @@ public final class PluginMain extends JavaPlugin {
 		// instantiate command handler
 		new CommandManager(this);
 
-		// instantiate event listener
+		// instantiate player event listener
 		new PlayerEventListener(this);
+
+		// instantiate inventory event listener
+		new InventoryEventListener(this);
 	}
 
 

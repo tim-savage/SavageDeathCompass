@@ -94,10 +94,10 @@ public final class DataStoreFactory {
 				}
 			}
 			
-			List<DeathRecord> allRecords = oldDataStore.getAllRecords();
+			List<DeathCompass> allRecords = oldDataStore.getAllRecords();
 			
 			int count = 0;
-			for (DeathRecord record : allRecords) {
+			for (DeathCompass record : allRecords) {
 				newDataStore.putRecord(record);
 				count++;
 			}

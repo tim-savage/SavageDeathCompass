@@ -21,6 +21,9 @@ disabled-worlds:
 # Destroy compass on drop
 destroy-on-drop: true
 
+# Prevent placing death compass in chests or other containers
+no-chest: true
+
 # delay setting compass target after respawn (in ticks; 20 ticks = 1 second)
 target-delay: 20
 

@@ -116,10 +116,15 @@ public class CommandManager implements CommandExecutor {
 			sender.sendMessage(errorColor + "You do not have permission for this command!");
 			return true;
 		}
-		
+
 		sender.sendMessage(ChatColor.DARK_AQUA + "[" + plugin.getName() +  "] "
 				+ ChatColor.AQUA + "Version: " + ChatColor.RESET + plugin.getDescription().getVersion());
-		
+
+		if (plugin.getConfig().getBoolean("debug")) {
+			sender.sendMessage(ChatColor.GREEN + "Debug: "
+					+ ChatColor.RED + plugin.getConfig().getString("debug"));
+		}
+
 		sender.sendMessage(ChatColor.GREEN + "Language: " 
 				+ ChatColor.RESET + plugin.getConfig().getString("language"));
 
@@ -130,7 +135,8 @@ public class CommandManager implements CommandExecutor {
 				+ ChatColor.RESET + plugin.getConfig().getString("target-delay"));
 
 		sender.sendMessage(ChatColor.GREEN + "Enabled Words: "
-				+ ChatColor.RESET + plugin.worldManager.getEnabledWorldNames().toString());
+				+ ChatColor.RESET + plugin.worldManager.getEnabledWorldNames().toString()
+				+ ChatColor.RESET);
 		return true;
 	}
 

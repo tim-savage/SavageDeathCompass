@@ -86,7 +86,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 	}
 	
 	@Override
-	public DeathRecord getRecord(UUID playerUUID, String worldName) {
+	public DeathCompass getRecord(UUID playerUUID, String worldName) {
 		
 		// if key is null return null record
 		if (playerUUID == null) {
@@ -102,7 +102,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 		}
 
 		// try cache first
-		DeathRecord deathRecord = locationCache.fetchLocation(worldUID,playerUUID);
+		DeathCompass deathRecord = locationCache.fetchLocation(worldUID,playerUUID);
 
 		// if a record was returned from cache, return the record; otherwise try datastore
 		if (deathRecord != null) {
@@ -137,7 +137,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 				}
 				world = plugin.getServer().getWorld(worldName);
 				Location location = new Location(world,x,y,z);
-				deathRecord = new DeathRecord(playerUUID,location);
+				deathRecord = new DeathCompass(playerUUID,location);
 			}
 		}
 		catch (SQLException e) {
@@ -164,7 +164,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 
 
 	@Override
-	public void putRecord(DeathRecord deathRecord) {
+	public void putRecord(DeathCompass deathRecord) {
 		
 		// if record is null do nothing and return
 		if (deathRecord == null) {
@@ -224,9 +224,9 @@ class DataStoreSQLite extends DataStore implements Listener {
 		}.runTaskAsynchronously(plugin);
 	}
 	
-	List<DeathRecord> getAllRecords() {
+	List<DeathCompass> getAllRecords() {
 		
-		List<DeathRecord> returnList = new ArrayList<DeathRecord>();
+		List<DeathCompass> returnList = new ArrayList<DeathCompass>();
 
 		try {
 			PreparedStatement preparedStatement = connection.prepareStatement(Queries.getQuery("SelectAllLocations"));
@@ -265,7 +265,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 				// if playerUUID is null, do not add record to return list
 				if (playerUUID != null) {
 					Location location = new Location(world,x,y,z);
-					DeathRecord deathRecord = new DeathRecord(playerUUID,location);
+					DeathCompass deathRecord = new DeathCompass(playerUUID,location);
 					returnList.add(deathRecord);
 				}
 			}
@@ -288,7 +288,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 	}
 	
 	@Override
-	DeathRecord deleteRecord(UUID playerUUID, String worldName) {
+	DeathCompass deleteRecord(UUID playerUUID, String worldName) {
 		
 		// if key is null return null record
 		if (playerUUID == null || worldName == null || worldName.isEmpty()) {
@@ -296,7 +296,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 		}
 
 		// get destination record to be deleted, for return
-		DeathRecord deathRecord = getRecord(playerUUID,worldName);
+		DeathCompass deathRecord = getRecord(playerUUID,worldName);
 
 		try {
 			// create prepared statement

@@ -18,7 +18,7 @@ class LocationCache {
 	 * Insert death location into cache keyed by player UUID and world UID
 	 * @param deathRecord object containing player UUID and death location to cache
 	 */
-	void cacheLocation(DeathRecord deathRecord) {
+	void cacheLocation(DeathCompass deathRecord) {
 
 		// if death record (or any element) is null, do nothing and return
 		if (deathRecord == null
@@ -66,7 +66,7 @@ class LocationCache {
 	 * @param worldUID world UID to use as key
 	 * @return deathRecord containing playerUUID and death location for world
 	 */
-	DeathRecord fetchLocation(UUID playerUUID, UUID worldUID) {
+	DeathCompass fetchLocation(UUID playerUUID, UUID worldUID) {
 
 		// if any passed arguments are null, return null record
 		if (playerUUID == null || worldUID == null) {
@@ -85,7 +85,7 @@ class LocationCache {
 		}
 
 		// return record fetched from cache (may be null)
-		return new DeathRecord(playerUUID,locationCache.get(playerUUID).get(worldUID));
+		return new DeathCompass(playerUUID,locationCache.get(playerUUID).get(worldUID));
 	}
 
 

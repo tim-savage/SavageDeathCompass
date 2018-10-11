@@ -23,3 +23,6 @@ messages:
   destroy:
     enabled: true
     string: '&c%itemname% destroyed.'
+  chest-deny:
+    enabled: true
+    string: '&c%itemname% can not be placed in containers.'

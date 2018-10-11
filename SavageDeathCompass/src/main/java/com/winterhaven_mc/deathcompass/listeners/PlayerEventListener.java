@@ -1,10 +1,8 @@
 package com.winterhaven_mc.deathcompass.listeners;
 
 import com.winterhaven_mc.deathcompass.PluginMain;
-import com.winterhaven_mc.deathcompass.storage.DeathRecord;
-import org.bukkit.ChatColor;
+import com.winterhaven_mc.deathcompass.storage.DeathCompass;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -15,7 +13,6 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
@@ -64,7 +61,7 @@ public class PlayerEventListener implements Listener {
 		}
 		
 		// create new death record for player
-		DeathRecord deathRecord = new DeathRecord(player);
+		DeathCompass deathRecord = new DeathCompass(player);
 		
 		// put death record in database
 		plugin.dataStore.putRecord(deathRecord);
@@ -82,7 +79,7 @@ public class PlayerEventListener implements Listener {
 			ListIterator<ItemStack> iterator = drops.listIterator();
 
 			// create death compass stack for comparison
-			ItemStack deathCompass = createDeathCompassStack(1);
+			ItemStack deathCompass = DeathCompass.createItem();
 
 			// loop through all dropped items and remove any stacks that are death compasses
 			while (iterator.hasNext()) {
@@ -162,7 +159,7 @@ public class PlayerEventListener implements Listener {
 		}
 		
 		// create 1 compass itemstack with configured settings
-		ItemStack deathcompass = createDeathCompassStack(1);
+		ItemStack deathcompass = DeathCompass.createItem();
 		
 		// get player last death location
 		Location lastdeathloc = getDeathLocation(player);
@@ -198,8 +195,8 @@ public class PlayerEventListener implements Listener {
 			return;
 		}
 		
-		// create 1 death compass itemstack
-		ItemStack deathcompass = createDeathCompassStack(1);
+		// create DeathCompass itemstack
+		ItemStack deathcompass = DeathCompass.createItem();
 		
 		// get last death location from datastore
 		Location lastDeathLocation = getDeathLocation(player);
@@ -264,13 +261,13 @@ public class PlayerEventListener implements Listener {
 		Player player = event.getPlayer();
 		
 		// get itemstack that was dropped
-		ItemStack droppeditemstack = event.getItemDrop().getItemStack();
+		ItemStack droppedItemStack = event.getItemDrop().getItemStack();
 		
 		// create death compass itemstack for comparison
-		ItemStack dc = createDeathCompassStack(droppeditemstack.getAmount());
-		
-		// if dropped itemstack is not deathcompass or destroy-on-drop config is not true, do nothing and return 
-		if (!droppeditemstack.equals(dc) || !plugin.getConfig().getBoolean("destroy-on-drop")) {
+		ItemStack dc = DeathCompass.createItem();
+
+		// if droppedItemStack is not a DeathCompass or destroy-on-drop config is not true, do nothing and return
+		if (!droppedItemStack.isSimilar(dc) || !plugin.getConfig().getBoolean("destroy-on-drop")) {
 			return;
 		}
 		
@@ -291,17 +288,17 @@ public class PlayerEventListener implements Listener {
 		plugin.messageManager.sendPlayerMessage(player, "destroy");
 	}
 
-	
+
 	/**
 	 * Give 1 death compass to player
 	 * @param player the player being given a death compass
 	 */
 	private void giveDeathCompass(Player player) {
 		
-		// create 1 death compass itemstack
-		ItemStack deathcompass = createDeathCompassStack(1);
+		// create DeathCompass itemstack
+		ItemStack deathcompass = DeathCompass.createItem();
 		
-		// add death compass itemstack to player inventory
+		// add DeathCompass itemstack to player inventory
 		player.getInventory().addItem(deathcompass);
 		
 		// log info
@@ -315,50 +312,8 @@ public class PlayerEventListener implements Listener {
 	 * @param inventory the inventory from which to remove all death compasses
 	 */
 	private void removeDeathCompasses(Inventory inventory) {
-		ItemStack deathcompass = createDeathCompassStack(64);
+		ItemStack deathcompass = DeathCompass.createItem();
 		inventory.removeItem(deathcompass);
-	}
-
-	
-	/**
-	 * Create death compass itemstack with given quantity
-	 * @param quantity the number of items in the ItemStack being created
-	 * @return ItemStack of death compass item(s)
-	 */
-	private ItemStack createDeathCompassStack(int quantity) {
-		if (quantity > Material.COMPASS.getMaxStackSize()) {
-			quantity = Material.COMPASS.getMaxStackSize();
-		}
-		else if (quantity < 1) {
-			quantity = 1;
-		}
-		// get item name from messages file
-		String itemname = plugin.messageManager.getItemName();
-		
-		// allow '&' as color code character
-		itemname = ChatColor.translateAlternateColorCodes('&', itemname);
-		
-		// get item lore from messages file
-		List<String> itemlore = plugin.messageManager.getItemLore();
-		
-		// allow '&' as color code character
-		ArrayList<String> coloredlore = new ArrayList<String>();
-		for (String string : itemlore) {
-			string = ChatColor.translateAlternateColorCodes('&', string);
-			coloredlore.add(string);
-		}
-		
-		// create itemstack with given quantity and durability 1 (to differentiate from other compasses)
-		// NOTE: removing the custom durability, as it is not compatible with 1.8
-		// death compasses will now be identified solely by their item metadata (name and lore)
-		ItemStack dc = new ItemStack(Material.COMPASS, quantity);
-
-		// set item name and lore metadata
-		ItemMeta dcMeta = dc.getItemMeta();
-		dcMeta.setDisplayName(ChatColor.RESET + itemname);
-		dcMeta.setLore(coloredlore);
-		dc.setItemMeta(dcMeta);
-		return dc;
 	}
 
 	
@@ -406,7 +361,7 @@ public class PlayerEventListener implements Listener {
 		Location location = player.getWorld().getSpawnLocation();
 
 		// fetch death record from datastore
-		DeathRecord deathRecord = plugin.dataStore.getRecord(player.getUniqueId(),worldName);
+		DeathCompass deathRecord = plugin.dataStore.getRecord(player.getUniqueId(),worldName);
 
 		if (deathRecord != null) {
 			location = deathRecord.getLocation();
