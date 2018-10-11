@@ -11,7 +11,7 @@ import java.util.UUID;
 class LocationCache {
 
 	// death location cache by player uuid, world uid -> death location
-	private Map<UUID,Map<UUID,Location>> locationCache = new HashMap<UUID, Map<UUID, Location>>();
+	private Map<UUID,Map<UUID,Location>> locationCache = new HashMap<>();
 
 
 	/**
@@ -43,7 +43,7 @@ class LocationCache {
 		if (worldMap == null) {
 
 			// create empty world map
-			worldMap = new HashMap<UUID, Location>();
+			worldMap = new HashMap<>();
 		}
 
 		// put this location into world map

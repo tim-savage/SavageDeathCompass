@@ -23,7 +23,7 @@ public class PlayerEventListener implements Listener {
 	private final PluginMain plugin;
 
 	// player death respawn map
-	private Set<String> deathTriggeredRespawn = new HashSet<String>();
+	private Set<String> deathTriggeredRespawn = new HashSet<>();
 
 	
 	/**
@@ -166,7 +166,7 @@ public class PlayerEventListener implements Listener {
 		
 		// if player does not have at least one death compass in inventory or
 		// saved death location in current world, do nothing and return
-		if (!player.getInventory().containsAtLeast(deathcompass, 1) || 
+		if (!player.getInventory().containsAtLeast(deathcompass, 1) ||
 				lastdeathloc == null) {
 			return;
 		}
@@ -286,6 +286,16 @@ public class PlayerEventListener implements Listener {
 		
 		// send player compass destroyed message
 		plugin.messageManager.sendPlayerMessage(player, "destroy");
+	}
+
+
+	/**
+	 * Remove player from cache on player quit event
+	 * @param event event handled by this method
+	 */
+	@EventHandler
+	void onPlayerQuit(PlayerQuitEvent event) {
+		plugin.dataStore.flushCache(event.getPlayer().getUniqueId());
 	}
 
 

@@ -6,8 +6,15 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 
-public class CommandManager implements CommandExecutor {
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+
+public class CommandManager implements CommandExecutor, TabCompleter {
 	
 	private PluginMain plugin;
 	
@@ -15,7 +22,12 @@ public class CommandManager implements CommandExecutor {
 	private final static ChatColor usageColor = ChatColor.GOLD;
 	private final static ChatColor errorColor = ChatColor.RED;
 
-	
+    // constant List of subcommands
+    private final static List<String> subcommands =
+            Collections.unmodifiableList(new ArrayList<>(
+                    Arrays.asList("status", "reload", "help")));
+
+
 	/**
 	 * Class constructor
 	 * @param plugin reference to plugin main class
@@ -25,6 +37,30 @@ public class CommandManager implements CommandExecutor {
 		this.plugin = plugin;
 		plugin.getCommand("deathcompass").setExecutor(this);
 	}
+
+    /**
+     * Tab completer for SpawnStar
+     */
+    @Override
+    public final List<String> onTabComplete(final CommandSender sender, final Command command,
+                                            final String alias, final String[] args) {
+
+        // initalize return list
+        final List<String> returnList = new ArrayList<>();
+
+        // if first argument, return list of valid matching subcommands
+        if (args.length == 1) {
+
+            for (String subcommand : subcommands) {
+                if (sender.hasPermission("deathcompass." + subcommand)
+                        && subcommand.startsWith(args[0].toLowerCase())) {
+                    returnList.add(subcommand);
+                }
+            }
+        }
+        return returnList;
+    }
+
 
 	/**
 	 * Command handler
@@ -48,59 +84,22 @@ public class CommandManager implements CommandExecutor {
 			subcommand = "help";
 		}
 
-		// reload command
-		if (subcommand.equalsIgnoreCase("reload")) {
-			return reloadCommand(sender);
-		}
-
 		// status command
 		if (subcommand.equalsIgnoreCase("status")) {
 			return statusCommand(sender);
 		}
 
-		// help command
+        // reload command
+        if (subcommand.equalsIgnoreCase("reload")) {
+            return reloadCommand(sender);
+        }
+
+        // help command
 		//noinspection SimplifiableIfStatement
 		if (subcommand.equalsIgnoreCase("help")) {
 			return helpCommand(sender,args);
 		}
 		return false;
-	}
-
-	
-	/**
-	 * Reload command
-	 * @param sender the command sender
-	 * @return always returns {@code true}, to prevent display of bukkit usage string
-	 */
-	private boolean reloadCommand(CommandSender sender) {
-		
-		// if sender does not have reload permission, send error message
-		if (!sender.hasPermission("deathcompass.reload")) {
-			sender.sendMessage(errorColor + "You do not have permission for this command!");
-			return true;
-		}
-
-		// reinstall config.yml if necessary
-		plugin.saveDefaultConfig();
-
-		// reload config.yml
-		plugin.reloadConfig();
-	
-		// update debug field
-		plugin.debug = plugin.getConfig().getBoolean("debug");
-		
-		// update enabledWorlds field
-		plugin.worldManager.reload();
-	
-		// reload messages
-		plugin.messageManager.reload();
-	
-		// reload datastore
-		DataStoreFactory.reload();
-	
-		// send reloaded message to command sender
-		sender.sendMessage(ChatColor.AQUA + "[DeathCompass] config reloaded.");
-		return true;
 	}
 
 	
@@ -141,7 +140,44 @@ public class CommandManager implements CommandExecutor {
 	}
 
 
-	/**
+    /**
+     * Reload command
+     * @param sender the command sender
+     * @return always returns {@code true}, to prevent display of bukkit usage string
+     */
+    private boolean reloadCommand(CommandSender sender) {
+
+        // if sender does not have reload permission, send error message
+        if (!sender.hasPermission("deathcompass.reload")) {
+            sender.sendMessage(errorColor + "You do not have permission for this command!");
+            return true;
+        }
+
+        // reinstall config.yml if necessary
+        plugin.saveDefaultConfig();
+
+        // reload config.yml
+        plugin.reloadConfig();
+
+        // update debug field
+        plugin.debug = plugin.getConfig().getBoolean("debug");
+
+        // update enabledWorlds field
+        plugin.worldManager.reload();
+
+        // reload messages
+        plugin.messageManager.reload();
+
+        // reload datastore
+        DataStoreFactory.reload();
+
+        // send reloaded message to command sender
+        sender.sendMessage(ChatColor.AQUA + "[DeathCompass] config reloaded.");
+        return true;
+    }
+
+
+    /**
 	 * Help command
 	 * @param sender the command sender
 	 * @param args the command arguments

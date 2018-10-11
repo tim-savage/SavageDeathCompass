@@ -22,3 +22,6 @@ messages:
   destroy:
     enabled: true
     string: '&c%itemname% zerstört.'
+  chest-deny:
+    enabled: true
+    string: '&c%itemname% kann nicht in Containern platziert werden.'

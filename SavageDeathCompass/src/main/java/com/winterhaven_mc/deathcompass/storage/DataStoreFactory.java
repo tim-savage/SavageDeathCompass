@@ -118,7 +118,7 @@ public final class DataStoreFactory {
 	private static void convertAll(final DataStore newDataStore) {
 
 		// get array list of all data store types
-		ArrayList<DataStoreType> dataStoresTypes = new ArrayList<DataStoreType>(Arrays.asList(DataStoreType.values()));
+		ArrayList<DataStoreType> dataStoresTypes = new ArrayList<>(Arrays.asList(DataStoreType.values()));
 
 		// remove newDataStore from list of types to convert
 		dataStoresTypes.remove(newDataStore.getType());

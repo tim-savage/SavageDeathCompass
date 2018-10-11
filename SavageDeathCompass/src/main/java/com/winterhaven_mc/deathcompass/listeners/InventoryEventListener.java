@@ -2,6 +2,8 @@ package com.winterhaven_mc.deathcompass.listeners;
 
 import com.winterhaven_mc.deathcompass.PluginMain;
 import com.winterhaven_mc.deathcompass.storage.DeathCompass;
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.*;
@@ -41,16 +43,11 @@ public final class InventoryEventListener implements Listener {
 			return;
 		}
 
-		// if event world is disabled, do nothing and return
-		if (!plugin.worldManager.isEnabled(event.getDestination().getLocation().getWorld() )) {
-			return;
-		}
-
 		// get itemstack involved in event
 		final ItemStack itemStack = event.getItem();
 
-		// if itemstack is death compass, cancel event
-		if (DeathCompass.isDeathCompass(itemStack) && plugin.getConfig().getBoolean("no-chest")) {
+		// if itemstack is death compass and prevent-storage is configured true, cancel event
+		if (DeathCompass.isDeathCompass(itemStack) && plugin.getConfig().getBoolean("prevent-storage")) {
 			event.setCancelled(true);
 		}
 	}
@@ -68,13 +65,8 @@ public final class InventoryEventListener implements Listener {
 			return;
 		}
 
-		// if player world is disabled, do nothing and return
-		if (!plugin.worldManager.isEnabled(event.getWhoClicked().getWorld())) {
-			return;
-		}
-
-		// if no-chest is configured false, do nothing and return
-		if (!plugin.getConfig().getBoolean("no-chest")) {
+		// if prevent-storage is configured false, do nothing and return
+		if (!plugin.getConfig().getBoolean("prevent-storage")) {
 			return;
 		}
 
@@ -85,13 +77,25 @@ public final class InventoryEventListener implements Listener {
 		if (DeathCompass.isDeathCompass(event.getCurrentItem())
 				&& action.equals(InventoryAction.MOVE_TO_OTHER_INVENTORY)) {
 			event.setCancelled(true);
+
+			// send player message
+			plugin.messageManager.sendPlayerMessage(event.getWhoClicked(),"chest-deny");
+
+			// play sound
+			if (plugin.getConfig().getBoolean("sound-effects")) {
+				if (event.getWhoClicked() instanceof Player) {
+					Player player = (Player)event.getWhoClicked();
+					player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
+				}
+			}
 			return;
 		}
 
 		// prevent DeathCompass click transfer to container
 		if (DeathCompass.isDeathCompass(event.getCursor())
-				&& action.equals(InventoryAction.PLACE_ONE)
-				|| action.equals(InventoryAction.PLACE_ALL)
+				&& action.equals(InventoryAction.PLACE_ALL)
+				|| action.equals(InventoryAction.SWAP_WITH_CURSOR)
+				|| action.equals(InventoryAction.PLACE_ONE)
 				|| action.equals(InventoryAction.PLACE_SOME)) {
 
 			if (event.getRawSlot() < inventory.getSize()) {
@@ -99,6 +103,14 @@ public final class InventoryEventListener implements Listener {
 
 				// send player message
 				plugin.messageManager.sendPlayerMessage(event.getWhoClicked(),"chest-deny");
+
+				// play sound
+				if (plugin.getConfig().getBoolean("sound-effects")) {
+					if (event.getWhoClicked() instanceof Player) {
+						Player player = (Player)event.getWhoClicked();
+						player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
+					}
+				}
 			}
 		}
 	}
@@ -116,13 +128,8 @@ public final class InventoryEventListener implements Listener {
 			return;
 		}
 
-		// if player world is disabled, do nothing and return
-		if (!plugin.worldManager.isEnabled(event.getWhoClicked().getWorld())) {
-			return;
-		}
-
-		// if no-chest is configured false, do nothing and return
-		if (!plugin.getConfig().getBoolean("no-chest")) {
+		// if prevent-storage is configured false, do nothing and return
+		if (!plugin.getConfig().getBoolean("prevent-storage")) {
 			return;
 		}
 
@@ -139,6 +146,14 @@ public final class InventoryEventListener implements Listener {
 
 					// send player message
 					plugin.messageManager.sendPlayerMessage(event.getWhoClicked(),"chest-deny");
+
+					// play sound
+					if (plugin.getConfig().getBoolean("sound-effects")) {
+						if (event.getWhoClicked() instanceof Player) {
+							Player player = (Player)event.getWhoClicked();
+							player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
+						}
+					}
 					break;
 				}
 			}

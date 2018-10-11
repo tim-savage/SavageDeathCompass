@@ -103,7 +103,7 @@ final class MessageFileHelper {
 	private void installLocalizationFiles() {
 
 		// initalize List of String to store matching filenames in jar
-		List<String> fileList = new ArrayList<String>();
+		List<String> fileList = new ArrayList<>();
 
 		// get the absolute path to this plugin as URL
 		final URL pluginURL = plugin.getServer().getPluginManager().getPlugin(plugin.getName()).getClass()

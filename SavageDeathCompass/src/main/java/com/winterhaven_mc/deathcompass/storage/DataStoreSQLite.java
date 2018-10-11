@@ -3,9 +3,7 @@ package com.winterhaven_mc.deathcompass.storage;
 import com.winterhaven_mc.deathcompass.PluginMain;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
@@ -44,8 +42,6 @@ class DataStoreSQLite extends DataStore implements Listener {
 		// initialize location cache
 		locationCache = new LocationCache();
 
-		// register event handlers in this class
-		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 
 
@@ -102,7 +98,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 		}
 
 		// try cache first
-		DeathCompass deathRecord = locationCache.fetchLocation(worldUID,playerUUID);
+		DeathCompass deathRecord = locationCache.fetchLocation(playerUUID,worldUID);
 
 		// if a record was returned from cache, return the record; otherwise try datastore
 		if (deathRecord != null) {
@@ -226,7 +222,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 	
 	List<DeathCompass> getAllRecords() {
 		
-		List<DeathCompass> returnList = new ArrayList<DeathCompass>();
+		List<DeathCompass> returnList = new ArrayList<>();
 
 		try {
 			PreparedStatement preparedStatement = connection.prepareStatement(Queries.getQuery("SelectAllLocations"));
@@ -376,12 +372,9 @@ class DataStoreSQLite extends DataStore implements Listener {
 	}
 
 
-	/**
-	 * Remove player from cache on player quit event
-	 * @param event event handled by this method
-	 */
-	@EventHandler
-	void onPlayerQuit(PlayerQuitEvent event) {
-		locationCache.flushPlayerMap(event.getPlayer().getUniqueId());
+	@Override
+	public void flushCache(UUID playerUUID) {
+		locationCache.flushPlayerMap(playerUUID);
 	}
+
 }

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+
 public final class DeathCompass {
 
 	private final UUID playerUUID;
@@ -23,8 +24,8 @@ public final class DeathCompass {
 
 	/**
 	 * Class constructor
-	 * @param playerUUID the player UUID for the DeathRecord
-	 * @param location the player death location for the DeathRecord
+	 * @param playerUUID the player UUID for the DeathCompass
+	 * @param location the player death location for the DeathCompass
 	 */
 	DeathCompass(UUID playerUUID, Location location) {
 		this.playerUUID = playerUUID;
@@ -34,7 +35,7 @@ public final class DeathCompass {
 
 	/**
 	 * Class constructor
-	 * @param player the player whose UUID and location will be used to create the DeathRecord
+	 * @param player the player whose UUID and location will be used to create the DeathCompass
 	 */
 	public DeathCompass(Player player) {
 		
@@ -59,7 +60,7 @@ public final class DeathCompass {
 
 	/**
 	 * Create a DeathCompass item stack with custom display name and lore
-	 * @return ItemStack of SpawnStar items
+	 * @return ItemStack of DeathCompass
 	 */
 	public static ItemStack createItem() {
 
@@ -77,7 +78,7 @@ public final class DeathCompass {
 	/**
 	 * Check if itemStack is a DeathCompass item
 	 * @param itemStack the ItemStack to check
-	 * @return {@code true} if itemStack is a SpawnStar item, {@code false} if not
+	 * @return {@code true} if itemStack is a DeathCompass item, {@code false} if not
 	 */
 	public static boolean isDeathCompass(ItemStack itemStack) {
 
@@ -101,8 +102,8 @@ public final class DeathCompass {
 
 	/**
 	 * Set ItemMetaData on ItemStack using custom display name and lore from language file.<br>
-	 * Display name additionally has hidden itemTag to make it identifiable as a SpawnStar item.
-	 * @param itemStack the ItemStack on which to set SpawnStar MetaData
+	 * Display name additionally has hidden itemTag to make it identifiable as a DeathCompass item.
+	 * @param itemStack the ItemStack on which to set DeathCompass MetaData
 	 */
 	private static void setMetaData(ItemStack itemStack) {
 
@@ -113,7 +114,7 @@ public final class DeathCompass {
 		// allow for '&' character for color codes in name and lore
 		displayName = ChatColor.translateAlternateColorCodes('&', displayName);
 
-		ArrayList<String> coloredLore = new ArrayList<String>();
+		ArrayList<String> coloredLore = new ArrayList<>();
 
 		for (String line : configLore) {
 			coloredLore.add(ChatColor.translateAlternateColorCodes('&', line));
@@ -133,6 +134,11 @@ public final class DeathCompass {
 	}
 
 
+	/**
+	 * Encode string with color codes to create non-visible DisplayName prefix
+	 * @param s string to encode with color codes
+	 * @return encoded string
+	 */
 	@SuppressWarnings("SameParameterValue")
 	private static String hiddenString(String s) {
 		StringBuilder hidden = new StringBuilder();

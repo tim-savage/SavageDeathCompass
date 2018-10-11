@@ -47,6 +47,12 @@ public abstract class DataStore {
 	abstract DeathCompass deleteRecord(UUID playerUUID, String worldName);
 
 	/**
+	 * Remove player from storage cache
+	 * @param playerUUID player UUID to remove from storage cache
+	 */
+	abstract public void flushCache(UUID playerUUID);
+
+	/**
 	 * Close storage
 	 */
 	public abstract void close();
