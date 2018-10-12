@@ -2,6 +2,7 @@ package com.winterhaven_mc.deathcompass.listeners;
 
 import com.winterhaven_mc.deathcompass.PluginMain;
 import com.winterhaven_mc.deathcompass.storage.DeathCompass;
+import com.winterhaven_mc.deathcompass.util.Message;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
@@ -17,13 +18,14 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 
+
 public class PlayerEventListener implements Listener {
 
 	// reference to main class
 	private final PluginMain plugin;
 
-	// player death respawn map
-	private Set<String> deathTriggeredRespawn = new HashSet<>();
+	// player death respawn hash set, used to prevent giving compass on non-death respawn events
+	private Set<UUID> deathTriggeredRespawn = new HashSet<>();
 
 	
 	/**
@@ -47,28 +49,6 @@ public class PlayerEventListener implements Listener {
 	@EventHandler(priority = EventPriority.LOW)
 	public void onPlayerDeath(PlayerDeathEvent event) {
 		
-		Player player = event.getEntity();
-		String playeruuid = player.getUniqueId().toString();
-		
-		// if player world is not enabled in config, do nothing and return
-		if (!plugin.worldManager.isEnabled(player.getWorld())) {
-			return;
-		}
-		
-		// if player does not have deathcompass.use permission, do nothing and return
-		if (!player.hasPermission("deathcompass.use")) {
-			return;
-		}
-		
-		// create new death record for player
-		DeathCompass deathRecord = new DeathCompass(player);
-		
-		// put death record in database
-		plugin.dataStore.putRecord(deathRecord);
-		
-		// put player uuid in deathTriggeredRespawn hashset
-		deathTriggeredRespawn.add(playeruuid);
-		
 		// if destroy-on-drop is enabled in configuration, remove any death compasses from player drops on death
 		if (plugin.getConfig().getBoolean("destroy-on-drop")) {
 
@@ -89,6 +69,28 @@ public class PlayerEventListener implements Listener {
 				}
 			}
 		}
+
+		Player player = event.getEntity();
+		UUID playeruuid = player.getUniqueId();
+
+		// if player world is not enabled in config, do nothing and return
+		if (!plugin.worldManager.isEnabled(player.getWorld())) {
+			return;
+		}
+		
+		// if player does not have deathcompass.use permission, do nothing and return
+		if (!player.hasPermission("deathcompass.use")) {
+			return;
+		}
+		
+		// create new death record for player
+		DeathCompass deathRecord = new DeathCompass(player);
+		
+		// put death record in database
+		plugin.dataStore.putRecord(deathRecord);
+		
+		// put player uuid in deathTriggeredRespawn hashset
+		deathTriggeredRespawn.add(playeruuid);
 	}
 
 	
@@ -103,28 +105,19 @@ public class PlayerEventListener implements Listener {
 
 		// if player world is not enabled, do nothing and return
 		if (!plugin.worldManager.isEnabled(player.getWorld())) {
-			if (plugin.debug) {
-				plugin.getLogger().info("Player world " + player.getWorld().getName() + " not enabled.");
-			}
 			return;
 		}
 		
 		// if deathTriggeredRespawn hashset does not contain user uuid, do nothing and return
-		if (!deathTriggeredRespawn.contains(player.getUniqueId().toString())) {
-			if (plugin.debug) {
-				plugin.getLogger().info("player uuid not in deathTriggeredRespawn hashset.");
-			}
+		if (!deathTriggeredRespawn.contains(player.getUniqueId())) {
 			return;
 		}
 		
 		// remove player uuid from deathTriggeredRespawn hashset
-		deathTriggeredRespawn.remove(player.getUniqueId().toString());
+		deathTriggeredRespawn.remove(player.getUniqueId());
 		
 		// if player does not have deathcompass.use permission, do nothing and return
 		if (!player.hasPermission("deathcompass.use")) {
-			if (plugin.debug) {
-				plugin.getLogger().info("Player " + player.getName() + " does not have permission 'deathcompass.use'.");
-			}
 			return;
 		}
 		
@@ -135,7 +128,7 @@ public class PlayerEventListener implements Listener {
 		setDeathCompassTarget(player);
 		
 		// send player respawn message
-		plugin.messageManager.sendPlayerMessage(player, "respawn");
+		plugin.messageManager.sendPlayerMessage(player, Message.ACTION_PLAYER_RESPAWN);
 	}
 
 	
@@ -278,14 +271,14 @@ public class PlayerEventListener implements Listener {
 		if (plugin.getConfig().getBoolean("sound-effects")) {
 			player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 1);
 		}
-		
+
 		// if inventory does not contain at least 1 death compass, reset compass target
 		if (!player.getInventory().containsAtLeast(dc, 1)) {
 			resetDeathCompassTarget(player);
 		}
 		
 		// send player compass destroyed message
-		plugin.messageManager.sendPlayerMessage(player, "destroy");
+		plugin.messageManager.sendPlayerMessage(player, Message.ACTION_ITEM_DESTROY);
 	}
 
 
@@ -329,7 +322,7 @@ public class PlayerEventListener implements Listener {
 	
 	/**
 	 * Set death compass target
-	 * delay for 20 ticks to allow player to respawn
+	 * delay for configured number of ticks (default 20)  to allow player to respawn
 	 * @param player the player whose death location is being set as the compass target
 	 */
 	private void setDeathCompassTarget(final Player player) {

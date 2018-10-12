@@ -44,9 +44,9 @@ public class MessageManager {
 	 * @param sender the command sender for whom to display message
 	 * @param messageID the message identifier
 	 */
-	public void sendPlayerMessage(CommandSender sender, String messageID) {
+	public void sendPlayerMessage(CommandSender sender, Message messageID) {
 
-		if (messages.getBoolean("messages." + messageID + ".enabled")) {
+		if (messages.getBoolean("messages." + messageID.toString() + ".enabled")) {
 
 			// set some string defaults in case sender is not a player
 			String playerName = sender.getName();
@@ -71,10 +71,10 @@ public class MessageManager {
 			}
 
 			// get message string from localization file
-			String message = messages.getString("messages." + messageID + ".string");
+			String message = messages.getString("messages." + messageID.toString() + ".string");
 
 			// strip color codes
-			String itemName = messages.getString("itemname").replaceAll("[&§][0-9A-Za-zK-Ok-oRr]", "");
+			String itemName = messages.getString("ITEM_NAME").replaceAll("[&§][0-9A-Za-zK-Ok-oRr]", "");
 			playerName = playerName.replaceAll("[&§][0-9A-Za-zK-Ok-oRr]", "");
 			playerNickname = playerNickname.replaceAll("[&§][0-9A-Za-zK-Ok-oRr]", "");
 
@@ -98,7 +98,7 @@ public class MessageManager {
 	 * @return String itemname
 	 */
 	public String getItemName() {
-		return messages.getString("itemname");
+		return messages.getString("ITEM_NAME");
 	}
 
 
@@ -107,7 +107,7 @@ public class MessageManager {
 	 * @return List of strings, one string for each line of lore
 	 */
 	public List<String> getItemLore() {
-		return messages.getStringList("itemlore");
+		return messages.getStringList("ITEM_LORE");
 	}
 
 
@@ -115,10 +115,7 @@ public class MessageManager {
 	 * Reload custom message config file
 	 */
 	public void reload() {
-
-		// reload messages
 		this.messages = messageFileHelper.loadMessages();
-
 	}
 
 }

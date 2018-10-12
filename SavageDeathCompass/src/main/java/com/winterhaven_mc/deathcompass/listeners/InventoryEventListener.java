@@ -2,6 +2,7 @@ package com.winterhaven_mc.deathcompass.listeners;
 
 import com.winterhaven_mc.deathcompass.PluginMain;
 import com.winterhaven_mc.deathcompass.storage.DeathCompass;
+import com.winterhaven_mc.deathcompass.util.Message;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -43,18 +44,23 @@ public final class InventoryEventListener implements Listener {
 			return;
 		}
 
+		// if prevent-storage is configured false, do nothing and return
+		if (!plugin.getConfig().getBoolean("prevent-storage")) {
+			return;
+		}
+
 		// get itemstack involved in event
 		final ItemStack itemStack = event.getItem();
 
-		// if itemstack is death compass and prevent-storage is configured true, cancel event
-		if (DeathCompass.isDeathCompass(itemStack) && plugin.getConfig().getBoolean("prevent-storage")) {
+		// if itemstack is death compass, cancel event
+		if (DeathCompass.isDeathCompass(itemStack)) {
 			event.setCancelled(true);
 		}
 	}
 
 
 	/**
-	 * Prevent placing items in containers if configured
+	 * Prevent placing items into containers if configured
 	 * @param event the event being handled by this method
 	 */
 	@EventHandler
@@ -79,7 +85,7 @@ public final class InventoryEventListener implements Listener {
 			event.setCancelled(true);
 
 			// send player message
-			plugin.messageManager.sendPlayerMessage(event.getWhoClicked(),"chest-deny");
+			plugin.messageManager.sendPlayerMessage(event.getWhoClicked(),Message.ACTION_INVENTORY_DENY_TRANSFER);
 
 			// play sound
 			if (plugin.getConfig().getBoolean("sound-effects")) {
@@ -102,7 +108,7 @@ public final class InventoryEventListener implements Listener {
 				event.setCancelled(true);
 
 				// send player message
-				plugin.messageManager.sendPlayerMessage(event.getWhoClicked(),"chest-deny");
+				plugin.messageManager.sendPlayerMessage(event.getWhoClicked(),Message.ACTION_INVENTORY_DENY_TRANSFER);
 
 				// play sound
 				if (plugin.getConfig().getBoolean("sound-effects")) {
@@ -145,7 +151,7 @@ public final class InventoryEventListener implements Listener {
 					event.setCancelled(true);
 
 					// send player message
-					plugin.messageManager.sendPlayerMessage(event.getWhoClicked(),"chest-deny");
+					plugin.messageManager.sendPlayerMessage(event.getWhoClicked(),Message.ACTION_INVENTORY_DENY_TRANSFER);
 
 					// play sound
 					if (plugin.getConfig().getBoolean("sound-effects")) {

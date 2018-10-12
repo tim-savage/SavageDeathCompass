@@ -38,8 +38,9 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 		plugin.getCommand("deathcompass").setExecutor(this);
 	}
 
+
     /**
-     * Tab completer for SpawnStar
+     * Tab completer for DeathCompass command
      */
     @Override
     public final List<String> onTabComplete(final CommandSender sender, final Command command,

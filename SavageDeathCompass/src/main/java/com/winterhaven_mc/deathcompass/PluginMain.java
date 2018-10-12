@@ -10,6 +10,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.winterhaven_mc.util.WorldManager;
 
+
 /**
  * Bukkit plugin to give a compass on death
  * that points to players death location.

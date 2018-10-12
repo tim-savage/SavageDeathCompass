@@ -1,8 +1,8 @@
 # Item Display Name
-itemname: 'Brújula de la Muerte'
+ITEM_NAME: 'Brújula de la Muerte'
 
 # Item Lore
-itemlore:
+ITEM_LORE:
   - '&ePuntos para la ubicación'
   - '&ede su última muerte'
 
@@ -17,12 +17,12 @@ itemlore:
 # %worldname%           World name that player is in
 
 messages:
-  respawn:
+  ACTION_PLAYER_RESPAWN:
     enabled: true
     string: '&c%itemname% apunta a la ubicación de la muerte de %playernickname%, en %worldname%.'
-  destroy:
+  ACTION_ITEM_DESTROY:
     enabled: true
     string: '&c%itemname% destruido.'
-  chest-deny:
+  ACTION_INVENTORY_DENY_TRANSFER:
     enabled: true
     string: '&c%itemname% no puede ser colocado en contenedores.'

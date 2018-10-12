@@ -15,7 +15,7 @@ import java.util.zip.ZipInputStream;
 
 
 /**
- * Implements message manager for SpawnStar
+ * Implements message file helper for DeathCompass plugin
  *
  * @author      Tim Savage
  * @version		1.0
@@ -38,7 +38,6 @@ final class MessageFileHelper {
 
 		// set reference to main class
 		this.plugin = plugin;
-
 	}
 
 
@@ -90,6 +89,7 @@ final class MessageFileHelper {
 			plugin.getLogger().severe("Language file " + confirmedLanguage + ".yml  is not valid yaml.");
 		}
 
+		// return new language YamlConfiguration object
 		return newMessagesConfig;
 	}
 
@@ -134,9 +134,10 @@ final class MessageFileHelper {
 				continue;
 			}
 			plugin.saveResource(filename, false);
-			plugin.getLogger().info("Installed localization file:  " + filename);
+			plugin.getLogger().info("Installed localization file: " + filename);
 		}
 	}
+
 
 	/**
 	 * Check if a file exists for the provided IETF language tag (ex: en-US)
@@ -159,6 +160,5 @@ final class MessageFileHelper {
 		// return default language tag (en-US)
 		return "en-US";
 	}
-
 
 }

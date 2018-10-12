@@ -1,8 +1,8 @@
 # Item Display Name
-itemname: 'Tod Kompass'
+ITEM_NAME: 'Tod Kompass'
 
 # Item Lore
-itemlore:
+ITEM_LORE:
   - '&eVerweist auf den Ort'
   - '&edes letzten Todes'
 
@@ -16,12 +16,12 @@ itemlore:
 # %worldname%           World name that player is in
 
 messages:
-  respawn:
+  ACTION_PLAYER_RESPAWN:
     enabled: true
     string: '&c%itemname% zeigt die Stelle von %playernickname%s Tod in %worldname%.'
-  destroy:
+  ACTION_ITEM_DESTROY:
     enabled: true
     string: '&c%itemname% zerstört.'
-  chest-deny:
+  ACTION_INVENTORY_DENY_TRANSFER:
     enabled: true
     string: '&c%itemname% kann nicht in Containern platziert werden.'
