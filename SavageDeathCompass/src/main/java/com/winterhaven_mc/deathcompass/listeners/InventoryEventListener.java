@@ -3,7 +3,6 @@ package com.winterhaven_mc.deathcompass.listeners;
 import com.winterhaven_mc.deathcompass.PluginMain;
 import com.winterhaven_mc.deathcompass.storage.DeathCompass;
 import com.winterhaven_mc.deathcompass.util.Message;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -88,11 +87,9 @@ public final class InventoryEventListener implements Listener {
 			plugin.messageManager.sendPlayerMessage(event.getWhoClicked(),Message.ACTION_INVENTORY_DENY_TRANSFER);
 
 			// play sound
-			if (plugin.getConfig().getBoolean("sound-effects")) {
-				if (event.getWhoClicked() instanceof Player) {
-					Player player = (Player)event.getWhoClicked();
-					player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
-				}
+			if (event.getWhoClicked() instanceof Player) {
+				Player player = (Player)event.getWhoClicked();
+				plugin.soundManager.playerSound(player,"INVENTORY_DENY_TRANSFER");
 			}
 			return;
 		}
@@ -111,11 +108,9 @@ public final class InventoryEventListener implements Listener {
 				plugin.messageManager.sendPlayerMessage(event.getWhoClicked(),Message.ACTION_INVENTORY_DENY_TRANSFER);
 
 				// play sound
-				if (plugin.getConfig().getBoolean("sound-effects")) {
-					if (event.getWhoClicked() instanceof Player) {
-						Player player = (Player)event.getWhoClicked();
-						player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
-					}
+				if (event.getWhoClicked() instanceof Player) {
+					Player player = (Player)event.getWhoClicked();
+					plugin.soundManager.playerSound(player,"INVENTORY_DENY_TRANSFER");
 				}
 			}
 		}
@@ -154,11 +149,9 @@ public final class InventoryEventListener implements Listener {
 					plugin.messageManager.sendPlayerMessage(event.getWhoClicked(),Message.ACTION_INVENTORY_DENY_TRANSFER);
 
 					// play sound
-					if (plugin.getConfig().getBoolean("sound-effects")) {
-						if (event.getWhoClicked() instanceof Player) {
-							Player player = (Player)event.getWhoClicked();
-							player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
-						}
+					if (event.getWhoClicked() instanceof Player) {
+						Player player = (Player)event.getWhoClicked();
+						plugin.soundManager.playerSound(player,"INVENTORY_DENY_TRANSFER");
 					}
 					break;
 				}

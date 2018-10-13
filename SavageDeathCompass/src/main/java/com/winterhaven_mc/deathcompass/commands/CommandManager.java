@@ -169,6 +169,9 @@ public class CommandManager implements CommandExecutor, TabCompleter {
         // reload messages
         plugin.messageManager.reload();
 
+		// reload sounds
+		plugin.soundManager.reload();
+
         // reload datastore
         DataStoreFactory.reload();
 

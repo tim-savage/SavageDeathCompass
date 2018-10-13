@@ -12,6 +12,13 @@
 		<project.author>Tim Savage</project.author>
 	</properties>
 	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -45,24 +52,6 @@
 				</executions>
 			</plugin>
         </plugins>
-		<resources>
-			<resource>
-				<directory>src/main/resources</directory>
-				<includes>
-					<include>**/*</include>
-				</includes>
-				<excludes>
-					<exclude>plugin.yml</exclude>
-				</excludes>
-			</resource>
-			<resource>
-				<directory>src/main/resources</directory>
-				<filtering>true</filtering>
-				<includes>
-					<include>plugin.yml</include>
-				</includes>
-			</resource>
-		</resources>
 	</build>
 
 	<!-- Repositories -->
@@ -94,13 +83,6 @@
 			<version>1.13.1-R0.1-SNAPSHOT</version>
 		</dependency>
 
-		<!-- Multiverse-Core -->
-		<dependency>
-			<groupId>com.onarandombox.multiversecore</groupId>
-			<artifactId>Multiverse-Core</artifactId>
-			<version>2.5</version>
-		</dependency>
-
 		<!-- WorldManagerLib -->
 		<dependency>
 			<groupId>com.winterhaven-mc</groupId>
@@ -113,6 +95,13 @@
 			<groupId>com.winterhaven-mc</groupId>
 			<artifactId>string-util-lib</artifactId>
 			<version>1.0.0</version>
+		</dependency>
+
+		<!-- SoundManagerLib -->
+		<dependency>
+			<groupId>com.winterhaven-mc</groupId>
+			<artifactId>sound-manager-lib</artifactId>
+			<version>1.0.4</version>
 		</dependency>
 	</dependencies>
 </project>

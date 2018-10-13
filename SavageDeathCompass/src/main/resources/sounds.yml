@@ -1,0 +1,15 @@
+# Sound configuration file for ${name} v${version}
+
+INVENTORY_DENY_TRANSFER:
+  enabled: true
+  player-only: true
+  sound: ENTITY_VILLAGER_NO
+  volume: 1
+  pitch: 1
+
+PLAYER_DROP_COMPASS:
+  enabled: true
+  player-only: true
+  sound: ENTITY_ITEM_BREAK
+  volume: 1
+  pitch: 1
