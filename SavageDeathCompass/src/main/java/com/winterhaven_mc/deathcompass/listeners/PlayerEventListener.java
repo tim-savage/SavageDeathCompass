@@ -1,6 +1,7 @@
 package com.winterhaven_mc.deathcompass.listeners;
 
 import com.winterhaven_mc.deathcompass.PluginMain;
+import com.winterhaven_mc.deathcompass.messages.SoundId;
 import com.winterhaven_mc.deathcompass.storage.DeathCompass;
 import com.winterhaven_mc.deathcompass.messages.MessageId;
 import org.bukkit.Location;
@@ -267,7 +268,7 @@ public class PlayerEventListener implements Listener {
 		event.getItemDrop().remove();
 		
 		// play item_break sound to player if sound effects enabled in config
-		plugin.soundManager.playerSound(player,"PLAYER_DROP_COMPASS");
+		plugin.messageManager.sendPlayerSound(player, SoundId.PLAYER_DROP_COMPASS);
 
 		// if inventory does not contain at least 1 death compass, reset compass target
 		if (!player.getInventory().containsAtLeast(dc, 1)) {
