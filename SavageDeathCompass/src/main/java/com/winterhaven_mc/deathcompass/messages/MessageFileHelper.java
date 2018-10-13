@@ -1,4 +1,4 @@
-package com.winterhaven_mc.deathcompass.util;
+package com.winterhaven_mc.deathcompass.messages;
 
 import com.winterhaven_mc.deathcompass.PluginMain;
 import org.bukkit.configuration.InvalidConfigurationException;

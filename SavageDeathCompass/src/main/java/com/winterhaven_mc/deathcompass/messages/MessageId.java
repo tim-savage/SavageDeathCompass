@@ -1,6 +1,6 @@
-package com.winterhaven_mc.deathcompass.util;
+package com.winterhaven_mc.deathcompass.messages;
 
-public enum Message {
+public enum MessageId {
 
 	ACTION_PLAYER_RESPAWN,
 	ACTION_ITEM_DESTROY,

@@ -1,4 +1,4 @@
-package com.winterhaven_mc.deathcompass.util;
+package com.winterhaven_mc.deathcompass.messages;
 
 import com.winterhaven_mc.deathcompass.PluginMain;
 import com.winterhaven_mc.util.StringUtil;
@@ -44,7 +44,7 @@ public class MessageManager {
 	 * @param sender the command sender for whom to display message
 	 * @param messageID the message identifier
 	 */
-	public void sendPlayerMessage(CommandSender sender, Message messageID) {
+	public void sendPlayerMessage(CommandSender sender, MessageId messageID) {
 
 		if (messages.getBoolean("messages." + messageID.toString() + ".enabled")) {
 

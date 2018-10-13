@@ -2,7 +2,7 @@ package com.winterhaven_mc.deathcompass.listeners;
 
 import com.winterhaven_mc.deathcompass.PluginMain;
 import com.winterhaven_mc.deathcompass.storage.DeathCompass;
-import com.winterhaven_mc.deathcompass.util.Message;
+import com.winterhaven_mc.deathcompass.messages.MessageId;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -127,7 +127,7 @@ public class PlayerEventListener implements Listener {
 		setDeathCompassTarget(player);
 		
 		// send player respawn message
-		plugin.messageManager.sendPlayerMessage(player, Message.ACTION_PLAYER_RESPAWN);
+		plugin.messageManager.sendPlayerMessage(player, MessageId.ACTION_PLAYER_RESPAWN);
 	}
 
 	
@@ -275,7 +275,7 @@ public class PlayerEventListener implements Listener {
 		}
 		
 		// send player compass destroyed message
-		plugin.messageManager.sendPlayerMessage(player, Message.ACTION_ITEM_DESTROY);
+		plugin.messageManager.sendPlayerMessage(player, MessageId.ACTION_ITEM_DESTROY);
 	}
 
 

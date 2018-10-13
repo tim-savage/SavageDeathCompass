@@ -5,7 +5,7 @@ import com.winterhaven_mc.deathcompass.listeners.InventoryEventListener;
 import com.winterhaven_mc.deathcompass.listeners.PlayerEventListener;
 import com.winterhaven_mc.deathcompass.storage.DataStore;
 import com.winterhaven_mc.deathcompass.storage.DataStoreFactory;
-import com.winterhaven_mc.deathcompass.util.MessageManager;
+import com.winterhaven_mc.deathcompass.messages.MessageManager;
 import com.winterhaven_mc.util.SoundManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
