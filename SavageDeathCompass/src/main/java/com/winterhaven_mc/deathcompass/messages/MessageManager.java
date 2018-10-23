@@ -1,7 +1,7 @@
 package com.winterhaven_mc.deathcompass.messages;
 
 import com.winterhaven_mc.deathcompass.PluginMain;
-import com.winterhaven_mc.util.SoundManager;
+import com.winterhaven_mc.util.LanguageManager;
 import com.winterhaven_mc.util.StringUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -20,10 +20,7 @@ public class MessageManager {
 	private YamlConfiguration messages;
 
 	// message file helper
-	private MessageFileHelper messageFileHelper;
-
-	// sound manager
-	private SoundManager soundManager;
+	private LanguageManager languageManager;
 
 
 	/**
@@ -35,14 +32,10 @@ public class MessageManager {
 		this.plugin = plugin;
 
 		// instantiate messageFileHelper
-		this.messageFileHelper = new MessageFileHelper(plugin);
-
-		// instantiate soundManager
-		this.soundManager = new SoundManager(plugin);
+		this.languageManager = new LanguageManager(plugin);
 
 		// load messages from file
-		this.messages = messageFileHelper.loadMessages();
-
+		this.messages = languageManager.loadMessages();
 	}
 
 
@@ -101,16 +94,6 @@ public class MessageManager {
 
 
 	/**
-	 * Play sound
-	 * @param sender command sender (player) to play sound
-	 * @param soundId unique identifier that refers to sound in sounds.yml
-	 */
-	public final void sendPlayerSound(final CommandSender sender, final SoundId soundId) {
-		this.soundManager.playerSound(sender,soundId.toString());
-	}
-
-
-	/**
 	 * Get item name from language specific messages file
 	 * @return String itemname
 	 */
@@ -134,11 +117,7 @@ public class MessageManager {
 	public void reload() {
 
 		// reload messages
-		this.messages = messageFileHelper.loadMessages();
-
-		// reload sounds
-		this.soundManager.reload();
+		this.messages = languageManager.loadMessages();
 	}
 
 }
-

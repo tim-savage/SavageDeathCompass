@@ -268,7 +268,7 @@ public class PlayerEventListener implements Listener {
 		event.getItemDrop().remove();
 		
 		// play item_break sound to player if sound effects enabled in config
-		plugin.messageManager.sendPlayerSound(player, SoundId.PLAYER_DROP_COMPASS);
+		plugin.soundConfig.playSound(player, SoundId.PLAYER_DROP_COMPASS);
 
 		// if inventory does not contain at least 1 death compass, reset compass target
 		if (!player.getInventory().containsAtLeast(dc, 1)) {

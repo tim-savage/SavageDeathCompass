@@ -90,7 +90,7 @@ public final class InventoryEventListener implements Listener {
 			// play sound
 			if (event.getWhoClicked() instanceof Player) {
 				Player player = (Player)event.getWhoClicked();
-				plugin.messageManager.sendPlayerSound(player, SoundId.INVENTORY_DENY_TRANSFER);
+				plugin.soundConfig.playSound(player, SoundId.INVENTORY_DENY_TRANSFER);
 			}
 			return;
 		}
@@ -111,7 +111,7 @@ public final class InventoryEventListener implements Listener {
 				// play sound
 				if (event.getWhoClicked() instanceof Player) {
 					Player player = (Player)event.getWhoClicked();
-					plugin.messageManager.sendPlayerSound(player, SoundId.INVENTORY_DENY_TRANSFER);
+					plugin.soundConfig.playSound(player, SoundId.INVENTORY_DENY_TRANSFER);
 				}
 			}
 		}
@@ -152,7 +152,7 @@ public final class InventoryEventListener implements Listener {
 					// play sound
 					if (event.getWhoClicked() instanceof Player) {
 						Player player = (Player)event.getWhoClicked();
-						plugin.messageManager.sendPlayerSound(player, SoundId.INVENTORY_DENY_TRANSFER);
+						plugin.soundConfig.playSound(player, SoundId.INVENTORY_DENY_TRANSFER);
 					}
 					break;
 				}
