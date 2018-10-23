@@ -1,11 +1,13 @@
 package com.winterhaven_mc.deathcompass.messages;
 
 import com.winterhaven_mc.deathcompass.PluginMain;
-import com.winterhaven_mc.util.LanguageManager;
 import com.winterhaven_mc.util.StringUtil;
+import com.winterhaven_mc.util.LanguageManager;
+import com.winterhaven_mc.util.YamlLanguageManager;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.configuration.Configuration;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -17,7 +19,7 @@ public class MessageManager {
 	private PluginMain plugin;
 
 	// configuration object for messages
-	private YamlConfiguration messages;
+	private Configuration messages;
 
 	// message file helper
 	private LanguageManager languageManager;
@@ -32,7 +34,7 @@ public class MessageManager {
 		this.plugin = plugin;
 
 		// instantiate messageFileHelper
-		this.languageManager = new LanguageManager(plugin);
+		this.languageManager = new YamlLanguageManager(plugin);
 
 		// load messages from file
 		this.messages = languageManager.loadMessages();
