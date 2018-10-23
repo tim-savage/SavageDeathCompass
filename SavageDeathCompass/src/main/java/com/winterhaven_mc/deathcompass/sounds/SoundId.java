@@ -1,4 +1,4 @@
-package com.winterhaven_mc.deathcompass.messages;
+package com.winterhaven_mc.deathcompass.sounds;
 
 public enum SoundId {
 

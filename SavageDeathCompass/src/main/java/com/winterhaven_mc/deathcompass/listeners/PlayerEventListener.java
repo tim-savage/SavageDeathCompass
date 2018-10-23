@@ -1,7 +1,7 @@
 package com.winterhaven_mc.deathcompass.listeners;
 
 import com.winterhaven_mc.deathcompass.PluginMain;
-import com.winterhaven_mc.deathcompass.messages.SoundId;
+import com.winterhaven_mc.deathcompass.sounds.SoundId;
 import com.winterhaven_mc.deathcompass.storage.DeathCompass;
 import com.winterhaven_mc.deathcompass.messages.MessageId;
 import org.bukkit.Location;
