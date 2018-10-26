@@ -128,7 +128,7 @@ public class PlayerEventListener implements Listener {
 		setDeathCompassTarget(player);
 		
 		// send player respawn message
-		plugin.messageManager.sendPlayerMessage(player, MessageId.ACTION_PLAYER_RESPAWN);
+		plugin.messageManager.sendMessage(player, MessageId.ACTION_PLAYER_RESPAWN);
 	}
 
 	
@@ -276,7 +276,7 @@ public class PlayerEventListener implements Listener {
 		}
 		
 		// send player compass destroyed message
-		plugin.messageManager.sendPlayerMessage(player, MessageId.ACTION_ITEM_DESTROY);
+		plugin.messageManager.sendMessage(player, MessageId.ACTION_ITEM_DESTROY);
 	}
 
 

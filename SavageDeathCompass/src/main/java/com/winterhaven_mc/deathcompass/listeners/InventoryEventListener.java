@@ -85,7 +85,7 @@ public final class InventoryEventListener implements Listener {
 			event.setCancelled(true);
 
 			// send player message
-			plugin.messageManager.sendPlayerMessage(event.getWhoClicked(), MessageId.ACTION_INVENTORY_DENY_TRANSFER);
+			plugin.messageManager.sendMessage(event.getWhoClicked(), MessageId.ACTION_INVENTORY_DENY_TRANSFER);
 
 			// play sound
 			if (event.getWhoClicked() instanceof Player) {
@@ -106,7 +106,7 @@ public final class InventoryEventListener implements Listener {
 				event.setCancelled(true);
 
 				// send player message
-				plugin.messageManager.sendPlayerMessage(event.getWhoClicked(), MessageId.ACTION_INVENTORY_DENY_TRANSFER);
+				plugin.messageManager.sendMessage(event.getWhoClicked(), MessageId.ACTION_INVENTORY_DENY_TRANSFER);
 
 				// play sound
 				if (event.getWhoClicked() instanceof Player) {
@@ -147,7 +147,7 @@ public final class InventoryEventListener implements Listener {
 					event.setCancelled(true);
 
 					// send player message
-					plugin.messageManager.sendPlayerMessage(event.getWhoClicked(), MessageId.ACTION_INVENTORY_DENY_TRANSFER);
+					plugin.messageManager.sendMessage(event.getWhoClicked(), MessageId.ACTION_INVENTORY_DENY_TRANSFER);
 
 					// play sound
 					if (event.getWhoClicked() instanceof Player) {
