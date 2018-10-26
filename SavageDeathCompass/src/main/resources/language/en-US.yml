@@ -1,28 +1,37 @@
-# Item Display Name
-ITEM_NAME: 'Death Compass'
+# Language configuration file for ${project.name} v${project.version}
 
-# Item Lore
-ITEM_LORE:
+###########
+# Item Info
+###########
+item_info:
+  # Item Display Name
+  ITEM_NAME: 'Death Compass'
+
+  # Item Lore
+  ITEM_LORE:
   - '&ePoints to Your Last'
   - '&eDeath Location'
 
 
-# Custom Messages
-#
 # Variable substitutions:
-# %itemname%            Item name as configured above
-# %playername%          Player's full name
-# %playernickname%      Player's nickname
-# %playerdisplayname%   Player's display name, including prefix/suffix
-# %worldname%           World name that player is in
+# %ITEM_NAME%            Item name as configured above
+# %PLAYER_NAME%          Player's full name
+# %PLAYER_NICKNAME%      Player's nickname
+# %PLAYER_DISPLAYNAME%   Player's display name, including prefix/suffix
+# %WORLD_NAME%           World name that player is in
 
+##########
+# Messages
+##########
 messages:
   ACTION_PLAYER_RESPAWN:
     enabled: true
-    string: '&c%itemname% points to %playernickname%''s death location in %worldname%.'
+    string: '&c%ITEM_NAME% points to %PLAYER_NICKNAME%''s death location in %WORLD_NAME%.'
+
   ACTION_ITEM_DESTROY:
     enabled: true
-    string: '&c%itemname% destroyed.'
+    string: '&c%ITEM_NAME% destroyed.'
+
   ACTION_INVENTORY_DENY_TRANSFER:
     enabled: true
-    string: '&c%itemname% can not be placed in containers.'
+    string: '&c%ITEM_NAME% can not be placed in containers.'

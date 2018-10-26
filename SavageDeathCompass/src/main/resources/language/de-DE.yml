@@ -1,27 +1,37 @@
-# Item Display Name
-ITEM_NAME: 'Tod Kompass'
+# Language configuration file for ${project.name} v${project.version}
 
-# Item Lore
-ITEM_LORE:
+###########
+# Item Info
+###########
+item_info:
+  # Item Display Name
+  ITEM_NAME: 'Tod Kompass'
+
+  # Item Lore
+  ITEM_LORE:
   - '&eVerweist auf den Ort'
   - '&edes letzten Todes'
 
-# Custom Messages
-#
-# Variable substitutions:
-# %itemname%            Item name as configured above
-# %playername%          Player's full name
-# %playernickname%      Player's nickname
-# %playerdisplayname%   Player's display name, including prefix/suffix
-# %worldname%           World name that player is in
 
+# Variable substitutions:
+# %ITEM_NAME%            Item name as configured above
+# %PLAYER_NAME%          Player's full name
+# %PLAYER_NICKNAME%      Player's nickname
+# %PLAYER_DISPLAYNAME%   Player's display name, including prefix/suffix
+# %WORLD_NAME%           World name that player is in
+
+##########
+# Messages
+##########
 messages:
   ACTION_PLAYER_RESPAWN:
     enabled: true
-    string: '&c%itemname% zeigt die Stelle von %playernickname%s Tod in %worldname%.'
+    string: '&c%ITEM_NAME% zeigt die Stelle von %PLAYER_NICKNAME%s Tod in %WORLD_NAME%.'
+
   ACTION_ITEM_DESTROY:
     enabled: true
-    string: '&c%itemname% zerstört.'
+    string: '&c%ITEM_NAME% zerstört.'
+
   ACTION_INVENTORY_DENY_TRANSFER:
     enabled: true
-    string: '&c%itemname% kann nicht in Containern platziert werden.'
+    string: '&c%ITEM_NAME% kann nicht in Containern platziert werden.'
