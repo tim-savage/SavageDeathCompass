@@ -18,7 +18,7 @@ import com.winterhaven_mc.util.WorldManager;
  * that points to players death location.
  * 
  * @author      Tim Savage
- * @version		1.13.1
+ * @version		1.13.2
  */
 public final class PluginMain extends JavaPlugin {
 
