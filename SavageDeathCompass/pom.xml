@@ -86,6 +86,15 @@
 									<include>com.winterhaven-mc:sound-config-lib</include>
 								</includes>
 							</artifactSet>
+							<relocations>
+								<relocation>
+									<pattern>com.winterhaven_mc.util</pattern>
+									<shadedPattern>com.winterhaven_mc.deathcompass.shaded</shadedPattern>
+									<includes>
+										<include>com.winterhaven_mc.util.*</include>
+									</includes>
+								</relocation>
+							</relocations>
 						</configuration>
 					</execution>
 				</executions>
