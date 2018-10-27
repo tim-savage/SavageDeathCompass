@@ -303,8 +303,8 @@ public class PlayerEventListener implements Listener {
 		player.getInventory().addItem(deathcompass);
 		
 		// log info
-		plugin.getLogger().info(player.getName() + " was given a death compass in " + player.getWorld().getName() + ".");
-		
+		plugin.getLogger().info(player.getName() + " was given a death compass in "
+				+ player.getWorld().getName() + ".");
 	}
 
 	
