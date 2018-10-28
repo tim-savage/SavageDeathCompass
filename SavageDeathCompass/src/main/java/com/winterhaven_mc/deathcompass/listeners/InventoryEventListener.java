@@ -88,10 +88,7 @@ public final class InventoryEventListener implements Listener {
 			plugin.messageManager.sendMessage(event.getWhoClicked(), MessageId.ACTION_INVENTORY_DENY_TRANSFER);
 
 			// play sound
-			if (event.getWhoClicked() instanceof Player) {
-				Player player = (Player)event.getWhoClicked();
-				plugin.soundConfig.playSound(player, SoundId.INVENTORY_DENY_TRANSFER);
-			}
+			plugin.soundConfig.playSound(event.getWhoClicked(), SoundId.INVENTORY_DENY_TRANSFER);
 			return;
 		}
 
@@ -109,10 +106,7 @@ public final class InventoryEventListener implements Listener {
 				plugin.messageManager.sendMessage(event.getWhoClicked(), MessageId.ACTION_INVENTORY_DENY_TRANSFER);
 
 				// play sound
-				if (event.getWhoClicked() instanceof Player) {
-					Player player = (Player)event.getWhoClicked();
-					plugin.soundConfig.playSound(player, SoundId.INVENTORY_DENY_TRANSFER);
-				}
+				plugin.soundConfig.playSound(event.getWhoClicked(), SoundId.INVENTORY_DENY_TRANSFER);
 			}
 		}
 	}
@@ -140,7 +134,7 @@ public final class InventoryEventListener implements Listener {
 
 		// if itemStack is a death compass
 	    if (DeathCompass.isDeathCompass(itemStack)) {
-	
+
 			// iterate over dragged slots and if any are above max slot, cancel event
 			for (int slot : event.getRawSlots()) {
 				if (slot < inventory.getSize()) {
@@ -150,10 +144,7 @@ public final class InventoryEventListener implements Listener {
 					plugin.messageManager.sendMessage(event.getWhoClicked(), MessageId.ACTION_INVENTORY_DENY_TRANSFER);
 
 					// play sound
-					if (event.getWhoClicked() instanceof Player) {
-						Player player = (Player)event.getWhoClicked();
-						plugin.soundConfig.playSound(player, SoundId.INVENTORY_DENY_TRANSFER);
-					}
+					plugin.soundConfig.playSound(event.getWhoClicked(), SoundId.INVENTORY_DENY_TRANSFER);
 					break;
 				}
 			}
