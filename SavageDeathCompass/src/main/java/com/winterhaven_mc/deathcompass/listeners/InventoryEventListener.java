@@ -1,7 +1,7 @@
 package com.winterhaven_mc.deathcompass.listeners;
 
 import com.winterhaven_mc.deathcompass.PluginMain;
-import com.winterhaven_mc.deathcompass.messages.SoundId;
+import com.winterhaven_mc.deathcompass.sounds.SoundId;
 import com.winterhaven_mc.deathcompass.storage.DeathCompass;
 import com.winterhaven_mc.deathcompass.messages.MessageId;
 import org.bukkit.entity.Player;
@@ -85,12 +85,12 @@ public final class InventoryEventListener implements Listener {
 			event.setCancelled(true);
 
 			// send player message
-			plugin.messageManager.sendPlayerMessage(event.getWhoClicked(), MessageId.ACTION_INVENTORY_DENY_TRANSFER);
+			plugin.messageManager.sendMessage(event.getWhoClicked(), MessageId.ACTION_INVENTORY_DENY_TRANSFER);
 
 			// play sound
 			if (event.getWhoClicked() instanceof Player) {
 				Player player = (Player)event.getWhoClicked();
-				plugin.messageManager.sendPlayerSound(player, SoundId.INVENTORY_DENY_TRANSFER);
+				plugin.soundConfig.playSound(player, SoundId.INVENTORY_DENY_TRANSFER);
 			}
 			return;
 		}
@@ -106,12 +106,12 @@ public final class InventoryEventListener implements Listener {
 				event.setCancelled(true);
 
 				// send player message
-				plugin.messageManager.sendPlayerMessage(event.getWhoClicked(), MessageId.ACTION_INVENTORY_DENY_TRANSFER);
+				plugin.messageManager.sendMessage(event.getWhoClicked(), MessageId.ACTION_INVENTORY_DENY_TRANSFER);
 
 				// play sound
 				if (event.getWhoClicked() instanceof Player) {
 					Player player = (Player)event.getWhoClicked();
-					plugin.messageManager.sendPlayerSound(player, SoundId.INVENTORY_DENY_TRANSFER);
+					plugin.soundConfig.playSound(player, SoundId.INVENTORY_DENY_TRANSFER);
 				}
 			}
 		}
@@ -147,12 +147,12 @@ public final class InventoryEventListener implements Listener {
 					event.setCancelled(true);
 
 					// send player message
-					plugin.messageManager.sendPlayerMessage(event.getWhoClicked(), MessageId.ACTION_INVENTORY_DENY_TRANSFER);
+					plugin.messageManager.sendMessage(event.getWhoClicked(), MessageId.ACTION_INVENTORY_DENY_TRANSFER);
 
 					// play sound
 					if (event.getWhoClicked() instanceof Player) {
 						Player player = (Player)event.getWhoClicked();
-						plugin.messageManager.sendPlayerSound(player, SoundId.INVENTORY_DENY_TRANSFER);
+						plugin.soundConfig.playSound(player, SoundId.INVENTORY_DENY_TRANSFER);
 					}
 					break;
 				}

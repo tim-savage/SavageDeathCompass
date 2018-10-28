@@ -1,14 +1,15 @@
 package com.winterhaven_mc.deathcompass.storage;
 
 import com.winterhaven_mc.deathcompass.PluginMain;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,7 +20,7 @@ public final class DeathCompass {
 	private final Location location;
 
 	private final static PluginMain plugin = PluginMain.instance;
-	private final static String itemTag = hiddenString("DCv1");
+	private final static String itemTag = plugin.messageManager.getHiddenString("DCv1");
 
 
 	/**
@@ -96,7 +97,7 @@ public final class DeathCompass {
 		String itemDisplayName = itemStack.getItemMeta().getDisplayName();
 
 		// check that name contains hidden token
-		return !itemDisplayName.isEmpty() && itemDisplayName.startsWith(itemTag);
+		return itemDisplayName.startsWith(itemTag);
 	}
 
 
@@ -105,46 +106,34 @@ public final class DeathCompass {
 	 * Display name additionally has hidden itemTag to make it identifiable as a DeathCompass item.
 	 * @param itemStack the ItemStack on which to set DeathCompass MetaData
 	 */
-	private static void setMetaData(ItemStack itemStack) {
+	private static void setMetaData(final ItemStack itemStack) {
 
-		// retrieve item name and lore from language file file
-		String displayName = plugin.messageManager.getItemName();
-		List<String> configLore = plugin.messageManager.getItemLore();
+		// retrieve item name from language file file
+		String itemName = plugin.messageManager.getItemName();
 
-		// allow for '&' character for color codes in name and lore
-		displayName = ChatColor.translateAlternateColorCodes('&', displayName);
-
-		ArrayList<String> coloredLore = new ArrayList<>();
-
-		for (String line : configLore) {
-			coloredLore.add(ChatColor.translateAlternateColorCodes('&', line));
-		}
+		// retrieve item lore from language file file
+		//noinspection unchecked
+		List<String> itemLore = plugin.messageManager.getItemLore();
 
 		// get item metadata object
 		final ItemMeta itemMeta = itemStack.getItemMeta();
 
+		// hide item stack attributes and enchants
+		itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+		itemMeta.addItemFlags(ItemFlag.HIDE_DESTROYS);
+		itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+		itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+		itemMeta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
+		itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+
 		// set item metadata display name to value from config file
-		itemMeta.setDisplayName(itemTag + ChatColor.RESET + displayName);
+		itemMeta.setDisplayName(itemTag + ChatColor.RESET + itemName);
 
 		// set item metadata Lore to value from config file
-		itemMeta.setLore(coloredLore);
+		itemMeta.setLore(itemLore);
 
 		// save new item metadata
 		itemStack.setItemMeta(itemMeta);
-	}
-
-
-	/**
-	 * Encode string with color codes to create non-visible DisplayName prefix
-	 * @param s string to encode with color codes
-	 * @return encoded string
-	 */
-	@SuppressWarnings("SameParameterValue")
-	private static String hiddenString(String s) {
-		StringBuilder hidden = new StringBuilder();
-		for (char c : s.toCharArray())
-			hidden.append(ChatColor.COLOR_CHAR + "").append(c);
-		return hidden.toString();
 	}
 
 }

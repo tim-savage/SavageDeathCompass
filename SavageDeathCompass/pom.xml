@@ -3,14 +3,53 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.winterhaven-mc</groupId>
 	<artifactId>SavageDeathCompass</artifactId>
-	<version>1.13.1</version>
+	<version>1.13.2</version>
 	<name>SavageDeathCompass</name>
 	<url>http://dev.bukkit.org/bukkit-plugins/savagedeathcompass/</url>
 	<description>An alternative to /back on death command. On death, players are given a compass that points to their death location.</description>
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.author>Tim Savage</project.author>
 	</properties>
+
+	<repositories>
+		<repository>
+			<id>spigot-repo</id>
+			<url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
+		</repository>
+	</repositories>
+
+	<dependencies>
+		<!-- Bukkit -->
+		<dependency>
+			<groupId>org.bukkit</groupId>
+			<artifactId>bukkit</artifactId>
+			<version>1.13.2-R0.1-SNAPSHOT</version>
+		</dependency>
+
+		<!-- WorldManagerLib -->
+		<dependency>
+			<groupId>com.winterhaven-mc</groupId>
+			<artifactId>world-manager-lib</artifactId>
+			<version>1.0.6</version>
+		</dependency>
+
+		<!-- MessageManagerLib -->
+		<dependency>
+			<groupId>com.winterhaven-mc</groupId>
+			<artifactId>message-manager-lib</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+
+		<!-- SoundConfigLib -->
+		<dependency>
+			<groupId>com.winterhaven-mc</groupId>
+			<artifactId>sound-config-lib</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+	</dependencies>
+
 	<build>
 		<resources>
 			<resource>
@@ -42,66 +81,24 @@
 							<minimizeJar>true</minimizeJar>
 							<artifactSet>
 								<includes>
-									<include>com.winterhaven-mc:string-util-lib</include>
+									<include>com.winterhaven-mc:message-manager-lib</include>
 									<include>com.winterhaven-mc:world-manager-lib</include>
-									<include>com.winterhaven-mc:language-manager-lib</include>
+									<include>com.winterhaven-mc:sound-config-lib</include>
 								</includes>
 							</artifactSet>
+							<relocations>
+								<relocation>
+									<pattern>com.winterhaven_mc.util</pattern>
+									<shadedPattern>com.winterhaven_mc.deathcompass.shaded</shadedPattern>
+									<includes>
+										<include>com.winterhaven_mc.util.*</include>
+									</includes>
+								</relocation>
+							</relocations>
 						</configuration>
 					</execution>
 				</executions>
 			</plugin>
         </plugins>
 	</build>
-
-	<!-- Repositories -->
-	<repositories>
-		<repository>
-			<id>winterhaven-repo</id>
-			<url>https://nexus-winterhaven.rhcloud.com/content/groups/public/</url>
-		</repository>
-
-		<repository>
-			<!-- exclude defunct repo -->
-			<id>vault-repo</id>
-			<url>http://nexus.theyeticave.net/content/repositories/pub_releases/</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
-
-	<dependencies>
-
-		<!-- Bukkit -->
-		<dependency>
-			<groupId>org.bukkit</groupId>
-			<artifactId>bukkit</artifactId>
-			<version>1.13.1-R0.1-SNAPSHOT</version>
-		</dependency>
-
-		<!-- WorldManagerLib -->
-		<dependency>
-			<groupId>com.winterhaven-mc</groupId>
-			<artifactId>world-manager-lib</artifactId>
-			<version>1.0.1</version>
-		</dependency>
-
-		<!-- StringUtilLib -->
-		<dependency>
-			<groupId>com.winterhaven-mc</groupId>
-			<artifactId>string-util-lib</artifactId>
-			<version>1.0.2</version>
-		</dependency>
-
-		<!-- SoundManagerLib -->
-		<dependency>
-			<groupId>com.winterhaven-mc</groupId>
-			<artifactId>sound-manager-lib</artifactId>
-			<version>1.0.4</version>
-		</dependency>
-	</dependencies>
 </project>

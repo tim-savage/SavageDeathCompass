@@ -6,6 +6,8 @@ import com.winterhaven_mc.deathcompass.listeners.PlayerEventListener;
 import com.winterhaven_mc.deathcompass.storage.DataStore;
 import com.winterhaven_mc.deathcompass.storage.DataStoreFactory;
 import com.winterhaven_mc.deathcompass.messages.MessageManager;
+import com.winterhaven_mc.util.SoundConfiguration;
+import com.winterhaven_mc.util.YamlSoundConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.winterhaven_mc.util.WorldManager;
@@ -16,7 +18,7 @@ import com.winterhaven_mc.util.WorldManager;
  * that points to players death location.
  * 
  * @author      Tim Savage
- * @version		1.13.1
+ * @version		1.13.2
  */
 public final class PluginMain extends JavaPlugin {
 
@@ -27,6 +29,7 @@ public final class PluginMain extends JavaPlugin {
 	public Boolean debug = this.getConfig().getBoolean("debug");
 
 	public MessageManager messageManager;
+	public SoundConfiguration soundConfig;
 	public WorldManager worldManager;
 	public DataStore dataStore;
 
@@ -39,11 +42,14 @@ public final class PluginMain extends JavaPlugin {
 		// Save a copy of the default config.yml if file does not already exist
 		saveDefaultConfig();
 
-		// instantiate world manager
-		worldManager = new WorldManager(this);
-		
 		// instantiate message manager
 		messageManager = new MessageManager(this);
+
+		// instantiate sound config
+		soundConfig = new YamlSoundConfiguration(this);
+
+		// instantiate world manager
+		worldManager = new WorldManager(this);
 
 		// instantiate datastore
 		dataStore = DataStoreFactory.create();

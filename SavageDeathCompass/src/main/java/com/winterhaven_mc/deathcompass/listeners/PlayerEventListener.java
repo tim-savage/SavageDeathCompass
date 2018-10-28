@@ -1,7 +1,7 @@
 package com.winterhaven_mc.deathcompass.listeners;
 
 import com.winterhaven_mc.deathcompass.PluginMain;
-import com.winterhaven_mc.deathcompass.messages.SoundId;
+import com.winterhaven_mc.deathcompass.sounds.SoundId;
 import com.winterhaven_mc.deathcompass.storage.DeathCompass;
 import com.winterhaven_mc.deathcompass.messages.MessageId;
 import org.bukkit.Location;
@@ -128,7 +128,7 @@ public class PlayerEventListener implements Listener {
 		setDeathCompassTarget(player);
 		
 		// send player respawn message
-		plugin.messageManager.sendPlayerMessage(player, MessageId.ACTION_PLAYER_RESPAWN);
+		plugin.messageManager.sendMessage(player, MessageId.ACTION_PLAYER_RESPAWN);
 	}
 
 	
@@ -268,7 +268,7 @@ public class PlayerEventListener implements Listener {
 		event.getItemDrop().remove();
 		
 		// play item_break sound to player if sound effects enabled in config
-		plugin.messageManager.sendPlayerSound(player, SoundId.PLAYER_DROP_COMPASS);
+		plugin.soundConfig.playSound(player, SoundId.PLAYER_DROP_COMPASS);
 
 		// if inventory does not contain at least 1 death compass, reset compass target
 		if (!player.getInventory().containsAtLeast(dc, 1)) {
@@ -276,7 +276,7 @@ public class PlayerEventListener implements Listener {
 		}
 		
 		// send player compass destroyed message
-		plugin.messageManager.sendPlayerMessage(player, MessageId.ACTION_ITEM_DESTROY);
+		plugin.messageManager.sendMessage(player, MessageId.ACTION_ITEM_DESTROY);
 	}
 
 
@@ -303,8 +303,8 @@ public class PlayerEventListener implements Listener {
 		player.getInventory().addItem(deathcompass);
 		
 		// log info
-		plugin.getLogger().info(player.getName() + " was given a death compass in " + player.getWorld().getName() + ".");
-		
+		plugin.getLogger().info(player.getName() + " was given a death compass in "
+				+ player.getWorld().getName() + ".");
 	}
 
 	

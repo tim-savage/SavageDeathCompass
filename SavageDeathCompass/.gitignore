@@ -34,8 +34,10 @@
 
 # IntelliJ
 /out/
-
-/.idea/
+*.iml
+modules.xml
+vcs.xml
+.idea
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/
@@ -48,13 +50,6 @@ com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
 fabric.properties
-
-### Intellij Patch ###
-# Comment Reason: https://github.com/joeblau/gitignore.io/issues/186#issuecomment-215987721
-
-*.iml
-modules.xml
-vcs.xml
 
 
 ### Maven ###
