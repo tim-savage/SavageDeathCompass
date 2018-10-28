@@ -1,5 +1,6 @@
 package com.winterhaven_mc.deathcompass.listeners;
 
+
 import com.winterhaven_mc.deathcompass.PluginMain;
 import com.winterhaven_mc.deathcompass.sounds.SoundId;
 import com.winterhaven_mc.deathcompass.storage.DeathCompass;
