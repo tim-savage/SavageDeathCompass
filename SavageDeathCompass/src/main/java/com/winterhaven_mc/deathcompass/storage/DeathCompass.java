@@ -19,8 +19,11 @@ public final class DeathCompass {
 	private final UUID playerUUID;
 	private final Location location;
 
+	// reference to plugin main class
 	private final static PluginMain plugin = PluginMain.instance;
-	private final static String itemTag = plugin.messageManager.getHiddenString("DCv1");
+
+	// create itemTag string
+	private final static String itemTag = plugin.messageManager.createHiddenString("DCv1");
 
 
 	/**
