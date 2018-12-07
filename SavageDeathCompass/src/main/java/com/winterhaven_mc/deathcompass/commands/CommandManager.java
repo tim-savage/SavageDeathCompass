@@ -187,7 +187,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 	 * @param args the command arguments
 	 * @return always returns {@code true}, to prevent display of bukkit usage string
 	 */
-	private boolean helpCommand(CommandSender sender, String args[]) {
+	private boolean helpCommand(CommandSender sender, String[] args) {
 		
 		if (args.length < 1) {
 			displayUsage(sender, "all");
