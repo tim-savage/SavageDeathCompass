@@ -3,7 +3,7 @@
 ###########
 # Item Info
 ###########
-item_info:
+ITEM_INFO:
   # Item Display Name
   ITEM_NAME: '&6Tod Kompass'
 
@@ -23,7 +23,7 @@ item_info:
 ##########
 # Messages
 ##########
-messages:
+MESSAGES:
   ACTION_PLAYER_RESPAWN:
     enabled: true
     string: '&c%ITEM_NAME% zeigt die Stelle von %PLAYER_NICKNAME%s Tod in %WORLD_NAME%.'
