@@ -224,10 +224,12 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 	/**
 	 * Display command usage
 	 * @param sender the command sender
-	 * @param command the command for which to display usage
+	 * @param passedCommand the command for which to display usage
 	 */
-	private void displayUsage(final CommandSender sender, String command) {
+	private void displayUsage(final CommandSender sender, final String passedCommand) {
 	
+		String command = passedCommand;
+
 		if (command.isEmpty()) {
 			command = "all";
 		}
