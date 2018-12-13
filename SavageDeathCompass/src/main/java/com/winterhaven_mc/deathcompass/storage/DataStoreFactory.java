@@ -12,7 +12,6 @@ public final class DataStoreFactory {
 	private static PluginMain plugin = PluginMain.instance;
 
 
-
 	/**
 	 * Create new data store of given type.<br>
 	 * No parameter version used when no current datastore exists
@@ -69,7 +68,7 @@ public final class DataStoreFactory {
 	 * @param oldDataStore the old datastore to be converted from
 	 * @param newDataStore the new datastore to be converted to
 	 */
-	private static void convertDataStore(DataStore oldDataStore, DataStore newDataStore) {
+	private static void convertDataStore(final DataStore oldDataStore, final DataStore newDataStore) {
 
 		// if datastores are same type, do not convert
 		if (oldDataStore.getType().equals(newDataStore.getType())) {
