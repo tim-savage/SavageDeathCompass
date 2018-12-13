@@ -23,13 +23,13 @@ public abstract class DataStore {
 	 * @param worldName the world name for the record to be retrieved
 	 * @return death record or null if no matching record
 	 */
-	public abstract DeathCompass getRecord(UUID playerUUID, String worldName);
+	public abstract DeathCompass getRecord(final UUID playerUUID, final String worldName);
 
 	/**
 	 * Store record in datastore
 	 * @param deathRecord the DeathRecord to be stored
 	 */
-	public abstract void putRecord(DeathCompass deathRecord);
+	public abstract void putRecord(final DeathCompass deathRecord);
 
 	/**
 	 * get all records from datastore
@@ -44,13 +44,13 @@ public abstract class DataStore {
 	 * @return the DeathRecord that was deleted from datastore
 	 */
 	@SuppressWarnings("unused")
-	abstract DeathCompass deleteRecord(UUID playerUUID, String worldName);
+	abstract DeathCompass deleteRecord(final UUID playerUUID, final String worldName);
 
 	/**
 	 * Remove player from storage cache
 	 * @param playerUUID player UUID to remove from storage cache
 	 */
-	abstract public void flushCache(UUID playerUUID);
+	abstract public void flushCache(final UUID playerUUID);
 
 	/**
 	 * Close storage
@@ -87,7 +87,7 @@ public abstract class DataStore {
 		return this.initialized;
 	}
 
-	void setInitialized(boolean initialized) {
+	void setInitialized(final boolean initialized) {
 		this.initialized = initialized;
 	}
 
