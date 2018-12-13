@@ -24,7 +24,7 @@ public enum DataStoreType {
 	 * Class constructor
 	 * @param displayName the display name of the datastore type
 	 */
-	DataStoreType(String displayName) {
+	DataStoreType(final String displayName) {
 		this.displayName = displayName;
 	}
 
@@ -36,7 +36,7 @@ public enum DataStoreType {
 		return defaultType;
 	}
 
-	public static DataStoreType match(String name) {
+	public static DataStoreType match(final String name) {
 		
 		// try to match data store type to name
 		for (DataStoreType type : DataStoreType.values()) {
