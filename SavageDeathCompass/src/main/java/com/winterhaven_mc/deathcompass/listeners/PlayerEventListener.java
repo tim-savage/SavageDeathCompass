@@ -32,7 +32,7 @@ public class PlayerEventListener implements Listener {
 	 * Class constructor
 	 * @param plugin reference to main class
 	 */
-	public PlayerEventListener(PluginMain plugin) {
+	public PlayerEventListener(final PluginMain plugin) {
 
 		// set reference to main class
 		this.plugin = plugin;
@@ -47,7 +47,7 @@ public class PlayerEventListener implements Listener {
 	 * @param event the event handled by this method
 	 */
 	@EventHandler(priority = EventPriority.LOW)
-	public void onPlayerDeath(PlayerDeathEvent event) {
+	public void onPlayerDeath(final PlayerDeathEvent event) {
 		
 		// if destroy-on-drop is enabled in configuration, remove any death compasses from player drops on death
 		if (plugin.getConfig().getBoolean("destroy-on-drop")) {
@@ -99,7 +99,7 @@ public class PlayerEventListener implements Listener {
 	 * @param event the event handled by this method
 	 */
 	@EventHandler
-	public void onPlayerRespawn(PlayerRespawnEvent event) {
+	public void onPlayerRespawn(final PlayerRespawnEvent event) {
 		
 		Player player = event.getPlayer();
 
@@ -137,7 +137,7 @@ public class PlayerEventListener implements Listener {
 	 * @param event the event handled by this method
 	 */
 	@EventHandler
-	public void onPlayerJoin(PlayerJoinEvent event) {
+	public void onPlayerJoin(final PlayerJoinEvent event) {
 
 		Player player = event.getPlayer();
 		
@@ -174,7 +174,7 @@ public class PlayerEventListener implements Listener {
 	 * @param event the event handled by this method
 	 */
 	@EventHandler
-	public void onChangeWorld(PlayerChangedWorldEvent event) {
+	public void onChangeWorld(final PlayerChangedWorldEvent event) {
 
 		Player player = event.getPlayer();
 		
@@ -211,7 +211,7 @@ public class PlayerEventListener implements Listener {
 	 * @param event the event handled by this method
 	 */
 	@EventHandler
-	public void onPlayerInteract(PlayerInteractEvent event) {
+	public void onPlayerInteract(final PlayerInteractEvent event) {
 		
 		final Player player = event.getPlayer();
 		final Block block = event.getClickedBlock();
@@ -244,7 +244,7 @@ public class PlayerEventListener implements Listener {
 	 * @param event the event handled by this method
 	 */
 	@EventHandler
-	public void onItemDrop(PlayerDropItemEvent event) {
+	public void onItemDrop(final PlayerDropItemEvent event) {
 		
 		// if event is cancelled, do nothing and return
 		if (event.isCancelled()) {
@@ -285,7 +285,7 @@ public class PlayerEventListener implements Listener {
 	 * @param event event handled by this method
 	 */
 	@EventHandler
-	void onPlayerQuit(PlayerQuitEvent event) {
+	void onPlayerQuit(final PlayerQuitEvent event) {
 		plugin.dataStore.flushCache(event.getPlayer().getUniqueId());
 	}
 
@@ -294,7 +294,7 @@ public class PlayerEventListener implements Listener {
 	 * Give 1 death compass to player
 	 * @param player the player being given a death compass
 	 */
-	private void giveDeathCompass(Player player) {
+	private void giveDeathCompass(final Player player) {
 		
 		// create DeathCompass itemstack
 		ItemStack deathcompass = DeathCompass.createItem();
@@ -312,7 +312,7 @@ public class PlayerEventListener implements Listener {
 	 * Remove all death compasses from inventory
 	 * @param inventory the inventory from which to remove all death compasses
 	 */
-	private void removeDeathCompasses(Inventory inventory) {
+	private void removeDeathCompasses(final Inventory inventory) {
 		ItemStack deathcompass = DeathCompass.createItem();
 		inventory.removeItem(deathcompass);
 	}
@@ -341,7 +341,7 @@ public class PlayerEventListener implements Listener {
 	 * Reset compass target
 	 * @param player the player whose compass target is being reset
 	 */
-	private void resetDeathCompassTarget(Player player) {
+	private void resetDeathCompassTarget(final Player player) {
 		
 		// set player compass target to world spawn location
 		player.setCompassTarget(player.getWorld().getSpawnLocation());
@@ -353,7 +353,7 @@ public class PlayerEventListener implements Listener {
 	 * @param player the player whose death location is being retrieve
 	 * @return location
 	 */
-	private Location getDeathLocation(Player player) {
+	private Location getDeathLocation(final Player player) {
 		
 		// set worldname to player current world
 		String worldName = player.getWorld().getName();
