@@ -31,7 +31,7 @@ public final class DeathCompass {
 	 * @param playerUUID the player UUID for the DeathCompass
 	 * @param location the player death location for the DeathCompass
 	 */
-	DeathCompass(UUID playerUUID, Location location) {
+	DeathCompass(final UUID playerUUID, final Location location) {
 		this.playerUUID = playerUUID;
 		this.location = location;
 	}
@@ -41,7 +41,7 @@ public final class DeathCompass {
 	 * Class constructor
 	 * @param player the player whose UUID and location will be used to create the DeathCompass
 	 */
-	public DeathCompass(Player player) {
+	public DeathCompass(final Player player) {
 		
 		// set playerUUID
 		this.playerUUID = player.getUniqueId();
@@ -84,7 +84,7 @@ public final class DeathCompass {
 	 * @param itemStack the ItemStack to check
 	 * @return {@code true} if itemStack is a DeathCompass item, {@code false} if not
 	 */
-	public static boolean isDeathCompass(ItemStack itemStack) {
+	public static boolean isDeathCompass(final ItemStack itemStack) {
 
 		// if item stack is empty (null or air) return false
 		if (itemStack == null || itemStack.getType().equals(Material.AIR)) {
