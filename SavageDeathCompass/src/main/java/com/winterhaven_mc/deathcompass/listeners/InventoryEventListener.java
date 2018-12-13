@@ -93,10 +93,26 @@ public final class InventoryEventListener implements Listener {
 			return;
 		}
 
+		// prevent death compass transfer to container by swapping with other item
+		if (action.equals(InventoryAction.SWAP_WITH_CURSOR)
+					&& (DeathCompass.isDeathCompass(event.getCursor())
+					|| DeathCompass.isDeathCompass(event.getCurrentItem()))) {
+
+			if (event.getRawSlot() < inventory.getSize()) {
+				// cancel event
+				event.setCancelled(true);
+
+				// send player message
+				plugin.messageManager.sendMessage(event.getWhoClicked(), MessageId.ACTION_INVENTORY_DENY_TRANSFER);
+
+				// play sound
+				plugin.soundConfig.playSound(event.getWhoClicked(), SoundId.INVENTORY_DENY_TRANSFER);
+			}
+		}
+
 		// prevent DeathCompass click transfer to container
 		if (DeathCompass.isDeathCompass(event.getCursor())
 				&& action.equals(InventoryAction.PLACE_ALL)
-				|| action.equals(InventoryAction.SWAP_WITH_CURSOR)
 				|| action.equals(InventoryAction.PLACE_ONE)
 				|| action.equals(InventoryAction.PLACE_SOME)) {
 
