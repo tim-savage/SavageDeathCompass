@@ -32,8 +32,17 @@ public final class DeathCompass {
 	 * @param location the player death location for the DeathCompass
 	 */
 	DeathCompass(final UUID playerUUID, final Location location) {
+
+		// set playerUUID
 		this.playerUUID = playerUUID;
-		this.location = location;
+
+		// set location for this ChestBlock with defensive copy of passed location
+		this.location = new Location(location.getWorld(),
+				location.getX(),
+				location.getY(),
+				location.getZ(),
+				location.getYaw(),
+				location.getPitch());
 	}
 	
 
