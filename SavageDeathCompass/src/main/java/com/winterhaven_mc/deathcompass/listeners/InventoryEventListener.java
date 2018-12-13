@@ -20,7 +20,6 @@ public final class InventoryEventListener implements Listener {
 
 	
 	/** class constructor
-	 * 
 	 * @param plugin reference to main class
 	 */
 	public InventoryEventListener(final PluginMain plugin) {
