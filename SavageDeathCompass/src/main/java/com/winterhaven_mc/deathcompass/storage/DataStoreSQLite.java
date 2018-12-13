@@ -28,7 +28,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 	 * Class constructor
 	 * @param plugin reference to plugin main class
 	 */
-	DataStoreSQLite (PluginMain plugin) {
+	DataStoreSQLite (final PluginMain plugin) {
 
 		// reference to main class
 		this.plugin = plugin;
@@ -82,7 +82,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 	}
 	
 	@Override
-	public DeathCompass getRecord(UUID playerUUID, String worldName) {
+	public DeathCompass getRecord(final UUID playerUUID, final String worldName) {
 		
 		// if key is null return null record
 		if (playerUUID == null) {
@@ -160,7 +160,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 
 
 	@Override
-	public void putRecord(DeathCompass deathRecord) {
+	public void putRecord(final DeathCompass deathRecord) {
 		
 		// if record is null do nothing and return
 		if (deathRecord == null) {
@@ -284,7 +284,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 	}
 	
 	@Override
-	DeathCompass deleteRecord(UUID playerUUID, String worldName) {
+	DeathCompass deleteRecord(final UUID playerUUID, final String worldName) {
 		
 		// if key is null return null record
 		if (playerUUID == null || worldName == null || worldName.isEmpty()) {
@@ -373,7 +373,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 
 
 	@Override
-	public void flushCache(UUID playerUUID) {
+	public void flushCache(final UUID playerUUID) {
 		locationCache.flushPlayerMap(playerUUID);
 	}
 
