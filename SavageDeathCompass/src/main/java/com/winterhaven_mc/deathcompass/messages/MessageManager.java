@@ -18,7 +18,7 @@ public class MessageManager extends AbstractMessageManager {
 	 * Class constructor
 	 * @param plugin reference to plugin main class
 	 */
-	public MessageManager(PluginMain plugin) {
+	public MessageManager(final PluginMain plugin) {
 
 		// call super class constructor
 		//noinspection unchecked
@@ -27,7 +27,7 @@ public class MessageManager extends AbstractMessageManager {
 
 
 	@Override
-	protected Map<String,String> getDefaultReplacements(CommandSender recipient) {
+	protected Map<String,String> getDefaultReplacements(final CommandSender recipient) {
 
 		Map<String,String> replacements = new HashMap<>();
 		replacements.put("%PLAYER_NAME%",recipient.getName());
@@ -52,7 +52,7 @@ public class MessageManager extends AbstractMessageManager {
 	 * @param sender the command sender for whom to display message
 	 * @param messageId the message identifier
 	 */
-	public void sendMessage(CommandSender sender, MessageId messageId) {
+	public void sendMessage(final CommandSender sender, final MessageId messageId) {
 
 		//noinspection unchecked
 		sendMessage(sender, messageId, getDefaultReplacements(sender));
