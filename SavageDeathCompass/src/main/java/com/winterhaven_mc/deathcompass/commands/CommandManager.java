@@ -32,7 +32,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 	 * Class constructor
 	 * @param plugin reference to plugin main class
 	 */
-	public CommandManager(PluginMain plugin) {
+	public CommandManager(final PluginMain plugin) {
 		
 		this.plugin = plugin;
 		plugin.getCommand("deathcompass").setExecutor(this);
@@ -43,8 +43,10 @@ public class CommandManager implements CommandExecutor, TabCompleter {
      * Tab completer for DeathCompass command
      */
     @Override
-    public final List<String> onTabComplete(final CommandSender sender, final Command command,
-                                            final String alias, final String[] args) {
+    public final List<String> onTabComplete(final CommandSender sender,
+											final Command command,
+                                            final String alias,
+											final String[] args) {
 
         // initalize return list
         final List<String> returnList = new ArrayList<>();
@@ -67,7 +69,10 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 	 * Command handler
 	 */
 	@Override
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+	public boolean onCommand(final CommandSender sender,
+							 final Command cmd,
+							 final String label,
+							 final String[] args) {
 
 		int maxArgs = 2;
 
@@ -109,7 +114,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 	 * @param sender the command sender
 	 * @return always returns {@code true}, to prevent display of bukkit usage string
 	 */
-	private boolean statusCommand(CommandSender sender) {
+	private boolean statusCommand(final CommandSender sender) {
 		
 		// if sender does not have status permission, send message
 		if (!sender.hasPermission("deathcompass.status")) {
@@ -146,7 +151,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
      * @param sender the command sender
      * @return always returns {@code true}, to prevent display of bukkit usage string
      */
-    private boolean reloadCommand(CommandSender sender) {
+    private boolean reloadCommand(final CommandSender sender) {
 
         // if sender does not have reload permission, send error message
         if (!sender.hasPermission("deathcompass.reload")) {
@@ -187,7 +192,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 	 * @param args the command arguments
 	 * @return always returns {@code true}, to prevent display of bukkit usage string
 	 */
-	private boolean helpCommand(CommandSender sender, String[] args) {
+	private boolean helpCommand(final CommandSender sender, final String[] args) {
 		
 		if (args.length < 1) {
 			displayUsage(sender, "all");
@@ -221,7 +226,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 	 * @param sender the command sender
 	 * @param command the command for which to display usage
 	 */
-	private void displayUsage(CommandSender sender, String command) {
+	private void displayUsage(final CommandSender sender, String command) {
 	
 		if (command.isEmpty()) {
 			command = "all";
