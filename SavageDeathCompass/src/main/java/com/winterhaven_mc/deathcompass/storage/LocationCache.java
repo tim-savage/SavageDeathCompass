@@ -10,15 +10,28 @@ import java.util.UUID;
 
 class LocationCache {
 
-	// death location cache by player uuid, world uid -> death location
-	private Map<UUID,Map<UUID,Location>> locationCache = new HashMap<>();
+	private final PluginMain plugin;
+
+	// death location map by player uuid, world uid -> death location
+	private Map<UUID,Map<UUID,Location>> locationMap;
+
+
+	/**
+	 * Constructor
+	 * @param plugin passed reference ot main class
+	 */
+	LocationCache(PluginMain plugin) {
+		this.plugin = plugin;
+
+		locationMap = new HashMap<>();
+	}
 
 
 	/**
 	 * Insert death location into cache keyed by player UUID and world UID
 	 * @param deathRecord object containing player UUID and death location to cache
 	 */
-	void cacheLocation(final DeathCompass deathRecord) {
+	void put(final DeathCompass deathRecord) {
 
 		// if death record (or any element) is null, do nothing and return
 		if (deathRecord == null
@@ -37,7 +50,7 @@ class LocationCache {
 		UUID worldUID = location.getWorld().getUID();
 
 		// get world map for player
-		Map<UUID,Location> worldMap = locationCache.get(playerUUID);
+		Map<UUID,Location> worldMap = locationMap.get(playerUUID);
 
 		// if no cache entry exists for player, create new world map
 		if (worldMap == null) {
@@ -50,11 +63,11 @@ class LocationCache {
 		worldMap.put(worldUID,location);
 
 		// put world map into player map
-		locationCache.put(playerUUID,worldMap);
+		locationMap.put(playerUUID,worldMap);
 
 		// output debug message if configured
-		if (PluginMain.instance.debug) {
-			PluginMain.instance.getLogger().info("Death location cached for player UUID " + playerUUID.toString()
+		if (plugin.debug) {
+			plugin.getLogger().info("Death location cached for player UUID " + playerUUID.toString()
 					+ " in world " + worldUID.toString());
 		}
 	}
@@ -66,7 +79,7 @@ class LocationCache {
 	 * @param worldUID world UID to use as key
 	 * @return deathRecord containing playerUUID and death location for world
 	 */
-	DeathCompass fetchLocation(final UUID playerUUID, final UUID worldUID) {
+	DeathCompass get(final UUID playerUUID, final UUID worldUID) {
 
 		// if any passed arguments are null, return null record
 		if (playerUUID == null || worldUID == null) {
@@ -74,18 +87,18 @@ class LocationCache {
 		}
 
 		// if map for player does not exist, return null record
-		if (locationCache.get(playerUUID) == null) {
+		if (locationMap.get(playerUUID) == null) {
 			return null;
 		}
 
 		// output debug message if configured
-		if (PluginMain.instance.debug) {
-			PluginMain.instance.getLogger().info("Death location fetched for player UUID " + playerUUID.toString()
+		if (plugin.debug) {
+			plugin.getLogger().info("Death location fetched for player UUID " + playerUUID.toString()
 				+ " in world " + worldUID.toString());
 		}
 
 		// return record fetched from cache (may be null)
-		return new DeathCompass(playerUUID,locationCache.get(playerUUID).get(worldUID));
+		return new DeathCompass(playerUUID, locationMap.get(playerUUID).get(worldUID));
 	}
 
 
@@ -93,7 +106,7 @@ class LocationCache {
 	 * Remove player UUID from location cache
 	 * @param playerUUID the player UUID to be removed from location cache
 	 */
-	void flushPlayerMap(final UUID playerUUID) {
+	void removePlayer(final UUID playerUUID) {
 
 		// if player uuid is null, do nothing and return
 		if (playerUUID == null) {
@@ -101,11 +114,11 @@ class LocationCache {
 		}
 
 		// remove player uuid from location cache
-		locationCache.remove(playerUUID);
+		locationMap.remove(playerUUID);
 
 		// output debug message if configured
-		if (PluginMain.instance.debug) {
-			PluginMain.instance.getLogger().info("Player UUID " + playerUUID.toString() + " removed from cache.");
+		if (plugin.debug) {
+			plugin.getLogger().info("Player UUID " + playerUUID.toString() + " removed from cache.");
 		}
 	}
 }
