@@ -12,13 +12,24 @@ import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.*;
+
 
 public final class InventoryEventListener implements Listener {
 
 	// reference to main class
 	private final PluginMain plugin;
 
-	
+	// list of inventory types to allow shift-click transfers from hotbar (item goes into player inventory)
+	private final static List<InventoryType> transferAllowedTypes =
+			Collections.unmodifiableList(new ArrayList<>(
+					Arrays.asList(InventoryType.CRAFTING,
+							InventoryType.WORKBENCH,
+							InventoryType.FURNACE,
+							InventoryType.BEACON,
+							InventoryType.BREWING)));
+
+
 	/** class constructor
 	 * @param plugin reference to main class
 	 */
@@ -80,49 +91,67 @@ public final class InventoryEventListener implements Listener {
 		final InventoryAction action = event.getAction();
 
 		// prevent DeathCompass shift-click transfer to container
-		if (DeathCompass.isDeathCompass(event.getCurrentItem())
-				&& action.equals(InventoryAction.MOVE_TO_OTHER_INVENTORY)) {
-			event.setCancelled(true);
+		if (action.equals(InventoryAction.MOVE_TO_OTHER_INVENTORY)) {
 
-			// send player message
-			plugin.messageManager.sendMessage(event.getWhoClicked(), MessageId.ACTION_INVENTORY_DENY_TRANSFER);
+			// if item is death compass
+			if (DeathCompass.isDeathCompass(event.getCurrentItem())) {
 
-			// play sound
-			plugin.soundConfig.playSound(event.getWhoClicked(), SoundId.INVENTORY_DENY_TRANSFER);
-			return;
-		}
+				// if inventory type is in list, do nothing and return (allow transfer between player inventory and hotbar)
+				if (transferAllowedTypes.contains(inventory.getType())) {
+					return;
+				}
 
-		// prevent death compass transfer to container by swapping with other item
-		if (action.equals(InventoryAction.SWAP_WITH_CURSOR)
-					&& (DeathCompass.isDeathCompass(event.getCursor())
-					|| DeathCompass.isDeathCompass(event.getCurrentItem()))) {
-
-			if (event.getRawSlot() < inventory.getSize()) {
 				// cancel event
 				event.setCancelled(true);
 
 				// send player message
-				plugin.messageManager.sendMessage(event.getWhoClicked(), MessageId.ACTION_INVENTORY_DENY_TRANSFER);
+				plugin.messageManager.sendMessage(event.getWhoClicked(),
+						MessageId.ACTION_INVENTORY_DENY_TRANSFER);
 
 				// play sound
 				plugin.soundConfig.playSound(event.getWhoClicked(), SoundId.INVENTORY_DENY_TRANSFER);
 			}
+			return;
+		}
+
+		// prevent death compass transfer to container by swapping with other item
+		if (action.equals(InventoryAction.SWAP_WITH_CURSOR)) {
+
+			if (DeathCompass.isDeathCompass(event.getCursor())
+					|| DeathCompass.isDeathCompass(event.getCurrentItem())) {
+
+				if (event.getRawSlot() < inventory.getSize()) {
+					// cancel event
+					event.setCancelled(true);
+
+					// send player message
+					plugin.messageManager.sendMessage(event.getWhoClicked(),
+							MessageId.ACTION_INVENTORY_DENY_TRANSFER);
+
+					// play sound
+					plugin.soundConfig.playSound(event.getWhoClicked(), SoundId.INVENTORY_DENY_TRANSFER);
+				}
+			}
+			return;
 		}
 
 		// prevent DeathCompass click transfer to container
-		if (DeathCompass.isDeathCompass(event.getCursor())
-				&& action.equals(InventoryAction.PLACE_ALL)
-				|| action.equals(InventoryAction.PLACE_ONE)
-				|| action.equals(InventoryAction.PLACE_SOME)) {
+		if (action.equals(InventoryAction.PLACE_ONE)
+				|| action.equals(InventoryAction.PLACE_SOME)
+				|| action.equals(InventoryAction.PLACE_ALL)) {
 
-			if (event.getRawSlot() < inventory.getSize()) {
-				event.setCancelled(true);
+			if (DeathCompass.isDeathCompass(event.getCursor())) {
 
-				// send player message
-				plugin.messageManager.sendMessage(event.getWhoClicked(), MessageId.ACTION_INVENTORY_DENY_TRANSFER);
+				if (event.getRawSlot() < inventory.getSize()) {
+					event.setCancelled(true);
 
-				// play sound
-				plugin.soundConfig.playSound(event.getWhoClicked(), SoundId.INVENTORY_DENY_TRANSFER);
+					// send player message
+					plugin.messageManager.sendMessage(event.getWhoClicked(),
+							MessageId.ACTION_INVENTORY_DENY_TRANSFER);
+
+					// play sound
+					plugin.soundConfig.playSound(event.getWhoClicked(), SoundId.INVENTORY_DENY_TRANSFER);
+				}
 			}
 		}
 	}
