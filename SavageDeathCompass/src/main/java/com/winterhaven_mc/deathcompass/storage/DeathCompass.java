@@ -36,7 +36,7 @@ public final class DeathCompass {
 		// set playerUUID
 		this.playerUUID = playerUUID;
 
-		// set location for this ChestBlock with defensive copy of passed location
+		// set player death location with defensive copy of passed location
 		this.location = new Location(location.getWorld(),
 				location.getX(),
 				location.getY(),
@@ -55,8 +55,13 @@ public final class DeathCompass {
 		// set playerUUID
 		this.playerUUID = player.getUniqueId();
 
-		// set location
-		this.location = player.getLocation();
+		// set player death location with defensive copy of passed location
+		this.location = new Location(player.getLocation().getWorld(),
+				player.getLocation().getX(),
+				player.getLocation().getY(),
+				player.getLocation().getZ(),
+				player.getLocation().getYaw(),
+				player.getLocation().getPitch());
 	}
 
 	
@@ -95,13 +100,18 @@ public final class DeathCompass {
 	 */
 	public static boolean isDeathCompass(final ItemStack itemStack) {
 
-		// if item stack is empty (null or air) return false
-		if (itemStack == null || itemStack.getType().equals(Material.AIR)) {
+		// if passed ItemStack is null, return false
+		if (itemStack == null) {
+			return false;
+		}
+
+		// if item stack is not a compass return false
+		if (!itemStack.getType().equals(Material.COMPASS)) {
 			return false;
 		}
 
 		// if item stack does not have display name return false
-		if (! itemStack.getItemMeta().hasDisplayName()) {
+		if (!itemStack.getItemMeta().hasDisplayName()) {
 			return false;
 		}
 
