@@ -40,8 +40,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 		this.filename = "deathlocations.db";
 
 		// initialize location cache
-		locationCache = new LocationCache();
-
+		locationCache = new LocationCache(plugin);
 	}
 
 
@@ -98,7 +97,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 		}
 
 		// try cache first
-		DeathCompass deathRecord = locationCache.fetchLocation(playerUUID,worldUID);
+		DeathCompass deathRecord = locationCache.get(playerUUID,worldUID);
 
 		// if a record was returned from cache, return the record; otherwise try datastore
 		if (deathRecord != null) {
@@ -151,7 +150,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 
 		// if record is not null, put record in cache
 		if (deathRecord != null) {
-			locationCache.cacheLocation(deathRecord);
+			locationCache.put(deathRecord);
 		}
 
 		// return record
@@ -168,7 +167,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 		}
 
 		// cache death record
-		locationCache.cacheLocation(deathRecord);
+		locationCache.put(deathRecord);
 		
 		// get playerUUID as string
 		final String playerUUIDString = deathRecord.getPlayerUUID().toString();
@@ -374,7 +373,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 
 	@Override
 	public void flushCache(final UUID playerUUID) {
-		locationCache.flushPlayerMap(playerUUID);
+		locationCache.removePlayer(playerUUID);
 	}
 
 }
