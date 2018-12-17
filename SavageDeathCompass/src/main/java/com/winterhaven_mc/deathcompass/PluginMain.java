@@ -16,9 +16,7 @@ import com.winterhaven_mc.util.WorldManager;
 /**
  * Bukkit plugin to give a compass on death
  * that points to players death location.
- * 
- * @author      Tim Savage
- * @version		1.13.2
+ * @author Tim Savage
  */
 public final class PluginMain extends JavaPlugin {
 
@@ -34,9 +32,10 @@ public final class PluginMain extends JavaPlugin {
 	public DataStore dataStore;
 
 
+	@Override
 	public void onEnable() {
 
-		// static reference to main class
+		// set static reference to main class
 		INSTANCE = this;
 
 		// Save a copy of the default config.yml if file does not already exist
@@ -65,6 +64,7 @@ public final class PluginMain extends JavaPlugin {
 	}
 
 
+	@Override
 	public void onDisable() {
 		dataStore.close();
 	}
