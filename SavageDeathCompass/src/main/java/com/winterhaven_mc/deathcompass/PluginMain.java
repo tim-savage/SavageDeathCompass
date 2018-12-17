@@ -23,7 +23,7 @@ import com.winterhaven_mc.util.WorldManager;
 public final class PluginMain extends JavaPlugin {
 
 	// static reference to main class
-	public static PluginMain instance;
+	public static PluginMain INSTANCE;
 
 	// global debug setting read from config file
 	public Boolean debug = this.getConfig().getBoolean("debug");
@@ -37,7 +37,7 @@ public final class PluginMain extends JavaPlugin {
 	public void onEnable() {
 
 		// static reference to main class
-		instance = this;
+		INSTANCE = this;
 
 		// Save a copy of the default config.yml if file does not already exist
 		saveDefaultConfig();

@@ -14,7 +14,7 @@ public enum DataStoreType {
 		}
 	};
 
-	private final static PluginMain plugin = PluginMain.instance;
+	private final static PluginMain plugin = PluginMain.INSTANCE;
 
 	private String displayName;
 

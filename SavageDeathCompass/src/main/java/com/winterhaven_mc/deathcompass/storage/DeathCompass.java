@@ -20,7 +20,7 @@ public final class DeathCompass {
 	private final Location location;
 
 	// reference to plugin main class
-	private final static PluginMain plugin = PluginMain.instance;
+	private final static PluginMain plugin = PluginMain.INSTANCE;
 
 	// create itemTag string
 	private final static String itemTag = plugin.messageManager.createHiddenString("DCv1");
