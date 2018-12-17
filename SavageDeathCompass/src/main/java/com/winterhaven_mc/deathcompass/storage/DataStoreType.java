@@ -70,7 +70,7 @@ public enum DataStoreType {
 
 
 	/**
-	 * Abstract method for static constructor method
+	 * Abstract method for DataStore creation method
 	 * @return new DataStore
 	 */
 	public abstract DataStore create();
