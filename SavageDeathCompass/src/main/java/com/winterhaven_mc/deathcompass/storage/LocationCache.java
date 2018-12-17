@@ -1,6 +1,5 @@
 package com.winterhaven_mc.deathcompass.storage;
 
-import com.winterhaven_mc.deathcompass.PluginMain;
 import org.bukkit.Location;
 
 import java.util.HashMap;
@@ -10,19 +9,16 @@ import java.util.UUID;
 
 class LocationCache {
 
-	private final PluginMain plugin;
-
 	// death location map by player uuid, world uid -> death location
 	private Map<UUID,Map<UUID,Location>> locationMap;
 
 
 	/**
 	 * Constructor
-	 * @param plugin passed reference ot main class
 	 */
-	LocationCache(PluginMain plugin) {
-		this.plugin = plugin;
+	LocationCache() {
 
+		// initialize location map
 		locationMap = new HashMap<>();
 	}
 
@@ -34,9 +30,7 @@ class LocationCache {
 	void put(final DeathCompass deathRecord) {
 
 		// if death record (or any element) is null, do nothing and return
-		if (deathRecord == null
-				|| deathRecord.getPlayerUUID() == null
-				|| deathRecord.getLocation() == null) {
+		if (deathRecord == null) {
 			return;
 		}
 
@@ -64,12 +58,6 @@ class LocationCache {
 
 		// put world map into player map
 		locationMap.put(playerUUID,worldMap);
-
-		// output debug message if configured
-		if (plugin.debug) {
-			plugin.getLogger().info("Death location cached for player UUID " + playerUUID.toString()
-					+ " in world " + worldUID.toString());
-		}
 	}
 
 
@@ -77,7 +65,7 @@ class LocationCache {
 	 * Fetch death record for player uuid / world uuid
 	 * @param playerUUID player UUID to use as key
 	 * @param worldUID world UID to use as key
-	 * @return deathRecord containing playerUUID and death location for world
+	 * @return deathRecord containing playerUUID and death location for world, or null if no record exists
 	 */
 	DeathCompass get(final UUID playerUUID, final UUID worldUID) {
 
@@ -89,12 +77,6 @@ class LocationCache {
 		// if map for player does not exist, return null record
 		if (locationMap.get(playerUUID) == null) {
 			return null;
-		}
-
-		// output debug message if configured
-		if (plugin.debug) {
-			plugin.getLogger().info("Death location fetched for player UUID " + playerUUID.toString()
-				+ " in world " + worldUID.toString());
 		}
 
 		// return record fetched from cache (may be null)
@@ -115,10 +97,5 @@ class LocationCache {
 
 		// remove player uuid from location cache
 		locationMap.remove(playerUUID);
-
-		// output debug message if configured
-		if (plugin.debug) {
-			plugin.getLogger().info("Player UUID " + playerUUID.toString() + " removed from cache.");
-		}
 	}
 }
