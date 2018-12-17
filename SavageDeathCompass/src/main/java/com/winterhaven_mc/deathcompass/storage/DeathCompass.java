@@ -50,7 +50,9 @@ public final class DeathCompass {
 	 * @return UUID for death compass player
 	 */
 	final UUID getPlayerUUID() {
-		return playerUUID;
+
+		// return defensive copy of playerUUID
+		return new UUID(this.playerUUID.getMostSignificantBits(), this.playerUUID.getLeastSignificantBits());
 	}
 
 
@@ -59,7 +61,14 @@ public final class DeathCompass {
 	 * @return Location for death compass player death location
 	 */
 	public final Location getLocation() {
-		return location;
+
+		// return defensive copy of location
+		return new Location(this.location.getWorld(),
+				this.location.getX(),
+				this.location.getY(),
+				this.location.getZ(),
+				this.location.getYaw(),
+				this.location.getPitch());
 	}
 
 
