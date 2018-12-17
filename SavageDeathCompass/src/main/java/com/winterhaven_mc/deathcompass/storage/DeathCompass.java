@@ -49,7 +49,7 @@ public final class DeathCompass {
 	 * Getter for playerUUID
 	 * @return UUID for death compass player
 	 */
-	UUID getPlayerUUID() {
+	final UUID getPlayerUUID() {
 		return playerUUID;
 	}
 
@@ -58,7 +58,7 @@ public final class DeathCompass {
 	 * Getter for location
 	 * @return Location for death compass player death location
 	 */
-	public Location getLocation() {
+	public final Location getLocation() {
 		return location;
 	}
 
