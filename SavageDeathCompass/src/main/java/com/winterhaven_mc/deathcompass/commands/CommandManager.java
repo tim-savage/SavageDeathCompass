@@ -181,7 +181,9 @@ public class CommandManager implements CommandExecutor, TabCompleter {
         DataStoreFactory.reload();
 
         // send reloaded message to command sender
-        sender.sendMessage(ChatColor.AQUA + "[DeathCompass] config reloaded.");
+        sender.sendMessage(ChatColor.DARK_AQUA + "[" + plugin.getName() +  "] "
+				+ ChatColor.AQUA +  " configuration reloaded.");
+
         return true;
     }
 

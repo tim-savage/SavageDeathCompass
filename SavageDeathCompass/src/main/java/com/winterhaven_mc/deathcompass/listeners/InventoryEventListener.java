@@ -1,6 +1,5 @@
 package com.winterhaven_mc.deathcompass.listeners;
 
-
 import com.winterhaven_mc.deathcompass.PluginMain;
 import com.winterhaven_mc.deathcompass.sounds.SoundId;
 import com.winterhaven_mc.deathcompass.storage.DeathCompass;
@@ -9,7 +8,6 @@ import com.winterhaven_mc.deathcompass.messages.MessageId;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.*;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
@@ -20,14 +18,14 @@ public final class InventoryEventListener implements Listener {
 	// reference to main class
 	private final PluginMain plugin;
 
-	// list of inventory types to allow shift-click transfers from hotbar (item goes into player inventory)
-	private final static Set<InventoryType> transferAllowedTypes =
+	// set of inventory types to allow shift-click transfers from hotbar (item goes into player inventory)
+	private final static Set<InventoryType> SHIFT_CLICK_ALLOWED_TYPES =
 			Collections.unmodifiableSet(new HashSet<>(
-					Arrays.asList(InventoryType.CRAFTING,
-							InventoryType.WORKBENCH,
+					Arrays.asList(InventoryType.BEACON,
+							InventoryType.BREWING,
+							InventoryType.CRAFTING,
 							InventoryType.FURNACE,
-							InventoryType.BEACON,
-							InventoryType.BREWING)));
+							InventoryType.WORKBENCH)));
 
 
 	/** class constructor
@@ -87,17 +85,17 @@ public final class InventoryEventListener implements Listener {
 			return;
 		}
 
-		final Inventory inventory = event.getInventory();
+		// get inventory action
 		final InventoryAction action = event.getAction();
 
 		// prevent DeathCompass shift-click transfer to container
 		if (action.equals(InventoryAction.MOVE_TO_OTHER_INVENTORY)) {
 
-			// if item is death compass
+			// check if current item is death compass
 			if (DeathCompass.isDeathCompass(event.getCurrentItem())) {
 
-				// if inventory type is in list, do nothing and return (allow transfer between player inventory and hotbar)
-				if (transferAllowedTypes.contains(inventory.getType())) {
+				// if inventory type is in set, do nothing and return (allow transfer between player inventory and hotbar)
+				if (SHIFT_CLICK_ALLOWED_TYPES.contains(event.getInventory().getType())) {
 					return;
 				}
 
@@ -117,10 +115,13 @@ public final class InventoryEventListener implements Listener {
 		// prevent death compass transfer to container by swapping with other item
 		if (action.equals(InventoryAction.SWAP_WITH_CURSOR)) {
 
+			// check if cursor item or current item is death compass
 			if (DeathCompass.isDeathCompass(event.getCursor())
 					|| DeathCompass.isDeathCompass(event.getCurrentItem())) {
 
-				if (event.getRawSlot() < inventory.getSize()) {
+				// check if slot is in container inventory
+				if (event.getRawSlot() < event.getInventory().getSize()) {
+
 					// cancel event
 					event.setCancelled(true);
 
@@ -140,9 +141,13 @@ public final class InventoryEventListener implements Listener {
 				|| action.equals(InventoryAction.PLACE_SOME)
 				|| action.equals(InventoryAction.PLACE_ALL)) {
 
+			// check if cursor item is a death compass
 			if (DeathCompass.isDeathCompass(event.getCursor())) {
 
-				if (event.getRawSlot() < inventory.getSize()) {
+				// check if slot is in container inventory
+				if (event.getRawSlot() < event.getInventory().getSize()) {
+
+					// cancel event
 					event.setCancelled(true);
 
 					// send player message
@@ -174,15 +179,12 @@ public final class InventoryEventListener implements Listener {
 			return;
 		}
 
-		final Inventory inventory = event.getInventory();
-		final ItemStack itemStack = event.getOldCursor();
-
-		// if itemStack is a death compass
-	    if (DeathCompass.isDeathCompass(itemStack)) {
+		// if cursor item is a death compass
+	    if (DeathCompass.isDeathCompass(event.getOldCursor())) {
 
 			// iterate over dragged slots and if any are above max slot, cancel event
 			for (int slot : event.getRawSlots()) {
-				if (slot < inventory.getSize()) {
+				if (slot < event.getInventory().getSize()) {
 					event.setCancelled(true);
 
 					// send player message

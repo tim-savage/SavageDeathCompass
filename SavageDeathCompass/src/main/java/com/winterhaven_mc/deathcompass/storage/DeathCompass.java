@@ -5,7 +5,6 @@ import com.winterhaven_mc.deathcompass.PluginMain;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -20,7 +19,7 @@ public final class DeathCompass {
 	private final Location location;
 
 	// reference to plugin main class
-	private final static PluginMain plugin = PluginMain.instance;
+	private final static PluginMain plugin = PluginMain.INSTANCE;
 
 	// create itemTag string
 	private final static String itemTag = plugin.messageManager.createHiddenString("DCv1");
@@ -31,10 +30,10 @@ public final class DeathCompass {
 	 * @param playerUUID the player UUID for the DeathCompass
 	 * @param location the player death location for the DeathCompass
 	 */
-	DeathCompass(final UUID playerUUID, final Location location) {
+	public DeathCompass(final UUID playerUUID, final Location location) {
 
-		// set playerUUID
-		this.playerUUID = playerUUID;
+		// set playerUUID with defensive copy of passed UUID
+		this.playerUUID = new UUID(playerUUID.getMostSignificantBits(), playerUUID.getLeastSignificantBits());
 
 		// set player death location with defensive copy of passed location
 		this.location = new Location(location.getWorld(),
@@ -47,30 +46,18 @@ public final class DeathCompass {
 	
 
 	/**
-	 * Class constructor
-	 * @param player the player whose UUID and location will be used to create the DeathCompass
+	 * Getter for playerUUID
+	 * @return UUID for death compass player
 	 */
-	public DeathCompass(final Player player) {
-		
-		// set playerUUID
-		this.playerUUID = player.getUniqueId();
-
-		// set player death location with defensive copy of passed location
-		this.location = new Location(player.getLocation().getWorld(),
-				player.getLocation().getX(),
-				player.getLocation().getY(),
-				player.getLocation().getZ(),
-				player.getLocation().getYaw(),
-				player.getLocation().getPitch());
-	}
-
-	
-	@SuppressWarnings("WeakerAccess")
-	public UUID getPlayerUUID() {
+	UUID getPlayerUUID() {
 		return playerUUID;
 	}
 
-	
+
+	/**
+	 * Getter for location
+	 * @return Location for death compass player death location
+	 */
 	public Location getLocation() {
 		return location;
 	}

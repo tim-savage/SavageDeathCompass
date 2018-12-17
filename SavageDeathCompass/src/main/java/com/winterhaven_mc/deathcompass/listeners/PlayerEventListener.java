@@ -84,7 +84,7 @@ public class PlayerEventListener implements Listener {
 		}
 		
 		// create new death record for player
-		DeathCompass deathRecord = new DeathCompass(player);
+		DeathCompass deathRecord = new DeathCompass(player.getUniqueId(), player.getLocation());
 		
 		// put death record in database
 		plugin.dataStore.putRecord(deathRecord);

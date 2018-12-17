@@ -5,28 +5,32 @@ main: com.winterhaven_mc.deathcompass.PluginMain
 api-version: 1.13
 
 commands:
-   deathcompass:
-      description: show DeathCompass settings or reload configuration file
-      usage: /deathcompass help [command]
-      permission: deathcompass.admin
-      permission-message: You don't have the required deathcompass.admin permission.
+  deathcompass:
+    description: show DeathCompass settings or reload configuration file
+    usage: /deathcompass [command]
+    permission-message: You don't have the required <command> permission.
 
 permissions:
-    deathcompass.use:
-        description: Give player a compass on death and set compass target to last death location
-        default: true
+  deathcompass.use:
+    description: Give player a compass on death and set compass target to last death location
+    default: true
         
-    deathcompass.reload:
-        description: Reload DeathCompass config file
-        default: op
+  deathcompass.help:
+    description: View DeathCompass help
+    default: op
 
-    deathcompass.status:
-        description: View DeathCompass settings
-        default: op
+  deathcompass.reload:
+    description: Reload DeathCompass config file
+    default: op
 
-    deathcompass.admin:
-        description: DeathCompass admin commands
-        default: op
-        children:
-            deathcompass.status: true
-            deathcompass.reload: true        
+  deathcompass.status:
+    description: View DeathCompass settings
+    default: op
+
+  deathcompass.admin:
+    description: DeathCompass admin commands
+    default: op
+    children:
+      deathcompass.help: true
+      deathcompass.status: true
+      deathcompass.reload: true
