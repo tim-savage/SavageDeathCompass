@@ -19,7 +19,7 @@ public final class InventoryEventListener implements Listener {
 	private final PluginMain plugin;
 
 	// set of inventory types to allow shift-click transfers from hotbar (item goes into player inventory)
-	private final static Set<InventoryType> TRANSFER_ALLOWED_TYPES =
+	private final static Set<InventoryType> SHIFT_CLICK_ALLOWED_TYPES =
 			Collections.unmodifiableSet(new HashSet<>(
 					Arrays.asList(InventoryType.BEACON,
 							InventoryType.BREWING,
@@ -95,7 +95,7 @@ public final class InventoryEventListener implements Listener {
 			if (DeathCompass.isDeathCompass(event.getCurrentItem())) {
 
 				// if inventory type is in set, do nothing and return (allow transfer between player inventory and hotbar)
-				if (TRANSFER_ALLOWED_TYPES.contains(event.getInventory().getType())) {
+				if (SHIFT_CLICK_ALLOWED_TYPES.contains(event.getInventory().getType())) {
 					return;
 				}
 
