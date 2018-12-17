@@ -20,7 +20,7 @@ public enum DataStoreType {
 	// DataStoreType display name
 	private String displayName;
 
-	// default type
+	// default DataStoreType
 	private final static DataStoreType defaultType = DataStoreType.SQLITE;
 
 
