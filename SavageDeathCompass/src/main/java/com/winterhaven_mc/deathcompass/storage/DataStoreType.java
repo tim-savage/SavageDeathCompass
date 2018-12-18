@@ -2,6 +2,10 @@ package com.winterhaven_mc.deathcompass.storage;
 
 import com.winterhaven_mc.deathcompass.PluginMain;
 
+
+/**
+ * Enum of datastore types available for use by plugin
+ */
 public enum DataStoreType {
 
 	SQLITE("SQLite") {
