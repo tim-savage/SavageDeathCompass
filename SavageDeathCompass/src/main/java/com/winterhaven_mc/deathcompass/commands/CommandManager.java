@@ -14,6 +14,9 @@ import java.util.Collections;
 import java.util.List;
 
 
+/**
+ * Implements commands for this plugin
+ */
 public class CommandManager implements CommandExecutor, TabCompleter {
 	
 	private PluginMain plugin;
@@ -22,8 +25,8 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 	private final static ChatColor usageColor = ChatColor.GOLD;
 	private final static ChatColor errorColor = ChatColor.RED;
 
-    // constant List of subcommands
-    private final static List<String> subcommands =
+    // constant List of SUBCOMMANDS
+    private final static List<String> SUBCOMMANDS =
             Collections.unmodifiableList(new ArrayList<>(
                     Arrays.asList("status", "reload", "help")));
 
@@ -51,10 +54,10 @@ public class CommandManager implements CommandExecutor, TabCompleter {
         // initalize return list
         final List<String> returnList = new ArrayList<>();
 
-        // if first argument, return list of valid matching subcommands
+        // if first argument, return list of valid matching SUBCOMMANDS
         if (args.length == 1) {
 
-            for (String subcommand : subcommands) {
+            for (String subcommand : SUBCOMMANDS) {
                 if (sender.hasPermission("deathcompass." + subcommand)
                         && subcommand.startsWith(args[0].toLowerCase())) {
                     returnList.add(subcommand);
