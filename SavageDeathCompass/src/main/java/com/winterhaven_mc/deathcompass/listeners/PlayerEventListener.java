@@ -19,6 +19,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.*;
 
 
+/**
+ * Implements event handlers for player events
+ */
 public class PlayerEventListener implements Listener {
 
 	// reference to main class

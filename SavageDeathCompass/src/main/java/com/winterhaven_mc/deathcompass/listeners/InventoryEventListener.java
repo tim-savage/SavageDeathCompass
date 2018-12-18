@@ -13,6 +13,9 @@ import org.bukkit.inventory.ItemStack;
 import java.util.*;
 
 
+/**
+ * Implements event handlers for inventory events
+ */
 public final class InventoryEventListener implements Listener {
 
 	// reference to main class
