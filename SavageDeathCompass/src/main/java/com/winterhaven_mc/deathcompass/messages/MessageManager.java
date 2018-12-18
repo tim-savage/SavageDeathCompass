@@ -11,6 +11,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 
+/**
+ * Handles sending configurable messages to players and console.
+ * performs placeholder substitutions in message strings.
+ */
 public class MessageManager extends AbstractMessageManager {
 
 

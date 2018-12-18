@@ -40,7 +40,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 		this.filename = "deathlocations.db";
 
 		// initialize location cache
-		locationCache = new LocationCache(plugin);
+		locationCache = new LocationCache();
 	}
 
 

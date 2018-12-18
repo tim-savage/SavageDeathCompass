@@ -1,5 +1,8 @@
 package com.winterhaven_mc.deathcompass.messages;
 
+/**
+ * Provides constant identifiers for configurable messages sent to players
+ */
 public enum MessageId {
 
 	ACTION_PLAYER_RESPAWN,

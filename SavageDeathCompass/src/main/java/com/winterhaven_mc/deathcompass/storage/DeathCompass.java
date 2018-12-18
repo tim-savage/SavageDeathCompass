@@ -13,9 +13,16 @@ import java.util.List;
 import java.util.UUID;
 
 
+/**
+ * Implements a death compass object for storage.
+ * Provides static methods for creating and checking for death compass ItemStacks.
+ */
 public final class DeathCompass {
 
+	// player UUID
 	private final UUID playerUUID;
+
+	// player death location
 	private final Location location;
 
 	// reference to plugin main class
@@ -49,8 +56,10 @@ public final class DeathCompass {
 	 * Getter for playerUUID
 	 * @return UUID for death compass player
 	 */
-	UUID getPlayerUUID() {
-		return playerUUID;
+	final UUID getPlayerUUID() {
+
+		// return defensive copy of playerUUID
+		return new UUID(this.playerUUID.getMostSignificantBits(), this.playerUUID.getLeastSignificantBits());
 	}
 
 
@@ -58,8 +67,15 @@ public final class DeathCompass {
 	 * Getter for location
 	 * @return Location for death compass player death location
 	 */
-	public Location getLocation() {
-		return location;
+	public final Location getLocation() {
+
+		// return defensive copy of location
+		return new Location(this.location.getWorld(),
+				this.location.getX(),
+				this.location.getY(),
+				this.location.getZ(),
+				this.location.getYaw(),
+				this.location.getPitch());
 	}
 
 
