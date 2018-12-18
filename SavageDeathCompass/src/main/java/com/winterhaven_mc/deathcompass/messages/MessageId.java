@@ -1,7 +1,7 @@
 package com.winterhaven_mc.deathcompass.messages;
 
 /**
- * Enum provides constant identifiers for configurable messages sent to players
+ * Provides constant identifiers for configurable messages sent to players
  */
 public enum MessageId {
 
