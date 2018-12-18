@@ -29,7 +29,7 @@ public abstract class DataStore {
 	 * Get record from datastore
 	 * @param playerUUID the player UUID for the record to be retrieved
 	 * @param worldName the world name for the record to be retrieved
-	 * @return death record or null if no matching record
+	 * @return death record or null if no matching record found
 	 */
 	public abstract DeathCompass getRecord(final UUID playerUUID, final String worldName);
 
