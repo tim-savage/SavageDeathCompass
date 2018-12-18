@@ -7,6 +7,9 @@ import java.util.Map;
 import java.util.UUID;
 
 
+/**
+ * Implements in memory cache for datastore objects
+ */
 final class LocationCache {
 
 	// death location map by player uuid, world uid -> death location
