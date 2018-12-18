@@ -13,9 +13,16 @@ import java.util.List;
 import java.util.UUID;
 
 
+/**
+ * Implements a death compass object for storage.
+ * Provides static methods for creating and checking for death compass ItemStacks.
+ */
 public final class DeathCompass {
 
+	// player UUID
 	private final UUID playerUUID;
+
+	// player death location
 	private final Location location;
 
 	// reference to plugin main class
