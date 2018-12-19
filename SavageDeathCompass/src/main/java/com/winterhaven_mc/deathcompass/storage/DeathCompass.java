@@ -39,8 +39,8 @@ public final class DeathCompass {
 	 */
 	public DeathCompass(final UUID playerUUID, final Location location) {
 
-		// set playerUUID with defensive copy of passed UUID
-		this.playerUUID = new UUID(playerUUID.getMostSignificantBits(), playerUUID.getLeastSignificantBits());
+		// set playerUUID
+		this.playerUUID = playerUUID;
 
 		// set player death location with defensive copy of passed location
 		this.location = new Location(location.getWorld(),
@@ -58,8 +58,8 @@ public final class DeathCompass {
 	 */
 	final UUID getPlayerUUID() {
 
-		// return defensive copy of playerUUID
-		return new UUID(this.playerUUID.getMostSignificantBits(), this.playerUUID.getLeastSignificantBits());
+		// return playerUUID
+		return this.playerUUID;
 	}
 
 
