@@ -4,6 +4,7 @@ import com.winterhaven_mc.deathcompass.PluginMain;
 import com.winterhaven_mc.deathcompass.sounds.SoundId;
 import com.winterhaven_mc.deathcompass.storage.DeathCompass;
 import com.winterhaven_mc.deathcompass.messages.MessageId;
+
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -229,7 +230,7 @@ public class PlayerEventListener implements Listener {
 			return;
 		}
 		
-		// if deathchest owner is not player, do nothing and return
+		// if death chest owner is not player, do nothing and return
 		if (!block.getMetadata("deathchest-owner").get(0).asString().equals(player.getUniqueId().toString())) {
 			return;
 		}
@@ -358,7 +359,7 @@ public class PlayerEventListener implements Listener {
 	 */
 	private Location getDeathLocation(final Player player) {
 		
-		// set worldname to player current world
+		// set worldName to player current world
 		String worldName = player.getWorld().getName();
 	
 		// set location to world spawn location

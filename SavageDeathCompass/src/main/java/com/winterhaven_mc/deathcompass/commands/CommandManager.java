@@ -51,7 +51,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                                             final String alias,
 											final String[] args) {
 
-        // initalize return list
+        // initialize return list
         final List<String> returnList = new ArrayList<>();
 
         // if first argument, return list of valid matching SUBCOMMANDS
