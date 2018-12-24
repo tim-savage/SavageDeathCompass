@@ -30,7 +30,7 @@ public class PlayerEventListener implements Listener {
 	private final PluginMain plugin;
 
 	// player death respawn hash set, used to prevent giving compass on non-death respawn events
-	private Set<UUID> deathTriggeredRespawn = ConcurrentHashMap.newKeySet();
+	private final Set<UUID> deathTriggeredRespawn = ConcurrentHashMap.newKeySet();
 
 	
 	/**
