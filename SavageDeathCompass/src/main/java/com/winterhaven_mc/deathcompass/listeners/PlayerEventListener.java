@@ -94,7 +94,7 @@ public class PlayerEventListener implements Listener {
 		// put death record in database
 		plugin.dataStore.putRecord(deathRecord);
 		
-		// put player uuid in deathTriggeredRespawn hashset
+		// put player uuid in deathTriggeredRespawn set
 		deathTriggeredRespawn.add(playeruuid);
 	}
 
@@ -113,12 +113,12 @@ public class PlayerEventListener implements Listener {
 			return;
 		}
 		
-		// if deathTriggeredRespawn hashset does not contain user uuid, do nothing and return
+		// if deathTriggeredRespawn set does not contain user uuid, do nothing and return
 		if (!deathTriggeredRespawn.contains(player.getUniqueId())) {
 			return;
 		}
 		
-		// remove player uuid from deathTriggeredRespawn hashset
+		// remove player uuid from deathTriggeredRespawn set
 		deathTriggeredRespawn.remove(player.getUniqueId());
 		
 		// if player does not have deathcompass.use permission, do nothing and return
