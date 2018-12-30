@@ -13,7 +13,7 @@ import java.util.UUID;
 final class LocationCache {
 
 	// death location map by player uuid, world uid -> death location
-	private Map<UUID,Map<UUID,Location>> locationMap;
+	private Map<UUID, Map<UUID, Location>> locationMap;
 
 
 	/**
@@ -28,6 +28,7 @@ final class LocationCache {
 
 	/**
 	 * Insert death location into cache keyed by player UUID and world UID
+	 *
 	 * @param deathRecord object containing player UUID and death location to cache
 	 */
 	final void put(final DeathCompass deathRecord) {
@@ -47,7 +48,7 @@ final class LocationCache {
 		UUID worldUID = location.getWorld().getUID();
 
 		// get world map for player
-		Map<UUID,Location> worldMap = locationMap.get(playerUUID);
+		Map<UUID, Location> worldMap = locationMap.get(playerUUID);
 
 		// if no cache entry exists for player, create new world map
 		if (worldMap == null) {
@@ -57,17 +58,18 @@ final class LocationCache {
 		}
 
 		// put this location into world map
-		worldMap.put(worldUID,location);
+		worldMap.put(worldUID, location);
 
 		// put world map into player map
-		locationMap.put(playerUUID,worldMap);
+		locationMap.put(playerUUID, worldMap);
 	}
 
 
 	/**
 	 * Fetch death record for player uuid / world uuid
+	 *
 	 * @param playerUUID player UUID to use as key
-	 * @param worldUID world UID to use as key
+	 * @param worldUID   world UID to use as key
 	 * @return deathRecord containing playerUUID and death location for world, or null if no record exists
 	 */
 	final DeathCompass get(final UUID playerUUID, final UUID worldUID) {
@@ -89,6 +91,7 @@ final class LocationCache {
 
 	/**
 	 * Remove player UUID from location cache
+	 *
 	 * @param playerUUID the player UUID to be removed from location cache
 	 */
 	final void removePlayer(final UUID playerUUID) {
@@ -101,4 +104,5 @@ final class LocationCache {
 		// remove player uuid from location cache
 		locationMap.remove(playerUUID);
 	}
+
 }

@@ -31,21 +31,24 @@ public final class InventoryEventListener implements Listener {
 							InventoryType.WORKBENCH)));
 
 
-	/** class constructor
+	/**
+	 * class constructor
+	 *
 	 * @param plugin reference to main class
 	 */
 	public InventoryEventListener(final PluginMain plugin) {
-		
+
 		// set reference to main class
 		this.plugin = plugin;
-		
+
 		// register event handlers in this class
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 
-	
+
 	/**
 	 * Prevent hoppers from inserting DeathCompass items into containers
+	 *
 	 * @param event the event being handled by this method
 	 */
 	@EventHandler
@@ -73,6 +76,7 @@ public final class InventoryEventListener implements Listener {
 
 	/**
 	 * Prevent placing items into containers if configured
+	 *
 	 * @param event the event being handled by this method
 	 */
 	@EventHandler
@@ -167,6 +171,7 @@ public final class InventoryEventListener implements Listener {
 
 	/**
 	 * Prevent placing items in death chests if configured
+	 *
 	 * @param event the event being handled by this method
 	 */
 	@EventHandler
@@ -183,7 +188,7 @@ public final class InventoryEventListener implements Listener {
 		}
 
 		// if cursor item is a death compass
-	    if (DeathCompass.isDeathCompass(event.getOldCursor())) {
+		if (DeathCompass.isDeathCompass(event.getOldCursor())) {
 
 			// iterate over dragged slots and if any are above max slot, cancel event
 			for (int slot : event.getRawSlots()) {
@@ -198,7 +203,7 @@ public final class InventoryEventListener implements Listener {
 					break;
 				}
 			}
-	    }
+		}
 	}
 
 }

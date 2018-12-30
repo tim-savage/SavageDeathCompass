@@ -8,6 +8,7 @@ import com.winterhaven_mc.deathcompass.storage.DataStoreFactory;
 import com.winterhaven_mc.deathcompass.messages.MessageManager;
 import com.winterhaven_mc.util.SoundConfiguration;
 import com.winterhaven_mc.util.YamlSoundConfiguration;
+
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.winterhaven_mc.util.WorldManager;
@@ -16,6 +17,7 @@ import com.winterhaven_mc.util.WorldManager;
 /**
  * Bukkit plugin to give a compass on death
  * that points to players death location.
+ *
  * @author Tim Savage
  */
 public final class PluginMain extends JavaPlugin {

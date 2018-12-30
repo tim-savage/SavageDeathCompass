@@ -1,8 +1,9 @@
 package com.winterhaven_mc.deathcompass.storage;
 
 import com.winterhaven_mc.deathcompass.PluginMain;
-import org.bukkit.Location;
+
 import org.bukkit.World;
+import org.bukkit.Location;
 import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -17,25 +18,27 @@ class DataStoreSQLite extends DataStore implements Listener {
 
 	// reference to main class
 	private final PluginMain plugin;
-	
+
 	// database connection object
 	private Connection connection;
 
 	// location cache
 	private LocationCache locationCache;
 
+
 	/**
 	 * Class constructor
+	 *
 	 * @param plugin reference to plugin main class
 	 */
-	DataStoreSQLite (final PluginMain plugin) {
+	DataStoreSQLite(final PluginMain plugin) {
 
 		// reference to main class
 		this.plugin = plugin;
-		
+
 		// set datastore type
 		this.type = DataStoreType.SQLITE;
-		
+
 		// set filename
 		this.filename = "deathlocations.db";
 
@@ -46,7 +49,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 
 	@Override
 	void initialize() throws SQLException, ClassNotFoundException {
-		
+
 		// if data store is already initialized, do nothing and return
 		if (this.isInitialized()) {
 			if (plugin.debug) {
@@ -57,7 +60,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 
 		// register the driver
 		final String jdbcDriverName = "org.sqlite.JDBC";
-		
+
 		Class.forName(jdbcDriverName);
 
 		// create database url
@@ -79,10 +82,11 @@ class DataStoreSQLite extends DataStore implements Listener {
 		}
 
 	}
-	
+
+
 	@Override
 	public DeathCompass getRecord(final UUID playerUUID, final String worldName) {
-		
+
 		// if key is null return null record
 		if (playerUUID == null) {
 			return null;
@@ -97,7 +101,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 		}
 
 		// try cache first
-		DeathCompass deathRecord = locationCache.get(playerUUID,worldUID);
+		DeathCompass deathRecord = locationCache.get(playerUUID, worldUID);
 
 		// if a record was returned from cache, return the record; otherwise try datastore
 		if (deathRecord != null) {
@@ -107,7 +111,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 		// convert playerUUID to string
 		String playerUUIDString = playerUUID.toString();
 		World world;
-		
+
 		try {
 			PreparedStatement preparedStatement = connection.prepareStatement(Queries.getQuery("SelectLocation"));
 
@@ -119,20 +123,20 @@ class DataStoreSQLite extends DataStore implements Listener {
 
 			// only zero or one record can match the unique key
 			if (rs.next()) {
-			
+
 				// get stored world and coordinates
 				preparedStatement.setString(1, playerUUIDString);
 				Double x = rs.getDouble("x");
 				Double y = rs.getDouble("y");
 				Double z = rs.getDouble("z");
-				
+
 				if (plugin.getServer().getWorld(worldName) == null) {
 					plugin.getLogger().warning("Stored world not found!");
 					return null;
 				}
 				world = plugin.getServer().getWorld(worldName);
-				Location location = new Location(world,x,y,z);
-				deathRecord = new DeathCompass(playerUUID,location);
+				Location location = new Location(world, x, y, z);
+				deathRecord = new DeathCompass(playerUUID, location);
 			}
 		}
 		catch (SQLException e) {
@@ -140,7 +144,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 			// output simple error message
 			plugin.getLogger().warning("An error occured while fetching a record from the SQLite database.");
 			plugin.getLogger().warning(e.getLocalizedMessage());
-			
+
 			// if debugging is enabled, output stack trace
 			if (plugin.debug) {
 				e.getStackTrace();
@@ -160,7 +164,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 
 	@Override
 	public void putRecord(final DeathCompass deathRecord) {
-		
+
 		// if record is null do nothing and return
 		if (deathRecord == null) {
 			return;
@@ -168,26 +172,27 @@ class DataStoreSQLite extends DataStore implements Listener {
 
 		// cache death record
 		locationCache.put(deathRecord);
-		
+
 		// get playerUUID as string
 		final String playerUUIDString = deathRecord.getPlayerUUID().toString();
-		
+
 		// get location
 		final Location location = deathRecord.getLocation();
-		
+
 		// get world name
 		String testWorldName;
 
 		// test that world in destination location is valid
 		try {
 			testWorldName = location.getWorld().getName();
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			plugin.getLogger().warning("An error occured while inserting"
 					+ " a record in the SQLite database. World invalid!");
 			return;
 		}
 		final String worldName = testWorldName;
-		
+
 		new BukkitRunnable() {
 			@Override
 			public void run() {
@@ -214,13 +219,15 @@ class DataStoreSQLite extends DataStore implements Listener {
 					if (plugin.debug) {
 						e.getStackTrace();
 					}
-				}		
+				}
 			}
 		}.runTaskAsynchronously(plugin);
 	}
-	
+
+
+	@Override
 	List<DeathCompass> getAllRecords() {
-		
+
 		List<DeathCompass> returnList = new ArrayList<>();
 
 		try {
@@ -236,31 +243,33 @@ class DataStoreSQLite extends DataStore implements Listener {
 				Double x = rs.getDouble("x");
 				Double y = rs.getDouble("y");
 				Double z = rs.getDouble("z");
-				
+
 				World world;
-				
+
 				try {
 					world = plugin.getServer().getWorld(worldName);
-				} catch (Exception e) {
-					plugin.getLogger().warning("Stored record has invalid world: " 
+				}
+				catch (Exception e) {
+					plugin.getLogger().warning("Stored record has invalid world: "
 							+ worldName + ". Skipping record.");
 					continue;
 				}
-				
+
 				// convert key string to UUID
 				UUID playerUUID = null;
 				try {
 					playerUUID = UUID.fromString(key);
-				} catch (Exception e) {
+				}
+				catch (Exception e) {
 					if (plugin.debug) {
 						plugin.getLogger().warning("Player UUID in datastore is invalid!");
 					}
 				}
-				
+
 				// if playerUUID is null, do not add record to return list
 				if (playerUUID != null) {
-					Location location = new Location(world,x,y,z);
-					DeathCompass deathRecord = new DeathCompass(playerUUID,location);
+					Location location = new Location(world, x, y, z);
+					DeathCompass deathRecord = new DeathCompass(playerUUID, location);
 					returnList.add(deathRecord);
 				}
 			}
@@ -279,19 +288,20 @@ class DataStoreSQLite extends DataStore implements Listener {
 
 		// return results
 		return returnList;
-		
+
 	}
-	
+
+
 	@Override
 	DeathCompass deleteRecord(final UUID playerUUID, final String worldName) {
-		
+
 		// if key is null return null record
 		if (playerUUID == null || worldName == null || worldName.isEmpty()) {
 			return null;
 		}
 
 		// get destination record to be deleted, for return
-		DeathCompass deathRecord = getRecord(playerUUID,worldName);
+		DeathCompass deathRecord = getRecord(playerUUID, worldName);
 
 		try {
 			// create prepared statement
@@ -302,7 +312,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 
 			// execute prepared statement
 			int rowsAffected = preparedStatement.executeUpdate();
-			
+
 			// output debugging information
 			if (plugin.debug) {
 				plugin.getLogger().info(rowsAffected + " rows deleted.");
@@ -318,16 +328,17 @@ class DataStoreSQLite extends DataStore implements Listener {
 			if (plugin.debug) {
 				e.getStackTrace();
 			}
-		}		
+		}
 		return deathRecord;
 	}
+
 
 	@Override
 	public void close() {
 
 		try {
 			connection.close();
-			plugin.getLogger().info("SQLite database connection closed.");		
+			plugin.getLogger().info("SQLite database connection closed.");
 		}
 		catch (Exception e) {
 
@@ -342,14 +353,16 @@ class DataStoreSQLite extends DataStore implements Listener {
 		}
 		setInitialized(false);
 	}
-	
+
+
 	@Override
 	void save() {
-	
+
 		// no action necessary for this storage type
-		
+
 	}
-	
+
+
 	@Override
 	boolean delete() {
 
@@ -360,10 +373,11 @@ class DataStoreSQLite extends DataStore implements Listener {
 		}
 		return result;
 	}
-	
+
+
 	@Override
 	boolean exists() {
-		
+
 		// get path name to old data store file
 		File dataStoreFile = new File(plugin.getDataFolder() + File.separator + this.getFilename());
 		return dataStoreFile.exists();
