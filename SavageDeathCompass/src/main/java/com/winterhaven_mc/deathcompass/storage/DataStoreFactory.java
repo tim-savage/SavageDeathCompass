@@ -8,7 +8,7 @@ import java.util.List;
 
 
 public final class DataStoreFactory {
-	
+
 	private static PluginMain plugin = PluginMain.INSTANCE;
 
 
@@ -16,6 +16,7 @@ public final class DataStoreFactory {
 	 * Create new data store of given type.<br>
 	 * No parameter version used when no current datastore exists
 	 * and datastore type should be read from configuration
+	 *
 	 * @return new datastore of configured type
 	 */
 	public static DataStore create() {
@@ -32,9 +33,10 @@ public final class DataStoreFactory {
 	/**
 	 * Create new data store of given type and convert old data store.<br>
 	 * Two parameter version used when a datastore INSTANCE already exists
-	 * @param dataStoreType		new datastore type
-	 * @param oldDataStore		existing datastore reference
-	 * @return	reference to the new datastore
+	 *
+	 * @param dataStoreType new datastore type
+	 * @param oldDataStore  existing datastore reference
+	 * @return reference to the new datastore
 	 */
 	private static DataStore create(final DataStoreType dataStoreType, final DataStore oldDataStore) {
 
@@ -44,7 +46,8 @@ public final class DataStoreFactory {
 		// initialize new data store
 		try {
 			newDataStore.initialize();
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			plugin.getLogger().severe("Could not initialize " + newDataStore.getDisplayName() + " datastore!");
 			if (plugin.debug) {
 				e.printStackTrace();
@@ -65,6 +68,7 @@ public final class DataStoreFactory {
 
 	/**
 	 * convert old data store to new data store
+	 *
 	 * @param oldDataStore the old datastore to be converted from
 	 * @param newDataStore the new datastore to be converted to
 	 */
@@ -74,36 +78,37 @@ public final class DataStoreFactory {
 		if (oldDataStore.getType().equals(newDataStore.getType())) {
 			return;
 		}
-		
+
 		// if old datastore file exists, attempt to read all records
 		if (oldDataStore.exists()) {
-			
+
 			plugin.getLogger().info("Converting existing " + oldDataStore.getDisplayName() + " datastore to "
 					+ newDataStore.getDisplayName() + " datastore...");
-			
+
 			// initialize old datastore
 			if (!oldDataStore.isInitialized()) {
 				try {
 					oldDataStore.initialize();
-				} catch (Exception e) {
+				}
+				catch (Exception e) {
 					plugin.getLogger().warning("Could not initialize "
 							+ oldDataStore.toString() + " datastore for conversion.");
 					plugin.getLogger().warning(e.getLocalizedMessage());
 					return;
 				}
 			}
-			
+
 			List<DeathCompass> allRecords = oldDataStore.getAllRecords();
-			
+
 			int count = 0;
 			for (DeathCompass record : allRecords) {
 				newDataStore.putRecord(record);
 				count++;
 			}
 			plugin.getLogger().info(count + " records converted to new datastore.");
-			
+
 			newDataStore.save();
-			
+
 			oldDataStore.close();
 			oldDataStore.delete();
 		}
@@ -112,6 +117,7 @@ public final class DataStoreFactory {
 
 	/**
 	 * convert all existing data stores to new data store
+	 *
 	 * @param newDataStore the datastore to convert all other existing datastore to
 	 */
 	private static void convertAll(final DataStore newDataStore) {
@@ -139,13 +145,13 @@ public final class DataStoreFactory {
 	 * Reload the datastore, converting to new type if configured datastore type has changed
 	 */
 	public static void reload() {
-		
+
 		// get current datastore type
 		DataStoreType currentType = plugin.dataStore.getType();
-		
+
 		// get configured datastore type
 		DataStoreType newType = DataStoreType.match(plugin.getConfig().getString("storage-type"));
-				
+
 		// if current datastore type does not match configured datastore type, create new datastore
 		if (!currentType.equals(newType)) {
 

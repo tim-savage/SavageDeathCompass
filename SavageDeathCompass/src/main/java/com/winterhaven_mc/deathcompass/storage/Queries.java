@@ -12,9 +12,9 @@ import java.util.Properties;
 class Queries {
 
 	private final static String propFileName = "queries.properties";
-	
+
 	private static Properties properties;
-	
+
 
 	/**
 	 * Private class constructor to prevent instantiation
@@ -26,18 +26,19 @@ class Queries {
 
 	/**
 	 * Load properties file
+	 *
 	 * @return Properties object
 	 * @throws SQLException if properties file could not be loaded
 	 */
 	private static Properties getQueries() throws SQLException {
-		
+
 		// singleton
 		if (properties == null) {
 			properties = new Properties();
 			try {
-				
+
 				InputStream inputStream = Queries.class.getResourceAsStream("/" + propFileName);
-				
+
 				if (inputStream == null) {
 					throw new SQLException("Unable to load property file: " + propFileName);
 				}
@@ -47,13 +48,14 @@ class Queries {
 				throw new SQLException("Unable to load property file: " + propFileName);
 			}
 		}
-		
+
 		return properties;
 	}
 
 
 	/**
 	 * Retreive an sql query string
+	 *
 	 * @param query the properties key for the query string to be retrieved
 	 * @return String the sql query string
 	 * @throws SQLException if query string could not be retrieved
@@ -61,5 +63,5 @@ class Queries {
 	static String getQuery(final String query) throws SQLException {
 		return getQueries().getProperty(query);
 	}
-	
+
 }

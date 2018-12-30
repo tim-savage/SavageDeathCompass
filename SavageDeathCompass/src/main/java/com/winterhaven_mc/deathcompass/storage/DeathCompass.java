@@ -34,8 +34,9 @@ public final class DeathCompass {
 
 	/**
 	 * Class constructor
+	 *
 	 * @param playerUUID the player UUID for the DeathCompass
-	 * @param location the player death location for the DeathCompass
+	 * @param location   the player death location for the DeathCompass
 	 */
 	public DeathCompass(final UUID playerUUID, final Location location) {
 
@@ -50,10 +51,11 @@ public final class DeathCompass {
 				location.getYaw(),
 				location.getPitch());
 	}
-	
+
 
 	/**
 	 * Getter for playerUUID
+	 *
 	 * @return UUID for death compass player
 	 */
 	final UUID getPlayerUUID() {
@@ -65,6 +67,7 @@ public final class DeathCompass {
 
 	/**
 	 * Getter for location
+	 *
 	 * @return Location for death compass player death location
 	 */
 	public final Location getLocation() {
@@ -81,6 +84,7 @@ public final class DeathCompass {
 
 	/**
 	 * Create a DeathCompass item stack with custom display name and lore
+	 *
 	 * @return ItemStack of DeathCompass
 	 */
 	public static ItemStack createItem() {
@@ -98,6 +102,7 @@ public final class DeathCompass {
 
 	/**
 	 * Check if itemStack is a DeathCompass item
+	 *
 	 * @param itemStack the ItemStack to check
 	 * @return {@code true} if itemStack is a DeathCompass item, {@code false} if not
 	 */
@@ -129,6 +134,7 @@ public final class DeathCompass {
 	/**
 	 * Set ItemMetaData on ItemStack using custom display name and lore from language file.<br>
 	 * Display name additionally has hidden itemTag to make it identifiable as a DeathCompass item.
+	 *
 	 * @param itemStack the ItemStack on which to set DeathCompass MetaData
 	 */
 	private static void setMetaData(final ItemStack itemStack) {

@@ -27,8 +27,9 @@ public abstract class DataStore {
 
 	/**
 	 * Get record from datastore
+	 *
 	 * @param playerUUID the player UUID for the record to be retrieved
-	 * @param worldName the world name for the record to be retrieved
+	 * @param worldName  the world name for the record to be retrieved
 	 * @return death record or null if no matching record found
 	 */
 	public abstract DeathCompass getRecord(final UUID playerUUID, final String worldName);
@@ -36,6 +37,7 @@ public abstract class DataStore {
 
 	/**
 	 * Store record in datastore
+	 *
 	 * @param deathRecord the DeathRecord to be stored
 	 */
 	public abstract void putRecord(final DeathCompass deathRecord);
@@ -43,6 +45,7 @@ public abstract class DataStore {
 
 	/**
 	 * get all records from datastore
+	 *
 	 * @return List of all DeathRecords
 	 */
 	abstract List<DeathCompass> getAllRecords();
@@ -50,8 +53,9 @@ public abstract class DataStore {
 
 	/**
 	 * Delete record
+	 *
 	 * @param playerUUID the player uuid of the record to delete
-	 * @param worldName the world name of the record to delete
+	 * @param worldName  the world name of the record to delete
 	 * @return the DeathRecord that was deleted from datastore
 	 */
 	@SuppressWarnings("unused")
@@ -60,6 +64,7 @@ public abstract class DataStore {
 
 	/**
 	 * Remove player from storage cache
+	 *
 	 * @param playerUUID player UUID to remove from storage cache
 	 */
 	abstract public void flushCache(final UUID playerUUID);
@@ -79,6 +84,7 @@ public abstract class DataStore {
 
 	/**
 	 * Delete datastore file
+	 *
 	 * @return boolean {@code true} if deletion was successful, {@code false} if unsuccessful
 	 */
 	@SuppressWarnings("UnusedReturnValue")
@@ -87,6 +93,7 @@ public abstract class DataStore {
 
 	/**
 	 * Check if datastore file exists
+	 *
 	 * @return {@code true} if file exists, {@code false} if file does not exist
 	 */
 	abstract boolean exists();
@@ -94,6 +101,7 @@ public abstract class DataStore {
 
 	/**
 	 * Get datastore file name
+	 *
 	 * @return String containing file name for datastore
 	 */
 	String getFilename() {
@@ -103,6 +111,7 @@ public abstract class DataStore {
 
 	/**
 	 * Get datastore type
+	 *
 	 * @return DataStoreType - the datastore type for this datastore
 	 */
 	@SuppressWarnings("WeakerAccess")
@@ -113,6 +122,7 @@ public abstract class DataStore {
 
 	/**
 	 * Get datastore name, formatted for display
+	 *
 	 * @return String containing datastore name
 	 */
 	@SuppressWarnings("WeakerAccess")
@@ -123,6 +133,7 @@ public abstract class DataStore {
 
 	/**
 	 * Check if datastore is initialize
+	 *
 	 * @return {@code true} if datastore is initialized, {@code false} if datastore is not initialized
 	 */
 	boolean isInitialized() {
@@ -132,6 +143,7 @@ public abstract class DataStore {
 
 	/**
 	 * Set initialized state of datastore
+	 *
 	 * @param initialized boolean for initialized state of datastore
 	 */
 	void setInitialized(final boolean initialized) {
