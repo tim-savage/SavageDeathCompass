@@ -5,6 +5,7 @@ import com.winterhaven_mc.deathcompass.sounds.SoundId;
 import com.winterhaven_mc.deathcompass.storage.DeathCompass;
 import com.winterhaven_mc.deathcompass.messages.MessageId;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -317,8 +318,8 @@ public class PlayerEventListener implements Listener {
 		player.getInventory().addItem(deathcompass);
 
 		// log info
-		plugin.getLogger().info(player.getName() + " was given a death compass in "
-				+ player.getWorld().getName() + ".");
+		plugin.getLogger().info(player.getName() + ChatColor.RESET  + " was given a death compass in "
+				+ plugin.messageManager.getWorldName(player) + ChatColor.RESET + ".");
 	}
 
 
