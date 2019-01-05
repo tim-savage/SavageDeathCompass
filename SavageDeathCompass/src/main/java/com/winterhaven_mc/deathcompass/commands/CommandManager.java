@@ -1,7 +1,7 @@
 package com.winterhaven_mc.deathcompass.commands;
 
 import com.winterhaven_mc.deathcompass.PluginMain;
-import com.winterhaven_mc.deathcompass.storage.DataStoreFactory;
+import com.winterhaven_mc.deathcompass.storage.DataStore;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -185,7 +185,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 		plugin.soundConfig.reload();
 
 		// reload datastore
-		DataStoreFactory.reload();
+		DataStore.reload();
 
 		// send reloaded message to command sender
 		sender.sendMessage(ChatColor.DARK_AQUA + "[" + plugin.getName() + "] "
