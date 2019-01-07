@@ -142,7 +142,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 		catch (SQLException e) {
 
 			// output simple error message
-			plugin.getLogger().warning("An error occured while fetching a record from the SQLite database.");
+			plugin.getLogger().warning("An error occurred while fetching a record from the SQLite database.");
 			plugin.getLogger().warning(e.getLocalizedMessage());
 
 			// if debugging is enabled, output stack trace
@@ -187,7 +187,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 			testWorldName = location.getWorld().getName();
 		}
 		catch (Exception e) {
-			plugin.getLogger().warning("An error occured while inserting"
+			plugin.getLogger().warning("An error occurred while inserting"
 					+ " a record in the SQLite database. World invalid!");
 			return;
 		}
@@ -212,7 +212,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 				catch (Exception e) {
 
 					// output simple error message
-					plugin.getLogger().warning("An error occured while inserting a record into the SQLite database.");
+					plugin.getLogger().warning("An error occurred while inserting a record into the SQLite database.");
 					plugin.getLogger().warning(e.getLocalizedMessage());
 
 					// if debugging is enabled, output stack trace
@@ -343,7 +343,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 		catch (Exception e) {
 
 			// output simple error message
-			plugin.getLogger().warning("An error occured while closing the SQLite database connection.");
+			plugin.getLogger().warning("An error occurred while closing the SQLite database connection.");
 			plugin.getLogger().warning(e.getMessage());
 
 			// if debugging is enabled, output stack trace
