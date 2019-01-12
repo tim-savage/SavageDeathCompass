@@ -9,6 +9,7 @@ import org.bukkit.command.CommandSender;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 
 /**
@@ -33,6 +34,9 @@ public class MessageManager extends AbstractMessageManager {
 
 	@Override
 	protected Map<String, String> getDefaultReplacements(final CommandSender recipient) {
+
+		// check for null parameter
+		Objects.requireNonNull(recipient);
 
 		Map<String, String> replacements = new HashMap<>();
 		replacements.put("%PLAYER_NAME%", recipient.getName());
@@ -59,6 +63,10 @@ public class MessageManager extends AbstractMessageManager {
 	 * @param messageId the message identifier
 	 */
 	public void sendMessage(final CommandSender sender, final MessageId messageId) {
+
+		// check for null parameters
+		Objects.requireNonNull(sender);
+		Objects.requireNonNull(messageId);
 
 		//noinspection unchecked
 		sendMessage(sender, messageId, getDefaultReplacements(sender));
