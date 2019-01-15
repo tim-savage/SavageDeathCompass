@@ -39,7 +39,7 @@ public abstract class DataStore {
 	 * @param worldName  the world name for the record to be retrieved
 	 * @return death record or null if no matching record found
 	 */
-	public abstract DeathCompass getRecord(final UUID playerUUID, final String worldName);
+	public abstract DeathRecord getRecord(final UUID playerUUID, final String worldName);
 
 
 	/**
@@ -47,7 +47,7 @@ public abstract class DataStore {
 	 *
 	 * @param deathRecord the DeathRecord to be stored
 	 */
-	public abstract void putRecord(final DeathCompass deathRecord);
+	public abstract void putRecord(final DeathRecord deathRecord);
 
 
 	/**
@@ -55,7 +55,7 @@ public abstract class DataStore {
 	 *
 	 * @return List of all DeathRecords
 	 */
-	abstract List<DeathCompass> getAllRecords();
+	abstract List<DeathRecord> getAllRecords();
 
 
 	/**
@@ -66,7 +66,7 @@ public abstract class DataStore {
 	 * @return the DeathRecord that was deleted from datastore
 	 */
 	@SuppressWarnings("unused")
-	abstract DeathCompass deleteRecord(final UUID playerUUID, final String worldName);
+	abstract DeathRecord deleteRecord(final UUID playerUUID, final String worldName);
 
 
 	/**
@@ -262,10 +262,10 @@ public abstract class DataStore {
 				}
 			}
 
-			List<DeathCompass> allRecords = oldDataStore.getAllRecords();
+			List<DeathRecord> allRecords = oldDataStore.getAllRecords();
 
 			int count = 0;
-			for (DeathCompass record : allRecords) {
+			for (DeathRecord record : allRecords) {
 				newDataStore.putRecord(record);
 				count++;
 			}

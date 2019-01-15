@@ -1,5 +1,6 @@
 package com.winterhaven_mc.deathcompass.storage;
 
+import com.winterhaven_mc.deathcompass.PluginMain;
 import org.bukkit.Location;
 
 import java.util.HashMap;
@@ -11,6 +12,9 @@ import java.util.UUID;
  * Implements in memory cache for datastore objects
  */
 final class LocationCache {
+
+	// static reference to plugin main class
+	private PluginMain plugin = PluginMain.INSTANCE;
 
 	// death location map by player uuid, world uid -> death location
 	private Map<UUID, Map<UUID, Location>> locationMap;
@@ -31,7 +35,7 @@ final class LocationCache {
 	 *
 	 * @param deathRecord object containing player UUID and death location to cache
 	 */
-	final void put(final DeathCompass deathRecord) {
+	final void put(final DeathRecord deathRecord) {
 
 		// if death record (or any element) is null, do nothing and return
 		if (deathRecord == null) {
@@ -72,10 +76,21 @@ final class LocationCache {
 	 * @param worldUID   world UID to use as key
 	 * @return deathRecord containing playerUUID and death location for world, or null if no record exists
 	 */
-	final DeathCompass get(final UUID playerUUID, final UUID worldUID) {
+	final DeathRecord get(final UUID playerUUID, final UUID worldUID) {
 
-		// if any passed arguments are null, return null record
-		if (playerUUID == null || worldUID == null) {
+		// if passed playerUUID is null, return null record
+		if (playerUUID == null) {
+			if (plugin.debug) {
+				plugin.getLogger().warning("LocationCache.get was passed null playerUUID!");
+			}
+			return null;
+		}
+
+		// if passed worldUID is null, return null record
+		if (worldUID == null) {
+			if (plugin.debug) {
+				plugin.getLogger().warning("LocationCache.get was passed null worldUID!");
+			}
 			return null;
 		}
 
@@ -84,8 +99,13 @@ final class LocationCache {
 			return null;
 		}
 
-		// return record fetched from cache (may be null)
-		return new DeathCompass(playerUUID, locationMap.get(playerUUID).get(worldUID));
+		// if location in map is null, return null record
+		if (locationMap.get(playerUUID).get(worldUID) == null) {
+			return null;
+		}
+
+		// return record fetched from cache
+		return new DeathRecord(playerUUID, locationMap.get(playerUUID).get(worldUID));
 	}
 
 
