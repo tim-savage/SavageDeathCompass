@@ -2,8 +2,8 @@ package com.winterhaven_mc.deathcompass.listeners;
 
 import com.winterhaven_mc.deathcompass.PluginMain;
 import com.winterhaven_mc.deathcompass.sounds.SoundId;
-import com.winterhaven_mc.deathcompass.storage.DeathCompass;
 import com.winterhaven_mc.deathcompass.messages.MessageId;
+import com.winterhaven_mc.deathcompass.util.DeathCompass;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

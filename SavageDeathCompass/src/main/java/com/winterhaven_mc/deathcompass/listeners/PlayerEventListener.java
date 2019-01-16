@@ -2,9 +2,11 @@ package com.winterhaven_mc.deathcompass.listeners;
 
 import com.winterhaven_mc.deathcompass.PluginMain;
 import com.winterhaven_mc.deathcompass.sounds.SoundId;
-import com.winterhaven_mc.deathcompass.storage.DeathCompass;
+import com.winterhaven_mc.deathcompass.storage.DeathRecord;
 import com.winterhaven_mc.deathcompass.messages.MessageId;
 
+import com.winterhaven_mc.deathcompass.util.DeathCompass;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -78,7 +80,6 @@ public class PlayerEventListener implements Listener {
 		}
 
 		Player player = event.getEntity();
-		UUID playeruuid = player.getUniqueId();
 
 		// if player world is not enabled in config, do nothing and return
 		if (!plugin.worldManager.isEnabled(player.getWorld())) {
@@ -91,13 +92,13 @@ public class PlayerEventListener implements Listener {
 		}
 
 		// create new death record for player
-		DeathCompass deathRecord = new DeathCompass(player.getUniqueId(), player.getLocation());
+		DeathRecord deathRecord = new DeathRecord(player);
 
 		// put death record in database
 		plugin.dataStore.putRecord(deathRecord);
 
 		// put player uuid in deathTriggeredRespawn set
-		deathTriggeredRespawn.add(playeruuid);
+		deathTriggeredRespawn.add(player.getUniqueId());
 	}
 
 
@@ -186,7 +187,8 @@ public class PlayerEventListener implements Listener {
 	@EventHandler
 	public void onChangeWorld(final PlayerChangedWorldEvent event) {
 
-		Player player = event.getPlayer();
+		// get player for event
+		Player player = Objects.requireNonNull(event.getPlayer());
 
 		// if player world is not enabled in config, do nothing and return
 		if (!plugin.worldManager.isEnabled(player.getWorld())) {
@@ -201,12 +203,16 @@ public class PlayerEventListener implements Listener {
 		// create DeathCompass itemstack
 		ItemStack deathcompass = DeathCompass.createItem();
 
+		// if player does not have a death compass in inventory, do nothing and return
+		if (!player.getInventory().containsAtLeast(deathcompass,1)) {
+			return;
+		}
+
 		// get last death location from datastore
 		Location lastDeathLocation = getDeathLocation(player);
 
-		// if player does not have a death compass or saved death location, do nothing and return
-		if (!player.getInventory().containsAtLeast(deathcompass, 1) ||
-				lastDeathLocation == null) {
+		// if player does not have a saved death location, do nothing and return
+		if (lastDeathLocation == null) {
 			return;
 		}
 
@@ -221,32 +227,27 @@ public class PlayerEventListener implements Listener {
 	 *
 	 * @param event the event handled by this method
 	 */
-	@EventHandler
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerInteract(final PlayerInteractEvent event) {
 
+		// get player
 		final Player player = event.getPlayer();
+
+		// get block
 		final Block block = event.getClickedBlock();
 
-		// if event is cancelled, do nothing and return
-		if (event.isCancelled()) {
-			return;
+		// if block is a DeathChestBlock owned by player, remove death compasses from inventory and reset target
+		if (block != null
+				&& block.hasMetadata("deathchest-owner")
+				&& block.getMetadata("deathchest-owner").get(0).asString()
+					.equals(player.getUniqueId().toString())) {
+
+			// remove all death compasses from player inventory
+			removeDeathCompasses(player.getInventory());
+
+			// reset compass target to world spawn
+			resetDeathCompassTarget(player);
 		}
-
-		// if block is not a DeathChestBlock, do nothing and return
-		if (!(block != null && block.hasMetadata("deathchest-owner"))) {
-			return;
-		}
-
-		// if death chest owner is not player, do nothing and return
-		if (!block.getMetadata("deathchest-owner").get(0).asString().equals(player.getUniqueId().toString())) {
-			return;
-		}
-
-		// remove all death compasses from player inventory
-		removeDeathCompasses(player.getInventory());
-
-		// reset compass target to world spawn
-		resetDeathCompassTarget(player);
 	}
 
 
@@ -293,17 +294,6 @@ public class PlayerEventListener implements Listener {
 
 
 	/**
-	 * Remove player from cache on player quit event
-	 *
-	 * @param event event handled by this method
-	 */
-	@EventHandler
-	void onPlayerQuit(final PlayerQuitEvent event) {
-		plugin.dataStore.flushCache(event.getPlayer().getUniqueId());
-	}
-
-
-	/**
 	 * Give 1 death compass to player
 	 *
 	 * @param player the player being given a death compass
@@ -317,8 +307,8 @@ public class PlayerEventListener implements Listener {
 		player.getInventory().addItem(deathcompass);
 
 		// log info
-		plugin.getLogger().info(player.getName() + " was given a death compass in "
-				+ player.getWorld().getName() + ".");
+		plugin.getLogger().info(player.getName() + ChatColor.RESET  + " was given a death compass in "
+				+ plugin.messageManager.getWorldName(player) + ChatColor.RESET + ".");
 	}
 
 
@@ -373,6 +363,9 @@ public class PlayerEventListener implements Listener {
 	 */
 	private Location getDeathLocation(final Player player) {
 
+		// check for null parameter
+		Objects.requireNonNull(player);
+
 		// set worldName to player current world
 		String worldName = player.getWorld().getName();
 
@@ -380,7 +373,7 @@ public class PlayerEventListener implements Listener {
 		Location location = player.getWorld().getSpawnLocation();
 
 		// fetch death record from datastore
-		DeathCompass deathRecord = plugin.dataStore.getRecord(player.getUniqueId(), worldName);
+		DeathRecord deathRecord = plugin.dataStore.getRecord(player.getUniqueId(), worldName);
 
 		if (deathRecord != null) {
 			location = deathRecord.getLocation();

@@ -22,8 +22,8 @@ class DataStoreSQLite extends DataStore implements Listener {
 	// database connection object
 	private Connection connection;
 
-	// location cache
-	private LocationCache locationCache;
+	// death record cache
+	private DeathRecordCache deathRecordCache;
 
 
 	/**
@@ -42,8 +42,8 @@ class DataStoreSQLite extends DataStore implements Listener {
 		// set filename
 		this.filename = "deathlocations.db";
 
-		// initialize location cache
-		locationCache = new LocationCache();
+		// initialize death record cache
+		deathRecordCache = new DeathRecordCache();
 	}
 
 
@@ -85,7 +85,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 
 
 	@Override
-	public DeathCompass getRecord(final UUID playerUUID, final String worldName) {
+	public DeathRecord getRecord(final UUID playerUUID, final String worldName) {
 
 		// if key is null return null record
 		if (playerUUID == null) {
@@ -101,7 +101,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 		}
 
 		// try cache first
-		DeathCompass deathRecord = locationCache.get(playerUUID, worldUID);
+		DeathRecord deathRecord = deathRecordCache.get(playerUUID, worldUID);
 
 		// if a record was returned from cache, return the record; otherwise try datastore
 		if (deathRecord != null) {
@@ -110,7 +110,6 @@ class DataStoreSQLite extends DataStore implements Listener {
 
 		// convert playerUUID to string
 		String playerUUIDString = playerUUID.toString();
-		World world;
 
 		try {
 			PreparedStatement preparedStatement = connection.prepareStatement(Queries.getQuery("SelectLocation"));
@@ -134,15 +133,16 @@ class DataStoreSQLite extends DataStore implements Listener {
 					plugin.getLogger().warning("Stored world not found!");
 					return null;
 				}
-				world = plugin.getServer().getWorld(worldName);
+
+				World world = plugin.getServer().getWorld(worldName);
 				Location location = new Location(world, x, y, z);
-				deathRecord = new DeathCompass(playerUUID, location);
+				deathRecord = new DeathRecord(playerUUID, location);
 			}
 		}
 		catch (SQLException e) {
 
 			// output simple error message
-			plugin.getLogger().warning("An error occured while fetching a record from the SQLite database.");
+			plugin.getLogger().warning("An error occurred while fetching a record from the SQLite database.");
 			plugin.getLogger().warning(e.getLocalizedMessage());
 
 			// if debugging is enabled, output stack trace
@@ -154,7 +154,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 
 		// if record is not null, put record in cache
 		if (deathRecord != null) {
-			locationCache.put(deathRecord);
+			deathRecordCache.put(deathRecord);
 		}
 
 		// return record
@@ -163,7 +163,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 
 
 	@Override
-	public void putRecord(final DeathCompass deathRecord) {
+	public void putRecord(final DeathRecord deathRecord) {
 
 		// if record is null do nothing and return
 		if (deathRecord == null) {
@@ -171,7 +171,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 		}
 
 		// cache death record
-		locationCache.put(deathRecord);
+		deathRecordCache.put(deathRecord);
 
 		// get playerUUID as string
 		final String playerUUIDString = deathRecord.getPlayerUUID().toString();
@@ -187,7 +187,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 			testWorldName = location.getWorld().getName();
 		}
 		catch (Exception e) {
-			plugin.getLogger().warning("An error occured while inserting"
+			plugin.getLogger().warning("An error occurred while inserting"
 					+ " a record in the SQLite database. World invalid!");
 			return;
 		}
@@ -212,7 +212,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 				catch (Exception e) {
 
 					// output simple error message
-					plugin.getLogger().warning("An error occured while inserting a record into the SQLite database.");
+					plugin.getLogger().warning("An error occurred while inserting a record into the SQLite database.");
 					plugin.getLogger().warning(e.getLocalizedMessage());
 
 					// if debugging is enabled, output stack trace
@@ -226,9 +226,9 @@ class DataStoreSQLite extends DataStore implements Listener {
 
 
 	@Override
-	List<DeathCompass> getAllRecords() {
+	List<DeathRecord> getAllRecords() {
 
-		List<DeathCompass> returnList = new ArrayList<>();
+		List<DeathRecord> returnList = new ArrayList<>();
 
 		try {
 			PreparedStatement preparedStatement = connection.prepareStatement(Queries.getQuery("SelectAllLocations"));
@@ -269,7 +269,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 				// if playerUUID is null, do not add record to return list
 				if (playerUUID != null) {
 					Location location = new Location(world, x, y, z);
-					DeathCompass deathRecord = new DeathCompass(playerUUID, location);
+					DeathRecord deathRecord = new DeathRecord(playerUUID, location);
 					returnList.add(deathRecord);
 				}
 			}
@@ -293,7 +293,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 
 
 	@Override
-	DeathCompass deleteRecord(final UUID playerUUID, final String worldName) {
+	DeathRecord deleteRecord(final UUID playerUUID, final String worldName) {
 
 		// if key is null return null record
 		if (playerUUID == null || worldName == null || worldName.isEmpty()) {
@@ -301,7 +301,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 		}
 
 		// get destination record to be deleted, for return
-		DeathCompass deathRecord = getRecord(playerUUID, worldName);
+		DeathRecord deathRecord = getRecord(playerUUID, worldName);
 
 		try {
 			// create prepared statement
@@ -343,7 +343,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 		catch (Exception e) {
 
 			// output simple error message
-			plugin.getLogger().warning("An error occured while closing the SQLite database connection.");
+			plugin.getLogger().warning("An error occurred while closing the SQLite database connection.");
 			plugin.getLogger().warning(e.getMessage());
 
 			// if debugging is enabled, output stack trace
@@ -382,12 +382,6 @@ class DataStoreSQLite extends DataStore implements Listener {
 		File dataStoreFile = new File(plugin.getDataFolder() + File.separator + this.getFilename());
 		return dataStoreFile.exists();
 
-	}
-
-
-	@Override
-	public void flushCache(final UUID playerUUID) {
-		locationCache.removePlayer(playerUUID);
 	}
 
 }
