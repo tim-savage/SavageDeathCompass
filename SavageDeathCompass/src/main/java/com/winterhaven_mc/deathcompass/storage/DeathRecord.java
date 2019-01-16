@@ -1,8 +1,7 @@
 package com.winterhaven_mc.deathcompass.storage;
 
-import com.winterhaven_mc.deathcompass.PluginMain;
-
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -20,38 +19,51 @@ public final class DeathRecord {
 	// player death location
 	private final Location location;
 
-	// reference to plugin main class
-	private final static PluginMain plugin = PluginMain.INSTANCE;
+
+	/**
+	 * Class constructor
+	 *
+	 * @param player the player for the DeathRecord
+	 */
+	public DeathRecord(final Player player) {
+
+		// test for null parameters
+		Objects.requireNonNull(player);
+
+		// set playerUUID
+		this.playerUUID = player.getUniqueId();
+
+		// set player death location with defensive copy of player location
+		this.location = new Location(player.getLocation().getWorld(),
+				player.getLocation().getX(),
+				player.getLocation().getY(),
+				player.getLocation().getZ(),
+				player.getLocation().getYaw(),
+				player.getLocation().getPitch());
+	}
 
 
 	/**
 	 * Class constructor
 	 *
-	 * @param playerUUID the player UUID for the DeathCompass
-	 * @param location   the player death location for the DeathCompass
+	 * @param playerUUID the player UUID for the DeathRecord
+	 * @param location   the player death location for the DeathRecord
 	 */
-	public DeathRecord(final UUID playerUUID, final Location location) {
+	DeathRecord(final UUID playerUUID, final Location location) {
 
 		// test for null parameters
 		Objects.requireNonNull(playerUUID);
-//		Objects.requireNonNull(location);
+		Objects.requireNonNull(location);
 
 		// set playerUUID
 		this.playerUUID = playerUUID;
 
-		// set player death location with defensive copy of passed location, or world spawn if location is null
-		if (location == null) {
-			plugin.getLogger().warning("DeathCompass constructor was passed null location!");
-			this.location = plugin.getServer().getPlayer(playerUUID).getWorld().getSpawnLocation();
-		}
-		else {
-			this.location = new Location(location.getWorld(),
-					location.getX(),
-					location.getY(),
-					location.getZ(),
-					location.getYaw(),
-					location.getPitch());
-		}
+		this.location = new Location(location.getWorld(),
+				location.getX(),
+				location.getY(),
+				location.getZ(),
+				location.getYaw(),
+				location.getPitch());
 	}
 
 
@@ -70,7 +82,7 @@ public final class DeathRecord {
 	/**
 	 * Getter for location
 	 *
-	 * @return Location for death compass player death location
+	 * @return Location - death compass player death location
 	 */
 	public final Location getLocation() {
 
