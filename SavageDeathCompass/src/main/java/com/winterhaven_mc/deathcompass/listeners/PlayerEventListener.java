@@ -92,7 +92,7 @@ public class PlayerEventListener implements Listener {
 		}
 
 		// create new death record for player
-		DeathRecord deathRecord = new DeathRecord(player.getUniqueId(), player.getLocation());
+		DeathRecord deathRecord = new DeathRecord(player);
 
 		// put death record in database
 		plugin.dataStore.putRecord(deathRecord);
@@ -227,32 +227,27 @@ public class PlayerEventListener implements Listener {
 	 *
 	 * @param event the event handled by this method
 	 */
-	@EventHandler
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerInteract(final PlayerInteractEvent event) {
 
+		// get player
 		final Player player = event.getPlayer();
+
+		// get block
 		final Block block = event.getClickedBlock();
 
-		// if event is cancelled, do nothing and return
-		if (event.isCancelled()) {
-			return;
+		// if block is a DeathChestBlock owned by player, remove death compasses from inventory and reset target
+		if (block != null
+				&& block.hasMetadata("deathchest-owner")
+				&& block.getMetadata("deathchest-owner").get(0).asString()
+					.equals(player.getUniqueId().toString())) {
+
+			// remove all death compasses from player inventory
+			removeDeathCompasses(player.getInventory());
+
+			// reset compass target to world spawn
+			resetDeathCompassTarget(player);
 		}
-
-		// if block is not a DeathChestBlock, do nothing and return
-		if (!(block != null && block.hasMetadata("deathchest-owner"))) {
-			return;
-		}
-
-		// if death chest owner is not player, do nothing and return
-		if (!block.getMetadata("deathchest-owner").get(0).asString().equals(player.getUniqueId().toString())) {
-			return;
-		}
-
-		// remove all death compasses from player inventory
-		removeDeathCompasses(player.getInventory());
-
-		// reset compass target to world spawn
-		resetDeathCompassTarget(player);
 	}
 
 
@@ -295,17 +290,6 @@ public class PlayerEventListener implements Listener {
 
 		// send player compass destroyed message
 		plugin.messageManager.sendMessage(player, MessageId.ACTION_ITEM_DESTROY);
-	}
-
-
-	/**
-	 * Remove player from cache on player quit event
-	 *
-	 * @param event event handled by this method
-	 */
-	@EventHandler
-	void onPlayerQuit(final PlayerQuitEvent event) {
-		plugin.dataStore.flushCache(event.getPlayer().getUniqueId());
 	}
 
 
