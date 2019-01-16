@@ -70,14 +70,6 @@ public abstract class DataStore {
 
 
 	/**
-	 * Remove player from storage cache
-	 *
-	 * @param playerUUID player UUID to remove from storage cache
-	 */
-	abstract public void flushCache(final UUID playerUUID);
-
-
-	/**
 	 * Close storage
 	 */
 	public abstract void close();

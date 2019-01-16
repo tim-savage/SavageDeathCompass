@@ -22,8 +22,8 @@ class DataStoreSQLite extends DataStore implements Listener {
 	// database connection object
 	private Connection connection;
 
-	// location cache
-	private LocationCache locationCache;
+	// death record cache
+	private DeathRecordCache deathRecordCache;
 
 
 	/**
@@ -42,8 +42,8 @@ class DataStoreSQLite extends DataStore implements Listener {
 		// set filename
 		this.filename = "deathlocations.db";
 
-		// initialize location cache
-		locationCache = new LocationCache();
+		// initialize death record cache
+		deathRecordCache = new DeathRecordCache();
 	}
 
 
@@ -101,7 +101,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 		}
 
 		// try cache first
-		DeathRecord deathRecord = locationCache.get(playerUUID, worldUID);
+		DeathRecord deathRecord = deathRecordCache.get(playerUUID, worldUID);
 
 		// if a record was returned from cache, return the record; otherwise try datastore
 		if (deathRecord != null) {
@@ -110,7 +110,6 @@ class DataStoreSQLite extends DataStore implements Listener {
 
 		// convert playerUUID to string
 		String playerUUIDString = playerUUID.toString();
-		World world;
 
 		try {
 			PreparedStatement preparedStatement = connection.prepareStatement(Queries.getQuery("SelectLocation"));
@@ -134,7 +133,8 @@ class DataStoreSQLite extends DataStore implements Listener {
 					plugin.getLogger().warning("Stored world not found!");
 					return null;
 				}
-				world = plugin.getServer().getWorld(worldName);
+
+				World world = plugin.getServer().getWorld(worldName);
 				Location location = new Location(world, x, y, z);
 				deathRecord = new DeathRecord(playerUUID, location);
 			}
@@ -154,7 +154,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 
 		// if record is not null, put record in cache
 		if (deathRecord != null) {
-			locationCache.put(deathRecord);
+			deathRecordCache.put(deathRecord);
 		}
 
 		// return record
@@ -171,7 +171,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 		}
 
 		// cache death record
-		locationCache.put(deathRecord);
+		deathRecordCache.put(deathRecord);
 
 		// get playerUUID as string
 		final String playerUUIDString = deathRecord.getPlayerUUID().toString();
@@ -382,12 +382,6 @@ class DataStoreSQLite extends DataStore implements Listener {
 		File dataStoreFile = new File(plugin.getDataFolder() + File.separator + this.getFilename());
 		return dataStoreFile.exists();
 
-	}
-
-
-	@Override
-	public void flushCache(final UUID playerUUID) {
-		locationCache.removePlayer(playerUUID);
 	}
 
 }
