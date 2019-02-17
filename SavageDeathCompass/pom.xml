@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.winterhaven-mc</groupId>
 	<artifactId>SavageDeathCompass</artifactId>
-	<version>1.13.4</version>
+	<version>1.13.5</version>
 	<name>SavageDeathCompass</name>
 	<url>http://dev.bukkit.org/bukkit-plugins/savagedeathcompass/</url>
 	<description>An alternative to /back on death command. On death, players are given a compass that points to their death location.</description>
