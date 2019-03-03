@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.winterhaven-mc</groupId>
 	<artifactId>SavageDeathCompass</artifactId>
-	<version>1.13.4</version>
+	<version>1.13.5</version>
 	<name>SavageDeathCompass</name>
 	<url>http://dev.bukkit.org/bukkit-plugins/savagedeathcompass/</url>
 	<description>An alternative to /back on death command. On death, players are given a compass that points to their death location.</description>
@@ -13,10 +13,27 @@
 		<project.author>Tim Savage</project.author>
 	</properties>
 
+	<distributionManagement>
+		<repository>
+			<id>releases</id>
+			<url>http://maven.winterhaven-mc.com/repository/releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>snapshots</id>
+			<url>http://maven.winterhaven-mc.com/repository/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
+
 	<repositories>
 		<repository>
-			<id>spigot-repo</id>
-			<url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
+			<id>public</id>
+			<url>http://maven.winterhaven-mc.com/repository/public/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
 		</repository>
 	</repositories>
 
@@ -62,16 +79,18 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
+				<version>3.8.0</version>
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>
 				</configuration>
 			</plugin>
+
+			<!-- Created Shaded jar -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>2.4.3</version>
+				<version>3.2.1</version>
 				<executions>
 					<execution>
 						<phase>package</phase>
@@ -100,6 +119,36 @@
 					</execution>
 				</executions>
 			</plugin>
-        </plugins>
+
+			<!-- Create Sources jar -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>3.0.1</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- Create Javadoc jar -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>3.0.1</version>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
 	</build>
 </project>

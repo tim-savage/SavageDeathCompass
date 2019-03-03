@@ -256,7 +256,7 @@ public class PlayerEventListener implements Listener {
 	 *
 	 * @param event the event handled by this method
 	 */
-	@EventHandler
+	@EventHandler(priority = EventPriority.HIGH)
 	public void onItemDrop(final PlayerDropItemEvent event) {
 
 		// if event is cancelled, do nothing and return
