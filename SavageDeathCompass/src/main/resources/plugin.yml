@@ -2,7 +2,7 @@ name: ${project.name}
 version: ${project.version}
 author: ${project.author}
 main: com.winterhaven_mc.deathcompass.PluginMain
-api-version: 1.13
+api-version: 1.14
 
 commands:
   deathcompass:
