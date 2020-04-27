@@ -1,0 +1,37 @@
+# Language configuration file for SavageDeathCompass v1.13.5
+
+###########
+# Item Info
+###########
+ITEM_INFO:
+  # Item Display Name
+  ITEM_NAME: '&6Kompas der doden'
+
+  # Item Lore
+  ITEM_LORE:
+  - '&eWijst je de weg'
+  - '&enaar je dodenkist'
+
+
+# Variable substitutions:
+# %ITEM_NAME%            Item name as configured above
+# %PLAYER_NAME%          Player's full name
+# %PLAYER_NICKNAME%      Player's nickname
+# %PLAYER_DISPLAYNAME%   Player's display name, including prefix/suffix
+# %WORLD_NAME%           World name that player is in
+
+##########
+# Messages
+##########
+MESSAGES:
+  ACTION_PLAYER_RESPAWN:
+    enabled: true
+    string: '&eVind je dodenkist terug met behulp van het &6%ITEM_NAME%.'
+
+  ACTION_ITEM_DESTROY:
+    enabled: true
+    string: '&c%ITEM_NAME% is vernietigd.'
+
+  ACTION_INVENTORY_DENY_TRANSFER:
+    enabled: true
+    string: '&c%ITEM_NAME% kan niet worden verplaatst.\n Vernietig het door het te laten vallen.'
