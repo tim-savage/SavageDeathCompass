@@ -16,7 +16,7 @@ import java.util.Objects;
  * Handles sending configurable messages to players and console.
  * performs placeholder substitutions in message strings.
  */
-public class MessageManager extends AbstractMessageManager {
+public class MessageManager extends AbstractMessageManager<MessageId> {
 
 
 	/**
@@ -27,7 +27,6 @@ public class MessageManager extends AbstractMessageManager {
 	public MessageManager(final PluginMain plugin) {
 
 		// call super class constructor
-		//noinspection unchecked
 		super(plugin, MessageId.class);
 	}
 
@@ -68,7 +67,7 @@ public class MessageManager extends AbstractMessageManager {
 		Objects.requireNonNull(sender);
 		Objects.requireNonNull(messageId);
 
-		//noinspection unchecked
+		// send message
 		sendMessage(sender, messageId, getDefaultReplacements(sender));
 	}
 
