@@ -87,7 +87,6 @@ public final class DeathCompass {
 		String itemName = plugin.messageManager.getItemName();
 
 		// retrieve item lore from language file file
-		//noinspection unchecked
 		List<String> itemLore = plugin.messageManager.getItemLore();
 
 		// get item metadata object
