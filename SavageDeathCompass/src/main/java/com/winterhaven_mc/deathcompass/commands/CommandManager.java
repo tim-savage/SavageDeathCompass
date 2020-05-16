@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class CommandManager implements CommandExecutor, TabCompleter {
 
-	private PluginMain plugin;
+	private final PluginMain plugin;
 
 	private final static ChatColor helpColor = ChatColor.YELLOW;
 	private final static ChatColor usageColor = ChatColor.GOLD;
@@ -40,6 +40,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 	public CommandManager(final PluginMain plugin) {
 
 		this.plugin = plugin;
+		//noinspection ConstantConditions
 		plugin.getCommand("deathcompass").setExecutor(this);
 	}
 

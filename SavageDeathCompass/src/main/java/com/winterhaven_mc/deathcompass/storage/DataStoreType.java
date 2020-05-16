@@ -21,7 +21,7 @@ public enum DataStoreType {
 	private final static PluginMain plugin = PluginMain.INSTANCE;
 
 	// DataStoreType display name
-	private String displayName;
+	private final String displayName;
 
 	// default DataStoreType
 	private final static DataStoreType defaultType = DataStoreType.SQLITE;

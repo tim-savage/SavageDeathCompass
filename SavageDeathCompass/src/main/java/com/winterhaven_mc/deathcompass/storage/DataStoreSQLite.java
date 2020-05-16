@@ -23,7 +23,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 	private Connection connection;
 
 	// death record cache
-	private DeathRecordCache deathRecordCache;
+	private final DeathRecordCache deathRecordCache;
 
 
 	/**
@@ -93,9 +93,11 @@ class DataStoreSQLite extends DataStore implements Listener {
 		}
 
 		// try to get world uid from world name
+		//noinspection ConstantConditions
 		UUID worldUID = plugin.getServer().getWorld(worldName).getUID();
 
 		// if world uid is null, return null record
+		//noinspection ConstantConditions
 		if (worldUID == null) {
 			return null;
 		}
@@ -125,9 +127,9 @@ class DataStoreSQLite extends DataStore implements Listener {
 
 				// get stored world and coordinates
 				preparedStatement.setString(1, playerUUIDString);
-				Double x = rs.getDouble("x");
-				Double y = rs.getDouble("y");
-				Double z = rs.getDouble("z");
+				double x = rs.getDouble("x");
+				double y = rs.getDouble("y");
+				double z = rs.getDouble("z");
 
 				if (plugin.getServer().getWorld(worldName) == null) {
 					plugin.getLogger().warning("Stored world not found!");
@@ -184,6 +186,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 
 		// test that world in destination location is valid
 		try {
+			//noinspection ConstantConditions
 			testWorldName = location.getWorld().getName();
 		}
 		catch (Exception e) {
@@ -240,9 +243,9 @@ class DataStoreSQLite extends DataStore implements Listener {
 
 				String key = rs.getString("playerid");
 				String worldName = rs.getString("worldname");
-				Double x = rs.getDouble("x");
-				Double y = rs.getDouble("y");
-				Double z = rs.getDouble("z");
+				double x = rs.getDouble("x");
+				double y = rs.getDouble("y");
+				double z = rs.getDouble("z");
 
 				World world;
 

@@ -18,10 +18,10 @@ import java.util.UUID;
 final class DeathRecordCache implements Listener {
 
 	// static reference to plugin main class
-	private PluginMain plugin = PluginMain.INSTANCE;
+	private final PluginMain plugin = PluginMain.INSTANCE;
 
 	// death location map by player uuid, world uid -> death record
-	private Map<UUID, Map<UUID, DeathRecord>> deathRecordMap;
+	private final Map<UUID, Map<UUID, DeathRecord>> deathRecordMap;
 
 
 	/**
@@ -54,7 +54,7 @@ final class DeathRecordCache implements Listener {
 		Location location = deathRecord.getLocation();
 
 		// get world UID from death record location
-		UUID worldUID = location.getWorld().getUID();
+		UUID worldUID = Objects.requireNonNull(location.getWorld()).getUID();
 
 		// get map for player
 		Map<UUID, DeathRecord> playerMap = deathRecordMap.get(playerUUID);
