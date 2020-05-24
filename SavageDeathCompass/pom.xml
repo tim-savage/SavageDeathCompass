@@ -29,7 +29,7 @@
 	<repositories>
 		<repository>
 			<id>public</id>
-			<url>http://maven.winterhaven-mc.com/repository/public/</url>
+			<url>https://maven.winterhaven-mc.com/repository/public/</url>
 			<releases>
 				<enabled>true</enabled>
 			</releases>
