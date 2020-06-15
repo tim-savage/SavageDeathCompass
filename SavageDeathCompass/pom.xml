@@ -40,11 +40,11 @@
 	</repositories>
 
 	<dependencies>
-		<!-- MessageManagerLib -->
+		<!-- MessengerLib -->
 		<dependency>
 			<groupId>com.winterhaven-mc</groupId>
-			<artifactId>message-manager-lib</artifactId>
-			<version>1.0.8</version>
+			<artifactId>messenger-lib</artifactId>
+			<version>1.0.0</version>
 		</dependency>
 
 		<!-- SoundConfigLib -->
@@ -103,7 +103,7 @@
 							<minimizeJar>true</minimizeJar>
 							<artifactSet>
 								<includes>
-									<include>com.winterhaven-mc:message-manager-lib</include>
+									<include>com.winterhaven-mc:messenger-lib</include>
 									<include>com.winterhaven-mc:world-manager-lib</include>
 									<include>com.winterhaven-mc:sound-config-lib</include>
 								</includes>

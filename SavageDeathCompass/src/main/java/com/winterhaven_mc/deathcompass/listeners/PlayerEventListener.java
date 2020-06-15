@@ -1,9 +1,9 @@
 package com.winterhaven_mc.deathcompass.listeners;
 
 import com.winterhaven_mc.deathcompass.PluginMain;
+import com.winterhaven_mc.deathcompass.messages.Message;
 import com.winterhaven_mc.deathcompass.sounds.SoundId;
 import com.winterhaven_mc.deathcompass.storage.DeathRecord;
-import com.winterhaven_mc.deathcompass.messages.MessageId;
 
 import com.winterhaven_mc.deathcompass.util.DeathCompass;
 import org.bukkit.ChatColor;
@@ -21,6 +21,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+
+import static com.winterhaven_mc.deathcompass.messages.MessageId.ACTION_ITEM_DESTROY;
+import static com.winterhaven_mc.deathcompass.messages.MessageId.ACTION_PLAYER_RESPAWN;
 
 
 /**
@@ -137,7 +140,7 @@ public class PlayerEventListener implements Listener {
 		setDeathCompassTarget(player);
 
 		// send player respawn message
-		plugin.messageManager.sendMessage(player, MessageId.ACTION_PLAYER_RESPAWN);
+		Message.create(player, ACTION_PLAYER_RESPAWN).send();
 	}
 
 
@@ -289,7 +292,7 @@ public class PlayerEventListener implements Listener {
 		}
 
 		// send player compass destroyed message
-		plugin.messageManager.sendMessage(player, MessageId.ACTION_ITEM_DESTROY);
+		Message.create(player, ACTION_ITEM_DESTROY).send();
 	}
 
 
@@ -308,7 +311,7 @@ public class PlayerEventListener implements Listener {
 
 		// log info
 		plugin.getLogger().info(player.getName() + ChatColor.RESET  + " was given a death compass in "
-				+ plugin.messageManager.getWorldName(player) + ChatColor.RESET + ".");
+				+ plugin.worldManager.getWorldName(player) + ChatColor.RESET + ".");
 	}
 
 

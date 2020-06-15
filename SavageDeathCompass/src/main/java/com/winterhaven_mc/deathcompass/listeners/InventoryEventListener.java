@@ -1,8 +1,8 @@
 package com.winterhaven_mc.deathcompass.listeners;
 
 import com.winterhaven_mc.deathcompass.PluginMain;
+import com.winterhaven_mc.deathcompass.messages.Message;
 import com.winterhaven_mc.deathcompass.sounds.SoundId;
-import com.winterhaven_mc.deathcompass.messages.MessageId;
 import com.winterhaven_mc.deathcompass.util.DeathCompass;
 
 import org.bukkit.event.EventHandler;
@@ -11,6 +11,8 @@ import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
+
+import static com.winterhaven_mc.deathcompass.messages.MessageId.ACTION_INVENTORY_DENY_TRANSFER;
 
 
 /**
@@ -110,8 +112,7 @@ public final class InventoryEventListener implements Listener {
 				event.setCancelled(true);
 
 				// send player message
-				plugin.messageManager.sendMessage(event.getWhoClicked(),
-						MessageId.ACTION_INVENTORY_DENY_TRANSFER);
+				Message.create(event.getWhoClicked(), ACTION_INVENTORY_DENY_TRANSFER).send();
 
 				// play sound
 				plugin.soundConfig.playSound(event.getWhoClicked(), SoundId.INVENTORY_DENY_TRANSFER);
@@ -133,8 +134,7 @@ public final class InventoryEventListener implements Listener {
 					event.setCancelled(true);
 
 					// send player message
-					plugin.messageManager.sendMessage(event.getWhoClicked(),
-							MessageId.ACTION_INVENTORY_DENY_TRANSFER);
+					Message.create(event.getWhoClicked(), ACTION_INVENTORY_DENY_TRANSFER).send();
 
 					// play sound
 					plugin.soundConfig.playSound(event.getWhoClicked(), SoundId.INVENTORY_DENY_TRANSFER);
@@ -158,8 +158,7 @@ public final class InventoryEventListener implements Listener {
 					event.setCancelled(true);
 
 					// send player message
-					plugin.messageManager.sendMessage(event.getWhoClicked(),
-							MessageId.ACTION_INVENTORY_DENY_TRANSFER);
+					Message.create(event.getWhoClicked(), ACTION_INVENTORY_DENY_TRANSFER).send();
 
 					// play sound
 					plugin.soundConfig.playSound(event.getWhoClicked(), SoundId.INVENTORY_DENY_TRANSFER);
@@ -196,7 +195,7 @@ public final class InventoryEventListener implements Listener {
 					event.setCancelled(true);
 
 					// send player message
-					plugin.messageManager.sendMessage(event.getWhoClicked(), MessageId.ACTION_INVENTORY_DENY_TRANSFER);
+					Message.create(event.getWhoClicked(), ACTION_INVENTORY_DENY_TRANSFER).send();
 
 					// play sound
 					plugin.soundConfig.playSound(event.getWhoClicked(), SoundId.INVENTORY_DENY_TRANSFER);

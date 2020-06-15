@@ -3,6 +3,7 @@ package com.winterhaven_mc.deathcompass.commands;
 import com.winterhaven_mc.deathcompass.PluginMain;
 import com.winterhaven_mc.deathcompass.storage.DataStore;
 
+import com.winterhaven_mc.util.LanguageManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -180,7 +181,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 		plugin.worldManager.reload();
 
 		// reload messages
-		plugin.messageManager.reload();
+		LanguageManager.getInstance().loadMessages();
 
 		// reload sounds
 		plugin.soundConfig.reload();

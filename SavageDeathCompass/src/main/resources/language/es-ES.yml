@@ -14,11 +14,9 @@ ITEM_INFO:
 
 
 # Variable substitutions:
-# %ITEM_NAME%            Item name as configured above
-# %PLAYER_NAME%          Player's full name
-# %PLAYER_NICKNAME%      Player's nickname
-# %PLAYER_DISPLAYNAME%   Player's display name, including prefix/suffix
-# %WORLD_NAME%           World name that player is in
+# %ITEM%            Item name as configured above
+# %PLAYER%          Player's full name
+# %WORLD%           World name that player is in
 
 ##########
 # Messages
@@ -26,12 +24,12 @@ ITEM_INFO:
 MESSAGES:
   ACTION_PLAYER_RESPAWN:
     enabled: true
-    string: '&c%ITEM_NAME% apunta a la ubicación de la muerte de %PLAYER_NICKNAME%, en %WORLD_NAME%.'
+    string: '&c%ITEM% apunta a la ubicación de la muerte de %PLAYER%, en %WORLD%.'
 
   ACTION_ITEM_DESTROY:
     enabled: true
-    string: '&c%ITEM_NAME% destruido.'
+    string: '&c%ITEM% destruido.'
 
   ACTION_INVENTORY_DENY_TRANSFER:
     enabled: true
-    string: '&c%ITEM_NAME% no puede ser colocado en contenedores.'
+    string: '&c%ITEM% no puede ser colocado en contenedores.'
