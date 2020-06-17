@@ -4,7 +4,6 @@ import com.winterhaven_mc.deathcompass.commands.CommandManager;
 import com.winterhaven_mc.deathcompass.listeners.InventoryEventListener;
 import com.winterhaven_mc.deathcompass.listeners.PlayerEventListener;
 import com.winterhaven_mc.deathcompass.storage.DataStore;
-import com.winterhaven_mc.util.LanguageManager;
 import com.winterhaven_mc.util.SoundConfiguration;
 import com.winterhaven_mc.util.YamlSoundConfiguration;
 
@@ -40,9 +39,6 @@ public final class PluginMain extends JavaPlugin {
 
 		// Save a copy of the default config.yml if file does not already exist
 		saveDefaultConfig();
-
-		// force loading of messages at startup
-		LanguageManager.getInstance();
 
 		// instantiate sound config
 		soundConfig = new YamlSoundConfiguration(this);
