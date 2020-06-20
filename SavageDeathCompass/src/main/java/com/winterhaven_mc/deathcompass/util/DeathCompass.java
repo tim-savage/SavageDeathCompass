@@ -2,6 +2,7 @@ package com.winterhaven_mc.deathcompass.util;
 
 import com.winterhaven_mc.deathcompass.PluginMain;
 import com.winterhaven_mc.util.LanguageManager;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -9,14 +10,15 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
 
 
 public final class DeathCompass {
 
-	// reference to plugin main class
-	private final static PluginMain plugin = PluginMain.INSTANCE;
+	// static reference to plugin main class
+	private final static PluginMain plugin = JavaPlugin.getPlugin(PluginMain.class);
 
 	// create itemTag string
 	private final static NamespacedKey itemKey = new NamespacedKey(plugin, "isItem");

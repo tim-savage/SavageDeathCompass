@@ -1,6 +1,7 @@
 package com.winterhaven_mc.deathcompass.storage;
 
 import com.winterhaven_mc.deathcompass.PluginMain;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,7 +15,7 @@ import java.util.UUID;
 public abstract class DataStore {
 
 	// static reference to main class
-	private final static PluginMain plugin = PluginMain.INSTANCE;
+	private final static PluginMain plugin = JavaPlugin.getPlugin(PluginMain.class);
 
 	// datastore initialized state
 	private boolean initialized;
