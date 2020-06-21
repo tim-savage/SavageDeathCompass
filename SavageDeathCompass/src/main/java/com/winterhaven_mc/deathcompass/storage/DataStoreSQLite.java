@@ -388,18 +388,17 @@ class DataStoreSQLite extends DataStore implements Listener {
 			while (rs.next()) {
 
 				if (schemaVersion == 0) {
-					String key = rs.getString("playerid");
-					String worldName = rs.getString("worldname");
-					double x = rs.getDouble("x");
-					double y = rs.getDouble("y");
-					double z = rs.getDouble("z");
+					final String key = rs.getString("playerid");
+					final String worldName = rs.getString("worldname");
+					final double x = rs.getDouble("x");
+					final double y = rs.getDouble("y");
+					final double z = rs.getDouble("z");
 
-					World world;
+					// get world by name
+					final World world = plugin.getServer().getWorld(worldName);
 
-					try {
-						world = plugin.getServer().getWorld(worldName);
-					}
-					catch (Exception e) {
+					// if world is null, skip to next record
+					if (world == null) {
 						plugin.getLogger().warning("Stored record has invalid world: "
 								+ worldName + ". Skipping record.");
 						continue;
@@ -429,45 +428,31 @@ class DataStoreSQLite extends DataStore implements Listener {
 				// if schema version 1, try to get world by uuid
 				else if (schemaVersion == 1) {
 
-					String key = rs.getString("playerid");
+					final long playerUidMsb = rs.getLong("playerUidMsb");
+					final long playerUidLsb = rs.getLong("playerUidLsb");
+					final String worldName = rs.getString("worldname");
+					final long worldUidMsb = rs.getLong("worlduuidmsb");
+					final long worldUidLsb = rs.getLong("worlduuidlsb");
+					final double x = rs.getDouble("x");
+					final double y = rs.getDouble("y");
+					final double z = rs.getDouble("z");
 
+					final World world = plugin.getServer().getWorld(new UUID(worldUidMsb, worldUidLsb));
 
-					String worldName = rs.getString("worldname");
-					double x = rs.getDouble("x");
-					double y = rs.getDouble("y");
-					double z = rs.getDouble("z");
-
-					long worldUidMsb = rs.getLong("worlduuidmsb");
-					long worldUidLsb = rs.getLong("worlduuidlsb");
-
-					World world;
-
-					try {
-						world = plugin.getServer().getWorld(new UUID(worldUidMsb, worldUidLsb));
-					}
-					catch (Exception e) {
+					// if world is null, skip to next record
+					if (world == null) {
 						plugin.getLogger().warning("Stored record has invalid world: "
 								+ worldName + ". Skipping record.");
 						continue;
 					}
 
-					// convert key string to UUID
-					UUID playerUUID = null;
-					try {
-						playerUUID = UUID.fromString(key);
-					}
-					catch (Exception e) {
-						if (plugin.debug) {
-							plugin.getLogger().warning("Player UUID in datastore is invalid!");
-						}
-					}
+					// get player uuid from components
+					final UUID playerUid = new UUID(playerUidMsb, playerUidLsb);
 
-					// if playerUUID is null, do not add record to return list
-					if (playerUUID != null) {
-						Location location = new Location(world, x, y, z);
-						DeathRecord deathRecord = new DeathRecord(playerUUID, location);
-						returnList.add(deathRecord);
-					}
+					// add record to return list
+					final Location location = new Location(world, x, y, z);
+					final DeathRecord deathRecord = new DeathRecord(playerUid, location);
+					returnList.add(deathRecord);
 				}
 			}
 		}
