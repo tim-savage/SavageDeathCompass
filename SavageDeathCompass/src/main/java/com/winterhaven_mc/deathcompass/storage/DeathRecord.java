@@ -10,13 +10,12 @@ import java.util.UUID;
 
 
 /**
- * Implements a death compass object for storage.
- * Provides static methods for creating and checking for death compass ItemStacks.
+ * Implements a death record object for storage.
  */
 public final class DeathRecord {
 
 	// player UUID
-	private final UUID playerUUID;
+	private final UUID playerUid;
 
 	// player death location components
 	private final UUID worldUid;
@@ -36,8 +35,9 @@ public final class DeathRecord {
 		Objects.requireNonNull(player);
 
 		// set playerUUID
-		this.playerUUID = player.getUniqueId();
+		this.playerUid = player.getUniqueId();
 
+		// set location components
 		this.worldUid = Objects.requireNonNull(player.getLocation().getWorld()).getUID();
 		this.x = player.getLocation().getX();
 		this.y = player.getLocation().getY();
@@ -45,8 +45,8 @@ public final class DeathRecord {
 	}
 
 
-	public DeathRecord(final UUID playerUUID, final UUID worldUid, final double x, final double y, final double z) {
-		this.playerUUID = playerUUID;
+	public DeathRecord(final UUID playerUid, final UUID worldUid, final double x, final double y, final double z) {
+		this.playerUid = playerUid;
 		this.worldUid = worldUid;
 		this.x = x;
 		this.y = y;
@@ -55,54 +55,50 @@ public final class DeathRecord {
 
 
 	/**
-	 * Class constructor
+	 * Getter for playerUid
 	 *
-	 * @param playerUUID the player UUID for the DeathRecord
-	 * @param location   the player death location for the DeathRecord
+	 * @return UUID for death record player
 	 */
-	DeathRecord(final UUID playerUUID, final Location location) {
-
-		// test for null parameters
-		Objects.requireNonNull(playerUUID);
-		Objects.requireNonNull(location);
-
-		// set playerUUID
-		this.playerUUID = playerUUID;
-
-		this.worldUid = Objects.requireNonNull(location.getWorld()).getUID();
-		this.x = location.getX();
-		this.y = location.getY();
-		this.z = location.getZ();
+	final UUID getPlayerUid() {
+		return this.playerUid;
 	}
 
 
 	/**
-	 * Getter for playerUUID
+	 * Getter for worldUid
 	 *
-	 * @return UUID for death compass player
+	 * @return UUID for death record world
 	 */
-	final UUID getPlayerUUID() {
-
-		// return playerUUID
-		return this.playerUUID;
-	}
-
-
 	public final UUID getWorldUid() {
 		return this.worldUid;
 	}
 
 
+	/**
+	 * Getter for x coordinate
+	 *
+	 * @return x coordinate
+	 */
 	public final double getX() {
 		return this.x;
 	}
 
 
+	/**
+	 * Getter for y coordinate
+	 *
+	 * @return y coordinate
+	 */
 	public final double getY() {
 		return this.y;
 	}
 
 
+	/**
+	 * Getter for z coordinate
+	 *
+	 * @return z coordinate
+	 */
 	public final double getZ() {
 		return this.z;
 	}
