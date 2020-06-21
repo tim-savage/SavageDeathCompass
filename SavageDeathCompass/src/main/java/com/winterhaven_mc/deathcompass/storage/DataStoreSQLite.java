@@ -197,8 +197,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 					return null;
 				}
 
-				Location location = new Location(world, x, y, z);
-				deathRecord = new DeathRecord(playerUUID, location);
+				deathRecord = new DeathRecord(playerUUID, worldUID, x, y, z);
 			}
 		}
 		catch (SQLException e) {
@@ -239,26 +238,22 @@ class DataStoreSQLite extends DataStore implements Listener {
 		final long playerUidMsb = deathRecord.getPlayerUUID().getMostSignificantBits();
 		final long playerUidLsb = deathRecord.getPlayerUUID().getLeastSignificantBits();
 
-		// get location
-		final Location location = deathRecord.getLocation();
+		// get world
+		final World world = plugin.getServer().getWorld(deathRecord.getWorldUid());
 
-		// get world name
-		String testWorldName;
-
-		// test that world in destination location is valid
-		try {
-			//noinspection ConstantConditions
-			testWorldName = location.getWorld().getName();
-		}
-		catch (Exception e) {
+		// if world is null, log message and return
+		if (world == null) {
 			plugin.getLogger().warning("An error occurred while inserting"
 					+ " a record in the SQLite database. World invalid!");
 			return;
 		}
 
-		final String worldName = testWorldName;
-		final long worldUidMsb = location.getWorld().getUID().getMostSignificantBits();
-		final long worldUidLsb = location.getWorld().getUID().getLeastSignificantBits();
+		// get world name
+		final String worldName = world.getName();
+
+		// get world uid components
+		final long worldUidMsb = world.getUID().getMostSignificantBits();
+		final long worldUidLsb = world.getUID().getLeastSignificantBits();
 
 		new BukkitRunnable() {
 			@Override
@@ -272,9 +267,9 @@ class DataStoreSQLite extends DataStore implements Listener {
 					preparedStatement.setString(3, worldName);
 					preparedStatement.setLong(4, worldUidMsb);
 					preparedStatement.setLong(5, worldUidLsb);
-					preparedStatement.setDouble(6, location.getX());
-					preparedStatement.setDouble(7, location.getY());
-					preparedStatement.setDouble(8, location.getZ());
+					preparedStatement.setDouble(6, deathRecord.getX());
+					preparedStatement.setDouble(7, deathRecord.getY());
+					preparedStatement.setDouble(8, deathRecord.getZ());
 
 					// execute prepared statement
 					preparedStatement.executeUpdate();
@@ -314,26 +309,22 @@ class DataStoreSQLite extends DataStore implements Listener {
 			final long playerUidMsb = deathRecord.getPlayerUUID().getMostSignificantBits();
 			final long playerUidLsb = deathRecord.getPlayerUUID().getLeastSignificantBits();
 
-			// get location
-			final Location location = deathRecord.getLocation();
+			// get world
+			final World world = plugin.getServer().getWorld(deathRecord.getWorldUid());
 
-			// get world name
-			String testWorldName;
-
-			// test that world in destination location is valid
-			try {
-				//noinspection ConstantConditions
-				testWorldName = location.getWorld().getName();
-			}
-			catch (Exception e) {
+			// if world is null, skip to next record
+			if (world == null) {
 				plugin.getLogger().warning("An error occurred while inserting"
 						+ " a record in the SQLite database. World invalid!");
 				continue;
 			}
 
-			final String worldName = testWorldName;
-			long worldUidMsb = location.getWorld().getUID().getMostSignificantBits();
-			long worldUidLsb = location.getWorld().getUID().getLeastSignificantBits();
+			// get world name
+			final String worldName = world.getName();
+
+			// get world uid components
+			final long worldUidMsb = world.getUID().getMostSignificantBits();
+			final long worldUidLsb = world.getUID().getLeastSignificantBits();
 
 			new BukkitRunnable() {
 				@Override
@@ -347,9 +338,9 @@ class DataStoreSQLite extends DataStore implements Listener {
 						preparedStatement.setString(3, worldName);
 						preparedStatement.setLong(4, worldUidMsb);
 						preparedStatement.setLong(5, worldUidLsb);
-						preparedStatement.setDouble(6, location.getX());
-						preparedStatement.setDouble(7, location.getY());
-						preparedStatement.setDouble(8, location.getZ());
+						preparedStatement.setDouble(6, deathRecord.getX());
+						preparedStatement.setDouble(7, deathRecord.getY());
+						preparedStatement.setDouble(8, deathRecord.getZ());
 
 
 						// execute prepared statement
@@ -429,89 +420,73 @@ class DataStoreSQLite extends DataStore implements Listener {
 				// if schema version 1, try to get world by uuid
 				else if (schemaVersion == 1) {
 
-					String key = rs.getString("playerid");
-
-
+					long playerUidMsb = rs.getLong("playerUidMsb");
+					long playerUidLsb = rs.getLong("playerUidLsb");
 					String worldName = rs.getString("worldname");
+					long worldUidMsb = rs.getLong("worldUidMsb");
+					long worldUidLsb = rs.getLong("worldUidLsb");
 					double x = rs.getDouble("x");
 					double y = rs.getDouble("y");
 					double z = rs.getDouble("z");
 
-					long worldUidMsb = rs.getLong("worlduuidmsb");
-					long worldUidLsb = rs.getLong("worlduuidlsb");
+					World world = plugin.getServer().getWorld(new UUID(worldUidMsb, worldUidLsb));
 
-					World world;
-
-					try {
-						world = plugin.getServer().getWorld(new UUID(worldUidMsb, worldUidLsb));
-					}
-					catch (Exception e) {
+					if (world == null) {
 						plugin.getLogger().warning("Stored record has invalid world: "
 								+ worldName + ". Skipping record.");
 						continue;
 					}
 
-					// convert key string to UUID
-					UUID playerUUID = null;
-					try {
-						playerUUID = UUID.fromString(key);
-					}
-					catch (Exception e) {
-						if (plugin.debug) {
-							plugin.getLogger().warning("Player UUID in datastore is invalid!");
-						}
-					}
+					// convert components to player uuid
+					UUID playerUUID = new UUID(playerUidMsb, playerUidLsb);
 
-					// if playerUUID is null, do not add record to return list
-					if (playerUUID != null) {
-						Location location = new Location(world, x, y, z);
-						DeathRecord deathRecord = new DeathRecord(playerUUID, location);
-						returnList.add(deathRecord);
-					}
+					DeathRecord deathRecord = new DeathRecord(playerUUID, world.getUID(), x, y, z);
+					returnList.add(deathRecord);
 				}
 			}
 		}
 		catch (Exception e) {
 
-				// output simple error message
-				plugin.getLogger().warning("An error occurred while trying to fetch all records from the SQLite database.");
-				plugin.getLogger().warning(e.getLocalizedMessage());
+			// output simple error message
+			plugin.getLogger().warning("An error occurred while trying "
+					+ "to fetch all records from the SQLite database.");
+			plugin.getLogger().warning(e.getLocalizedMessage());
 
-				// if debugging is enabled, output stack trace
-				if (plugin.debug) {
-					e.getStackTrace();
-				}
+			// if debugging is enabled, output stack trace
+			if (plugin.debug) {
+				e.getStackTrace();
 			}
-
-			// return results
-			return returnList;
-
 		}
+
+		// return results
+		return returnList;
+
+	}
 
 
 	@Override
-	DeathRecord deleteRecord(final UUID playerUUID, final UUID worldUID) {
+	DeathRecord deleteRecord(final UUID playerUid, final UUID worldUid) {
 
 		// if player uuid is null return null record
-		if (playerUUID == null) {
+		if (playerUid == null) {
 			return null;
 		}
 
 		// if world uid is null return null record
-		if (worldUID == null) {
+		if (worldUid == null) {
 			return null;
 		}
 
 		// get player uid components
-		final long playerUidMsb = playerUUID.getMostSignificantBits();
-		final long playerUidLsb = playerUUID.getLeastSignificantBits();
+		final long playerUidMsb = playerUid.getMostSignificantBits();
+		final long playerUidLsb = playerUid.getLeastSignificantBits();
 
 		// get world uid components
-		final long worldUidMsb = worldUID.getMostSignificantBits();
-		final long worldUidLsb = worldUID.getLeastSignificantBits();
+		final long worldUidMsb = worldUid.getMostSignificantBits();
+		final long worldUidLsb = worldUid.getLeastSignificantBits();
 
 		// get destination record to be deleted, for return
-		DeathRecord deathRecord = selectRecord(playerUUID, worldUID);
+		DeathRecord deathRecord = selectRecord(playerUid, worldUid);
 
 		try {
 			// create prepared statement
@@ -533,7 +508,8 @@ class DataStoreSQLite extends DataStore implements Listener {
 		catch (Exception e) {
 
 			// output simple error message
-			plugin.getLogger().warning("An error occurred while attempting to delete a record from the SQLite database.");
+			plugin.getLogger().warning("An error occurred while attempting "
+					+ "to delete a record from the SQLite database.");
 			plugin.getLogger().warning(e.getLocalizedMessage());
 
 			// if debugging is enabled, output stack trace
