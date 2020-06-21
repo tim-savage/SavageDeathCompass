@@ -3,7 +3,6 @@ package com.winterhaven_mc.deathcompass.storage;
 import com.winterhaven_mc.deathcompass.PluginMain;
 
 import org.bukkit.World;
-import org.bukkit.Location;
 import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -235,8 +234,8 @@ class DataStoreSQLite extends DataStore implements Listener {
 		deathRecordCache.put(deathRecord);
 
 		// get player uid components
-		final long playerUidMsb = deathRecord.getPlayerUUID().getMostSignificantBits();
-		final long playerUidLsb = deathRecord.getPlayerUUID().getLeastSignificantBits();
+		final long playerUidMsb = deathRecord.getPlayerUid().getMostSignificantBits();
+		final long playerUidLsb = deathRecord.getPlayerUid().getLeastSignificantBits();
 
 		// get world
 		final World world = plugin.getServer().getWorld(deathRecord.getWorldUid());
@@ -306,8 +305,8 @@ class DataStoreSQLite extends DataStore implements Listener {
 			deathRecordCache.put(deathRecord);
 
 			// get player uid components
-			final long playerUidMsb = deathRecord.getPlayerUUID().getMostSignificantBits();
-			final long playerUidLsb = deathRecord.getPlayerUUID().getLeastSignificantBits();
+			final long playerUidMsb = deathRecord.getPlayerUid().getMostSignificantBits();
+			final long playerUidLsb = deathRecord.getPlayerUid().getLeastSignificantBits();
 
 			// get world
 			final World world = plugin.getServer().getWorld(deathRecord.getWorldUid());
@@ -385,12 +384,9 @@ class DataStoreSQLite extends DataStore implements Listener {
 					double y = rs.getDouble("y");
 					double z = rs.getDouble("z");
 
-					World world;
+					World world = plugin.getServer().getWorld(worldName);
 
-					try {
-						world = plugin.getServer().getWorld(worldName);
-					}
-					catch (Exception e) {
+					if (world == null) {
 						plugin.getLogger().warning("Stored record has invalid world: "
 								+ worldName + ". Skipping record.");
 						continue;
@@ -409,12 +405,9 @@ class DataStoreSQLite extends DataStore implements Listener {
 
 					// if playerUUID is not null, add record to return list
 					if (playerUUID != null) {
-						Location location = new Location(world, x, y, z);
-						DeathRecord deathRecord = new DeathRecord(playerUUID, location);
+						DeathRecord deathRecord = new DeathRecord(playerUUID, world.getUID(), x, y, z);
 						returnList.add(deathRecord);
 					}
-
-
 				}
 
 				// if schema version 1, try to get world by uuid
