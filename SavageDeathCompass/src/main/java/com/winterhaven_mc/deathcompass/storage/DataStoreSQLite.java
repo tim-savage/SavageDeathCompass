@@ -9,9 +9,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 
 class DataStoreSQLite extends DataStore implements Listener {
@@ -24,6 +22,9 @@ class DataStoreSQLite extends DataStore implements Listener {
 
 	// death record cache
 	private final DeathRecordCache deathRecordCache;
+
+	// schema version
+	private int schemaVersion;
 
 
 	/**
@@ -53,7 +54,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 		// if data store is already initialized, do nothing and return
 		if (this.isInitialized()) {
 			if (plugin.debug) {
-				plugin.getLogger().info("sqlite datastore already initialized.");
+				plugin.getLogger().info("SQLite datastore already initialized.");
 			}
 			return;
 		}
@@ -70,37 +71,95 @@ class DataStoreSQLite extends DataStore implements Listener {
 
 		// create a database connection
 		connection = DriverManager.getConnection(dbUrl);
-		Statement statement = connection.createStatement();
 
-		// execute table creation statement
-		statement.executeUpdate(Queries.getQuery("createDeathLocationTable"));
+		// update database schema if necessary
+		updateSchema();
 
 		// set initialized true
 		setInitialized(true);
-		if (plugin.debug) {
-			plugin.getLogger().info("sqlite datastore initialized.");
+		plugin.getLogger().info("SQLite datastore initialized.");
+	}
+
+
+	private int getSchemaVersion() {
+
+		int version = -1;
+
+		try {
+			final Statement statement = connection.createStatement();
+
+			ResultSet rs = statement.executeQuery(Queries.getQuery("GetUserVersion"));
+
+			while (rs.next()) {
+				version = rs.getInt(1);
+			}
+		}
+		catch (SQLException e) {
+			plugin.getLogger().warning("Could not get schema version!");
+		}
+		return version;
+	}
+
+
+	private void updateSchema() throws SQLException {
+
+		schemaVersion = getSchemaVersion();
+
+		final Statement statement = connection.createStatement();
+
+		if (schemaVersion == 0) {
+			int count;
+
+			// check for existing table
+			ResultSet rs = statement.executeQuery(Queries.getQuery("SelectDeathLocationTable"));
+			if (rs.next()) {
+
+				// get existing records
+				Collection<DeathRecord> existingRecords = selectAllRecords();
+
+				// drop schema v0 table
+				statement.executeUpdate(Queries.getQuery("DropDeathLocationTable"));
+
+				// create schema v1 table
+				statement.executeUpdate(Queries.getQuery("CreateDeathLocationTable"));
+
+				// insert existing records in new table
+				count = insertRecords(existingRecords);
+				plugin.getLogger().info(count + " records migrated to table schema v1.");
+			}
+
+			// update schema version in database
+			statement.executeUpdate("PRAGMA user_version = 1");
+
+			// update schema version field
+			schemaVersion = 1;
 		}
 
+		// execute table creation statement
+		statement.executeUpdate(Queries.getQuery("CreateDeathLocationTable"));
 	}
 
 
 	@Override
-	public DeathRecord getRecord(final UUID playerUUID, final String worldName) {
+	public DeathRecord selectRecord(final UUID playerUUID, final UUID worldUID) {
 
 		// if key is null return null record
 		if (playerUUID == null) {
 			return null;
 		}
 
-		// try to get world uid from world name
-		//noinspection ConstantConditions
-		UUID worldUID = plugin.getServer().getWorld(worldName).getUID();
-
 		// if world uid is null, return null record
-		//noinspection ConstantConditions
 		if (worldUID == null) {
 			return null;
 		}
+
+		// get player uuid components
+		final long playerUidMsb = playerUUID.getMostSignificantBits();
+		final long playerUidLsb = playerUUID.getLeastSignificantBits();
+
+		// get world uid components
+		final long worldUidMsb = worldUID.getMostSignificantBits();
+		final long worldUidLsb = worldUID.getLeastSignificantBits();
 
 		// try cache first
 		DeathRecord deathRecord = deathRecordCache.get(playerUUID, worldUID);
@@ -110,14 +169,13 @@ class DataStoreSQLite extends DataStore implements Listener {
 			return deathRecord;
 		}
 
-		// convert playerUUID to string
-		String playerUUIDString = playerUUID.toString();
-
 		try {
 			PreparedStatement preparedStatement = connection.prepareStatement(Queries.getQuery("SelectLocation"));
 
-			preparedStatement.setString(1, playerUUIDString);
-			preparedStatement.setString(2, worldName);
+			preparedStatement.setLong(1, playerUidMsb);
+			preparedStatement.setLong(2, playerUidLsb);
+			preparedStatement.setLong(3, worldUidMsb);
+			preparedStatement.setLong(4, worldUidLsb);
 
 			// execute sql query
 			ResultSet rs = preparedStatement.executeQuery();
@@ -126,17 +184,19 @@ class DataStoreSQLite extends DataStore implements Listener {
 			if (rs.next()) {
 
 				// get stored world and coordinates
-				preparedStatement.setString(1, playerUUIDString);
+				String worldName = rs.getString("worldname");
 				double x = rs.getDouble("x");
 				double y = rs.getDouble("y");
 				double z = rs.getDouble("z");
 
-				if (plugin.getServer().getWorld(worldName) == null) {
-					plugin.getLogger().warning("Stored world not found!");
+				// get server world by uid
+				World world = plugin.getServer().getWorld(worldUID);
+
+				if (world == null) {
+					plugin.getLogger().warning("World " + worldName + " is not loaded!");
 					return null;
 				}
 
-				World world = plugin.getServer().getWorld(worldName);
 				Location location = new Location(world, x, y, z);
 				deathRecord = new DeathRecord(playerUUID, location);
 			}
@@ -165,7 +225,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 
 
 	@Override
-	public void putRecord(final DeathRecord deathRecord) {
+	public void insertRecord(final DeathRecord deathRecord) {
 
 		// if record is null do nothing and return
 		if (deathRecord == null) {
@@ -175,8 +235,9 @@ class DataStoreSQLite extends DataStore implements Listener {
 		// cache death record
 		deathRecordCache.put(deathRecord);
 
-		// get playerUUID as string
-		final String playerUUIDString = deathRecord.getPlayerUUID().toString();
+		// get player uid components
+		final long playerUidMsb = deathRecord.getPlayerUUID().getMostSignificantBits();
+		final long playerUidLsb = deathRecord.getPlayerUUID().getLeastSignificantBits();
 
 		// get location
 		final Location location = deathRecord.getLocation();
@@ -194,7 +255,10 @@ class DataStoreSQLite extends DataStore implements Listener {
 					+ " a record in the SQLite database. World invalid!");
 			return;
 		}
+
 		final String worldName = testWorldName;
+		final long worldUidMsb = location.getWorld().getUID().getMostSignificantBits();
+		final long worldUidLsb = location.getWorld().getUID().getLeastSignificantBits();
 
 		new BukkitRunnable() {
 			@Override
@@ -203,11 +267,14 @@ class DataStoreSQLite extends DataStore implements Listener {
 					// create prepared statement
 					PreparedStatement preparedStatement = connection.prepareStatement(Queries.getQuery("InsertLocation"));
 
-					preparedStatement.setString(1, playerUUIDString);
-					preparedStatement.setString(2, worldName);
-					preparedStatement.setDouble(3, location.getX());
-					preparedStatement.setDouble(4, location.getY());
-					preparedStatement.setDouble(5, location.getZ());
+					preparedStatement.setLong(1, playerUidMsb);
+					preparedStatement.setLong(2, playerUidLsb);
+					preparedStatement.setString(3, worldName);
+					preparedStatement.setLong(4, worldUidMsb);
+					preparedStatement.setLong(5, worldUidLsb);
+					preparedStatement.setDouble(6, location.getX());
+					preparedStatement.setDouble(7, location.getY());
+					preparedStatement.setDouble(8, location.getZ());
 
 					// execute prepared statement
 					preparedStatement.executeUpdate();
@@ -229,9 +296,88 @@ class DataStoreSQLite extends DataStore implements Listener {
 
 
 	@Override
-	List<DeathRecord> getAllRecords() {
+	public int insertRecords(final Collection<DeathRecord> deathRecords) {
 
-		List<DeathRecord> returnList = new ArrayList<>();
+		// if record is null do nothing and return
+		if (deathRecords == null) {
+			return 0;
+		}
+
+		int count = 0;
+
+		for (DeathRecord deathRecord : deathRecords) {
+
+			// cache death record
+			deathRecordCache.put(deathRecord);
+
+			// get player uid components
+			final long playerUidMsb = deathRecord.getPlayerUUID().getMostSignificantBits();
+			final long playerUidLsb = deathRecord.getPlayerUUID().getLeastSignificantBits();
+
+			// get location
+			final Location location = deathRecord.getLocation();
+
+			// get world name
+			String testWorldName;
+
+			// test that world in destination location is valid
+			try {
+				//noinspection ConstantConditions
+				testWorldName = location.getWorld().getName();
+			}
+			catch (Exception e) {
+				plugin.getLogger().warning("An error occurred while inserting"
+						+ " a record in the SQLite database. World invalid!");
+				continue;
+			}
+
+			final String worldName = testWorldName;
+			long worldUidMsb = location.getWorld().getUID().getMostSignificantBits();
+			long worldUidLsb = location.getWorld().getUID().getLeastSignificantBits();
+
+			new BukkitRunnable() {
+				@Override
+				public void run() {
+					try {
+						// create prepared statement
+						PreparedStatement preparedStatement = connection.prepareStatement(Queries.getQuery("InsertLocation"));
+
+						preparedStatement.setLong(1, playerUidMsb);
+						preparedStatement.setLong(2, playerUidLsb);
+						preparedStatement.setString(3, worldName);
+						preparedStatement.setLong(4, worldUidMsb);
+						preparedStatement.setLong(5, worldUidLsb);
+						preparedStatement.setDouble(6, location.getX());
+						preparedStatement.setDouble(7, location.getY());
+						preparedStatement.setDouble(8, location.getZ());
+
+
+						// execute prepared statement
+						preparedStatement.executeUpdate();
+					}
+					catch (Exception e) {
+
+						// output simple error message
+						plugin.getLogger().warning("An error occurred while inserting a record into the SQLite database.");
+						plugin.getLogger().warning(e.getLocalizedMessage());
+
+						// if debugging is enabled, output stack trace
+						if (plugin.debug) {
+							e.getStackTrace();
+						}
+					}
+				}
+			}.runTaskAsynchronously(plugin);
+			count++;
+		}
+		return count;
+	}
+
+
+	@Override
+	Collection<DeathRecord> selectAllRecords() {
+
+		Collection<DeathRecord> returnList = new ArrayList<>();
 
 		try {
 			PreparedStatement preparedStatement = connection.prepareStatement(Queries.getQuery("SelectAllLocations"));
@@ -241,77 +387,140 @@ class DataStoreSQLite extends DataStore implements Listener {
 
 			while (rs.next()) {
 
-				String key = rs.getString("playerid");
-				String worldName = rs.getString("worldname");
-				double x = rs.getDouble("x");
-				double y = rs.getDouble("y");
-				double z = rs.getDouble("z");
+				if (schemaVersion == 0) {
+					String key = rs.getString("playerid");
+					String worldName = rs.getString("worldname");
+					double x = rs.getDouble("x");
+					double y = rs.getDouble("y");
+					double z = rs.getDouble("z");
 
-				World world;
+					World world;
 
-				try {
-					world = plugin.getServer().getWorld(worldName);
-				}
-				catch (Exception e) {
-					plugin.getLogger().warning("Stored record has invalid world: "
-							+ worldName + ". Skipping record.");
-					continue;
-				}
-
-				// convert key string to UUID
-				UUID playerUUID = null;
-				try {
-					playerUUID = UUID.fromString(key);
-				}
-				catch (Exception e) {
-					if (plugin.debug) {
-						plugin.getLogger().warning("Player UUID in datastore is invalid!");
+					try {
+						world = plugin.getServer().getWorld(worldName);
 					}
+					catch (Exception e) {
+						plugin.getLogger().warning("Stored record has invalid world: "
+								+ worldName + ". Skipping record.");
+						continue;
+					}
+
+					// convert key string to UUID
+					UUID playerUUID = null;
+					try {
+						playerUUID = UUID.fromString(key);
+					}
+					catch (Exception e) {
+						if (plugin.debug) {
+							plugin.getLogger().warning("Player UUID in datastore is invalid!");
+						}
+					}
+
+					// if playerUUID is not null, add record to return list
+					if (playerUUID != null) {
+						Location location = new Location(world, x, y, z);
+						DeathRecord deathRecord = new DeathRecord(playerUUID, location);
+						returnList.add(deathRecord);
+					}
+
+
 				}
 
-				// if playerUUID is null, do not add record to return list
-				if (playerUUID != null) {
-					Location location = new Location(world, x, y, z);
-					DeathRecord deathRecord = new DeathRecord(playerUUID, location);
-					returnList.add(deathRecord);
+				// if schema version 1, try to get world by uuid
+				else if (schemaVersion == 1) {
+
+					String key = rs.getString("playerid");
+
+
+					String worldName = rs.getString("worldname");
+					double x = rs.getDouble("x");
+					double y = rs.getDouble("y");
+					double z = rs.getDouble("z");
+
+					long worldUidMsb = rs.getLong("worlduuidmsb");
+					long worldUidLsb = rs.getLong("worlduuidlsb");
+
+					World world;
+
+					try {
+						world = plugin.getServer().getWorld(new UUID(worldUidMsb, worldUidLsb));
+					}
+					catch (Exception e) {
+						plugin.getLogger().warning("Stored record has invalid world: "
+								+ worldName + ". Skipping record.");
+						continue;
+					}
+
+					// convert key string to UUID
+					UUID playerUUID = null;
+					try {
+						playerUUID = UUID.fromString(key);
+					}
+					catch (Exception e) {
+						if (plugin.debug) {
+							plugin.getLogger().warning("Player UUID in datastore is invalid!");
+						}
+					}
+
+					// if playerUUID is null, do not add record to return list
+					if (playerUUID != null) {
+						Location location = new Location(world, x, y, z);
+						DeathRecord deathRecord = new DeathRecord(playerUUID, location);
+						returnList.add(deathRecord);
+					}
 				}
 			}
 		}
 		catch (Exception e) {
 
-			// output simple error message
-			plugin.getLogger().warning("An error occurred while trying to fetch all records from the SQLite database.");
-			plugin.getLogger().warning(e.getLocalizedMessage());
+				// output simple error message
+				plugin.getLogger().warning("An error occurred while trying to fetch all records from the SQLite database.");
+				plugin.getLogger().warning(e.getLocalizedMessage());
 
-			// if debugging is enabled, output stack trace
-			if (plugin.debug) {
-				e.getStackTrace();
+				// if debugging is enabled, output stack trace
+				if (plugin.debug) {
+					e.getStackTrace();
+				}
 			}
+
+			// return results
+			return returnList;
+
 		}
-
-		// return results
-		return returnList;
-
-	}
 
 
 	@Override
-	DeathRecord deleteRecord(final UUID playerUUID, final String worldName) {
+	DeathRecord deleteRecord(final UUID playerUUID, final UUID worldUID) {
 
-		// if key is null return null record
-		if (playerUUID == null || worldName == null || worldName.isEmpty()) {
+		// if player uuid is null return null record
+		if (playerUUID == null) {
 			return null;
 		}
 
+		// if world uid is null return null record
+		if (worldUID == null) {
+			return null;
+		}
+
+		// get player uid components
+		final long playerUidMsb = playerUUID.getMostSignificantBits();
+		final long playerUidLsb = playerUUID.getLeastSignificantBits();
+
+		// get world uid components
+		final long worldUidMsb = worldUID.getMostSignificantBits();
+		final long worldUidLsb = worldUID.getLeastSignificantBits();
+
 		// get destination record to be deleted, for return
-		DeathRecord deathRecord = getRecord(playerUUID, worldName);
+		DeathRecord deathRecord = selectRecord(playerUUID, worldUID);
 
 		try {
 			// create prepared statement
 			PreparedStatement preparedStatement = connection.prepareStatement(Queries.getQuery("DeleteLocation"));
 
-			preparedStatement.setString(1, playerUUID.toString());
-			preparedStatement.setString(1, worldName);
+			preparedStatement.setLong(1, playerUidMsb);
+			preparedStatement.setLong(2, playerUidLsb);
+			preparedStatement.setLong(3, worldUidMsb);
+			preparedStatement.setLong(4, worldUidLsb);
 
 			// execute prepared statement
 			int rowsAffected = preparedStatement.executeUpdate();

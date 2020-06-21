@@ -97,8 +97,8 @@ public class PlayerEventListener implements Listener {
 		// create new death record for player
 		DeathRecord deathRecord = new DeathRecord(player);
 
-		// put death record in database
-		plugin.dataStore.putRecord(deathRecord);
+		// insert death record in database
+		plugin.dataStore.insertRecord(deathRecord);
 
 		// put player uuid in deathTriggeredRespawn set
 		deathTriggeredRespawn.add(player.getUniqueId());
@@ -369,15 +369,16 @@ public class PlayerEventListener implements Listener {
 		// check for null parameter
 		Objects.requireNonNull(player);
 
-		// set worldName to player current world
-		String worldName = player.getWorld().getName();
+		// get worldUid for player current world
+		final UUID worldUid = player.getWorld().getUID();
 
-		// set location to world spawn location
+		// set location to world spawn location, to be used as default if no stored death record found
 		Location location = player.getWorld().getSpawnLocation();
 
 		// fetch death record from datastore
-		DeathRecord deathRecord = plugin.dataStore.getRecord(player.getUniqueId(), worldName);
+		final DeathRecord deathRecord = plugin.dataStore.selectRecord(player.getUniqueId(), worldUid);
 
+		// if fetched record is not null, set location
 		if (deathRecord != null) {
 			location = deathRecord.getLocation();
 		}
