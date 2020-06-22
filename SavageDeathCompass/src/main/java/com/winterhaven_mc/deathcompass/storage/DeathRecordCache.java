@@ -1,7 +1,6 @@
 package com.winterhaven_mc.deathcompass.storage;
 
 import com.winterhaven_mc.deathcompass.PluginMain;
-import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -49,16 +48,13 @@ final class DeathRecordCache implements Listener {
 		Objects.requireNonNull(deathRecord);
 
 		// get player UUID from death record
-		UUID playerUUID = deathRecord.getPlayerUUID();
+		final UUID playerUid = deathRecord.getPlayerUid();
 
-		// get death location from death record
-		Location location = deathRecord.getLocation();
-
-		// get world UID from death record location
-		UUID worldUID = Objects.requireNonNull(location.getWorld()).getUID();
+		// get world UUID from death record location
+		final UUID worldUid = deathRecord.getWorldUid();
 
 		// get map for player
-		Map<UUID, DeathRecord> playerMap = deathRecordMap.get(playerUUID);
+		Map<UUID, DeathRecord> playerMap = deathRecordMap.get(playerUid);
 
 		// if no cached entry exists for player, create new map
 		if (playerMap == null) {
@@ -68,50 +64,50 @@ final class DeathRecordCache implements Listener {
 		}
 
 		// put this deathRecord into world map
-		playerMap.put(worldUID, deathRecord);
+		playerMap.put(worldUid, deathRecord);
 
 		// put world map into player map
-		deathRecordMap.put(playerUUID, playerMap);
+		deathRecordMap.put(playerUid, playerMap);
 	}
 
 
 	/**
 	 * Fetch death record for player uuid / world uuid
 	 *
-	 * @param playerUUID player UUID to use as key
-	 * @param worldUID   world UID to use as key
-	 * @return deathRecord containing playerUUID and death location for world, or null if no record exists
+	 * @param playerUid player UUID to use as key
+	 * @param worldUid  world UID to use as key
+	 * @return deathRecord containing playerUid and death location for world, or null if no record exists
 	 */
-	final DeathRecord get(final UUID playerUUID, final UUID worldUID) {
+	final DeathRecord get(final UUID playerUid, final UUID worldUid) {
 
-		// if passed playerUUID is null, return null record
-		if (playerUUID == null) {
+		// if passed playerUid is null, return null record
+		if (playerUid == null) {
 			if (plugin.debug) {
-				plugin.getLogger().warning("LocationCache.get was passed null playerUUID!");
+				plugin.getLogger().warning("LocationCache.get was passed null playerUid!");
 			}
 			return null;
 		}
 
-		// if passed worldUID is null, return null record
-		if (worldUID == null) {
+		// if passed worldUid is null, return null record
+		if (worldUid == null) {
 			if (plugin.debug) {
-				plugin.getLogger().warning("LocationCache.get was passed null worldUID!");
+				plugin.getLogger().warning("LocationCache.get was passed null worldUid!");
 			}
 			return null;
 		}
 
 		// if map for player does not exist, return null record
-		if (deathRecordMap.get(playerUUID) == null) {
+		if (deathRecordMap.get(playerUid) == null) {
 			return null;
 		}
 
 		// if location in map is null, return null record
-		if (deathRecordMap.get(playerUUID).get(worldUID) == null) {
+		if (deathRecordMap.get(playerUid).get(worldUid) == null) {
 			return null;
 		}
 
 		// return record fetched from cache
-		return deathRecordMap.get(playerUUID).get(worldUID);
+		return deathRecordMap.get(playerUid).get(worldUid);
 	}
 
 
@@ -124,4 +120,5 @@ final class DeathRecordCache implements Listener {
 	final void onPlayerQuit(PlayerQuitEvent event) {
 		deathRecordMap.remove(event.getPlayer().getUniqueId());
 	}
+
 }
