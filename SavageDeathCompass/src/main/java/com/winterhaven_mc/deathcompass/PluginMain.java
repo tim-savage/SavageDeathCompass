@@ -35,7 +35,7 @@ public final class PluginMain extends JavaPlugin {
 		// Save a copy of the default config.yml if file does not already exist
 		saveDefaultConfig();
 
-		// load language manager
+		// initialize language manager
 		LanguageManager.init();
 
 		// instantiate sound config
