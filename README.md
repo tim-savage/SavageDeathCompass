@@ -34,7 +34,7 @@ Command | Description | Permission
 ------- | ----------- | ----------
 `/deathcompass help [command]` | Displays short help and usage message. | deathcompass.help
 `/deathcompass reload` | Reloads config file. Requires deathcompass.reload permission. | deathcompass.reload
-`/deathcompass status` | Displays version info and config settings. Requires deathcompass.status permission. | deathcompass.status
+`/deathcompass status` | Displays version info and config settings. | deathcompass.status
 
 # Installation: #
 
