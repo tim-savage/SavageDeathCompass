@@ -32,7 +32,7 @@ Command | Description
 
 Permission | Description | Default
 ---------- | ----------- | -------
-`deathcompass.use` | Give player a DeathCompass when respawning after death | false
+`deathcompass.use` | Give player a DeathCompass when respawning after death | true
 `deathcompass.status` | Allow viewing plugin status | op
 `deathcompass.reload` | Allow reloading of configuration file	| op
 `deathcompass.admin` | All admin commands | op
