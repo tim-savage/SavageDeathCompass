@@ -1,8 +1,8 @@
-# Description: #
+### Description:
 
 This plugin was created as an alternative to the /back on death command. With DeathCompass enabled, a player is given a compass when they respawn after death. This compass points to their last death location in that world, so they can find their dropped loot. It also works well alongside various death chest and graveyard plugins.
 
-# Features: #
+### Features:
 
 * Customizable item name, supports color codes
 * Customizable item lore with color codes
@@ -20,7 +20,7 @@ This plugin was created as an alternative to the /back on death command. With De
 * Customizable sound effects
 * A perfect compliment to SavageDeathChest and SavageGraveyards
 
-# Permissions: #
+### Permissions:
 
 Permission | Description | Default
 ---------- | ----------- | -------
@@ -28,7 +28,7 @@ Permission | Description | Default
 `deathcompass.reload` | Allow reloading of configuration file	| op
 `deathcompass.admin` | All admin commands | op
 
-# Commands: #
+### Commands:
 
 Command | Description | Permission
 ------- | ----------- | ----------
@@ -36,7 +36,7 @@ Command | Description | Permission
 `/deathcompass reload` | Reloads config file. Requires deathcompass.reload permission. | deathcompass.reload
 `/deathcompass status` | Displays version info and config settings. | deathcompass.status
 
-# Installation: #
+### Installation:
 
 Place the jar file in your server plugins folder and restart the server.
 Open the config.yml file with your favorite text editor, and add any worlds in which you would like the plugin to be active to the enabled-worlds section, and make any other configuration changes you desire.
