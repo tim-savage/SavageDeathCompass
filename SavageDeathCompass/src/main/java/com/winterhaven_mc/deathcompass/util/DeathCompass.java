@@ -1,6 +1,8 @@
 package com.winterhaven_mc.deathcompass.util;
 
 import com.winterhaven_mc.deathcompass.PluginMain;
+import com.winterhaven_mc.util.LanguageManager;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -8,14 +10,15 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
 
 
 public final class DeathCompass {
 
-	// reference to plugin main class
-	private final static PluginMain plugin = PluginMain.INSTANCE;
+	// static reference to plugin main class
+	private final static PluginMain plugin = JavaPlugin.getPlugin(PluginMain.class);
 
 	// create itemTag string
 	private final static NamespacedKey itemKey = new NamespacedKey(plugin, "isItem");
@@ -84,10 +87,10 @@ public final class DeathCompass {
 	private static void setMetaData(final ItemStack itemStack) {
 
 		// retrieve item name from language file file
-		String itemName = plugin.messageManager.getItemName();
+		String itemName = LanguageManager.getInstance().getItemName();
 
 		// retrieve item lore from language file file
-		List<String> itemLore = plugin.messageManager.getItemLore();
+		List<String> itemLore = LanguageManager.getInstance().getItemLore();
 
 		// get item metadata object
 		final ItemMeta itemMeta = itemStack.getItemMeta();

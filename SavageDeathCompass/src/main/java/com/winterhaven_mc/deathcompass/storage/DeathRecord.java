@@ -1,6 +1,8 @@
 package com.winterhaven_mc.deathcompass.storage;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import java.util.Objects;
@@ -8,16 +10,18 @@ import java.util.UUID;
 
 
 /**
- * Implements a death compass object for storage.
- * Provides static methods for creating and checking for death compass ItemStacks.
+ * Implements a death record object for storage.
  */
 public final class DeathRecord {
 
 	// player UUID
-	private final UUID playerUUID;
+	private final UUID playerUid;
 
-	// player death location
-	private final Location location;
+	// player death location components
+	private final UUID worldUid;
+	private final double x;
+	private final double y;
+	private final double z;
 
 
 	/**
@@ -31,51 +35,72 @@ public final class DeathRecord {
 		Objects.requireNonNull(player);
 
 		// set playerUUID
-		this.playerUUID = player.getUniqueId();
+		this.playerUid = player.getUniqueId();
 
-		// set player death location with defensive copy of player location
-		this.location = new Location(player.getLocation().getWorld(),
-				player.getLocation().getX(),
-				player.getLocation().getY(),
-				player.getLocation().getZ(),
-				player.getLocation().getYaw(),
-				player.getLocation().getPitch());
+		// set location components
+		this.worldUid = Objects.requireNonNull(player.getLocation().getWorld()).getUID();
+		this.x = player.getLocation().getX();
+		this.y = player.getLocation().getY();
+		this.z = player.getLocation().getZ();
+	}
+
+
+	public DeathRecord(final UUID playerUid, final UUID worldUid, final double x, final double y, final double z) {
+		this.playerUid = playerUid;
+		this.worldUid = worldUid;
+		this.x = x;
+		this.y = y;
+		this.z = z;
 	}
 
 
 	/**
-	 * Class constructor
+	 * Getter for playerUid
 	 *
-	 * @param playerUUID the player UUID for the DeathRecord
-	 * @param location   the player death location for the DeathRecord
+	 * @return UUID for death record player
 	 */
-	DeathRecord(final UUID playerUUID, final Location location) {
-
-		// test for null parameters
-		Objects.requireNonNull(playerUUID);
-		Objects.requireNonNull(location);
-
-		// set playerUUID
-		this.playerUUID = playerUUID;
-
-		this.location = new Location(location.getWorld(),
-				location.getX(),
-				location.getY(),
-				location.getZ(),
-				location.getYaw(),
-				location.getPitch());
+	final UUID getPlayerUid() {
+		return this.playerUid;
 	}
 
 
 	/**
-	 * Getter for playerUUID
+	 * Getter for worldUid
 	 *
-	 * @return UUID for death compass player
+	 * @return UUID for death record world
 	 */
-	final UUID getPlayerUUID() {
+	public final UUID getWorldUid() {
+		return this.worldUid;
+	}
 
-		// return playerUUID
-		return this.playerUUID;
+
+	/**
+	 * Getter for x coordinate
+	 *
+	 * @return x coordinate
+	 */
+	public final double getX() {
+		return this.x;
+	}
+
+
+	/**
+	 * Getter for y coordinate
+	 *
+	 * @return y coordinate
+	 */
+	public final double getY() {
+		return this.y;
+	}
+
+
+	/**
+	 * Getter for z coordinate
+	 *
+	 * @return z coordinate
+	 */
+	public final double getZ() {
+		return this.z;
 	}
 
 
@@ -86,13 +111,16 @@ public final class DeathRecord {
 	 */
 	public final Location getLocation() {
 
-		// return defensive copy of location
-		return new Location(this.location.getWorld(),
-				this.location.getX(),
-				this.location.getY(),
-				this.location.getZ(),
-				this.location.getYaw(),
-				this.location.getPitch());
+		// get world from uid
+		final World world = Bukkit.getServer().getWorld(this.worldUid);
+
+		// if world is invalid, return null
+		if (world == null) {
+			return null;
+		}
+
+		// return new location object
+		return new Location(world, this.x, this.y, this.z);
 	}
 
 }

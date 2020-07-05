@@ -1,9 +1,9 @@
 package com.winterhaven_mc.deathcompass.listeners;
 
 import com.winterhaven_mc.deathcompass.PluginMain;
+import com.winterhaven_mc.deathcompass.messages.Message;
 import com.winterhaven_mc.deathcompass.sounds.SoundId;
 import com.winterhaven_mc.deathcompass.storage.DeathRecord;
-import com.winterhaven_mc.deathcompass.messages.MessageId;
 
 import com.winterhaven_mc.deathcompass.util.DeathCompass;
 import org.bukkit.ChatColor;
@@ -21,6 +21,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+
+import static com.winterhaven_mc.deathcompass.messages.MessageId.ACTION_ITEM_DESTROY;
+import static com.winterhaven_mc.deathcompass.messages.MessageId.ACTION_PLAYER_RESPAWN;
 
 
 /**
@@ -94,8 +97,8 @@ public class PlayerEventListener implements Listener {
 		// create new death record for player
 		DeathRecord deathRecord = new DeathRecord(player);
 
-		// put death record in database
-		plugin.dataStore.putRecord(deathRecord);
+		// insert death record in database
+		plugin.dataStore.insertRecord(deathRecord);
 
 		// put player uuid in deathTriggeredRespawn set
 		deathTriggeredRespawn.add(player.getUniqueId());
@@ -137,7 +140,7 @@ public class PlayerEventListener implements Listener {
 		setDeathCompassTarget(player);
 
 		// send player respawn message
-		plugin.messageManager.sendMessage(player, MessageId.ACTION_PLAYER_RESPAWN);
+		Message.create(player, ACTION_PLAYER_RESPAWN).send();
 	}
 
 
@@ -289,7 +292,7 @@ public class PlayerEventListener implements Listener {
 		}
 
 		// send player compass destroyed message
-		plugin.messageManager.sendMessage(player, MessageId.ACTION_ITEM_DESTROY);
+		Message.create(player, ACTION_ITEM_DESTROY).send();
 	}
 
 
@@ -308,7 +311,7 @@ public class PlayerEventListener implements Listener {
 
 		// log info
 		plugin.getLogger().info(player.getName() + ChatColor.RESET  + " was given a death compass in "
-				+ plugin.messageManager.getWorldName(player) + ChatColor.RESET + ".");
+				+ plugin.worldManager.getWorldName(player) + ChatColor.RESET + ".");
 	}
 
 
@@ -366,15 +369,16 @@ public class PlayerEventListener implements Listener {
 		// check for null parameter
 		Objects.requireNonNull(player);
 
-		// set worldName to player current world
-		String worldName = player.getWorld().getName();
+		// get worldUid for player current world
+		final UUID worldUid = player.getWorld().getUID();
 
-		// set location to world spawn location
+		// set location to world spawn location, to be used as default if no stored death record found
 		Location location = player.getWorld().getSpawnLocation();
 
 		// fetch death record from datastore
-		DeathRecord deathRecord = plugin.dataStore.getRecord(player.getUniqueId(), worldName);
+		final DeathRecord deathRecord = plugin.dataStore.selectRecord(player.getUniqueId(), worldUid);
 
+		// if fetched record is not null, set location
 		if (deathRecord != null) {
 			location = deathRecord.getLocation();
 		}

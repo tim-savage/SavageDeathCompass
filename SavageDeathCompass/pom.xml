@@ -4,7 +4,7 @@
 
 	<groupId>com.winterhaven-mc</groupId>
 	<artifactId>SavageDeathCompass</artifactId>
-	<version>1.15.0</version>
+	<version>1.16.0</version>
 	<name>SavageDeathCompass</name>
 
 	<url>http://dev.bukkit.org/bukkit-plugins/savagedeathcompass/</url>
@@ -29,7 +29,7 @@
 	<repositories>
 		<repository>
 			<id>public</id>
-			<url>http://maven.winterhaven-mc.com/repository/public/</url>
+			<url>https://maven.winterhaven-mc.com/repository/public/</url>
 			<releases>
 				<enabled>true</enabled>
 			</releases>
@@ -40,11 +40,11 @@
 	</repositories>
 
 	<dependencies>
-		<!-- MessageManagerLib -->
+		<!-- MessengerLib -->
 		<dependency>
 			<groupId>com.winterhaven-mc</groupId>
-			<artifactId>message-manager-lib</artifactId>
-			<version>1.0.8</version>
+			<artifactId>messenger-lib</artifactId>
+			<version>1.0.1</version>
 		</dependency>
 
 		<!-- SoundConfigLib -->
@@ -61,11 +61,11 @@
 			<version>1.0.8</version>
 		</dependency>
 
-		<!-- Bukkit -->
+		<!-- Spigot API -->
 		<dependency>
-			<groupId>org.bukkit</groupId>
-			<artifactId>bukkit</artifactId>
-			<version>1.15.2-R0.1-SNAPSHOT</version>
+			<groupId>org.spigotmc</groupId>
+			<artifactId>spigot-api</artifactId>
+			<version>1.16.1-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
@@ -103,7 +103,7 @@
 							<minimizeJar>true</minimizeJar>
 							<artifactSet>
 								<includes>
-									<include>com.winterhaven-mc:message-manager-lib</include>
+									<include>com.winterhaven-mc:messenger-lib</include>
 									<include>com.winterhaven-mc:world-manager-lib</include>
 									<include>com.winterhaven-mc:sound-config-lib</include>
 								</includes>

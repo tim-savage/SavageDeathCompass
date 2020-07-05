@@ -1,11 +1,9 @@
 package com.winterhaven_mc.deathcompass.storage;
 
 import com.winterhaven_mc.deathcompass.PluginMain;
+import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 
 /**
@@ -14,7 +12,7 @@ import java.util.UUID;
 public abstract class DataStore {
 
 	// static reference to main class
-	private final static PluginMain plugin = PluginMain.INSTANCE;
+	private final static PluginMain plugin = JavaPlugin.getPlugin(PluginMain.class);
 
 	// datastore initialized state
 	private boolean initialized;
@@ -35,19 +33,27 @@ public abstract class DataStore {
 	/**
 	 * Get record from datastore
 	 *
-	 * @param playerUUID the player UUID for the record to be retrieved
-	 * @param worldName  the world name for the record to be retrieved
+	 * @param playerUUID the player UUID of the record to be retrieved
+	 * @param worldUID   the world UID of the record to be retrieved
 	 * @return death record or null if no matching record found
 	 */
-	public abstract DeathRecord getRecord(final UUID playerUUID, final String worldName);
+	public abstract DeathRecord selectRecord(final UUID playerUUID, final UUID worldUID);
+
+	/**
+	 * Insert a record in datastore
+	 *
+	 * @param deathRecord a DeathRecord to be inserted
+	 */
+	public abstract void insertRecord(final DeathRecord deathRecord);
 
 
 	/**
-	 * Store record in datastore
+	 * Insert records in datastore
 	 *
-	 * @param deathRecord the DeathRecord to be stored
+	 * @param deathRecords a collection of DeathRecords to be inserted
+	 * @return int number of records inserted
 	 */
-	public abstract void putRecord(final DeathRecord deathRecord);
+	public abstract int insertRecords(final Collection<DeathRecord> deathRecords);
 
 
 	/**
@@ -55,18 +61,18 @@ public abstract class DataStore {
 	 *
 	 * @return List of all DeathRecords
 	 */
-	abstract List<DeathRecord> getAllRecords();
+	abstract Collection<DeathRecord> selectAllRecords();
 
 
 	/**
 	 * Delete record
 	 *
 	 * @param playerUUID the player uuid of the record to delete
-	 * @param worldName  the world name of the record to delete
+	 * @param worldUID   the world uid of the record to delete
 	 * @return the DeathRecord that was deleted from datastore
 	 */
 	@SuppressWarnings("unused")
-	abstract DeathRecord deleteRecord(final UUID playerUUID, final String worldName);
+	abstract DeathRecord deleteRecord(final UUID playerUUID, final UUID worldUID);
 
 
 	/**
@@ -254,13 +260,10 @@ public abstract class DataStore {
 				}
 			}
 
-			List<DeathRecord> allRecords = oldDataStore.getAllRecords();
+			Collection<DeathRecord> allRecords = oldDataStore.selectAllRecords();
 
-			int count = 0;
-			for (DeathRecord record : allRecords) {
-				newDataStore.putRecord(record);
-				count++;
-			}
+			int count = newDataStore.insertRecords(allRecords) ;
+
 			plugin.getLogger().info(count + " records converted to new datastore.");
 
 			newDataStore.save();

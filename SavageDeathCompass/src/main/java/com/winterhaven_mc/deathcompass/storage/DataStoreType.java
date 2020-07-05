@@ -1,6 +1,7 @@
 package com.winterhaven_mc.deathcompass.storage;
 
 import com.winterhaven_mc.deathcompass.PluginMain;
+import org.bukkit.plugin.java.JavaPlugin;
 
 
 /**
@@ -18,7 +19,7 @@ public enum DataStoreType {
 	};
 
 	// static reference to main class
-	private final static PluginMain plugin = PluginMain.INSTANCE;
+	private final static PluginMain plugin = JavaPlugin.getPlugin(PluginMain.class);
 
 	// DataStoreType display name
 	private final String displayName;

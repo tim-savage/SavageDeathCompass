@@ -14,11 +14,9 @@ ITEM_INFO:
 
 
 # Variable substitutions:
-# %ITEM_NAME%            Item name as configured above
-# %PLAYER_NAME%          Player's full name
-# %PLAYER_NICKNAME%      Player's nickname
-# %PLAYER_DISPLAYNAME%   Player's display name, including prefix/suffix
-# %WORLD_NAME%           World name that player is in
+# %ITEM%            Item name as configured above
+# %PLAYER%          Player's full name
+# %WORLD%           World name that player is in
 
 ##########
 # Messages
@@ -26,12 +24,12 @@ ITEM_INFO:
 MESSAGES:
   ACTION_PLAYER_RESPAWN:
     enabled: true
-    string: '&eVind je dodenkist terug met behulp van het &6%ITEM_NAME%.'
+    string: '&eVind je dodenkist terug met behulp van het &6%ITEM%.'
 
   ACTION_ITEM_DESTROY:
     enabled: true
-    string: '&c%ITEM_NAME% is vernietigd.'
+    string: '&c%ITEM% is vernietigd.'
 
   ACTION_INVENTORY_DENY_TRANSFER:
     enabled: true
-    string: '&c%ITEM_NAME% kan niet worden verplaatst.\n Vernietig het door het te laten vallen.'
+    string: '&c%ITEM% kan niet worden verplaatst.\n Vernietig het door het te laten vallen.'
