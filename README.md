@@ -20,21 +20,22 @@ This plugin was created as an alternative to the /back on death command. With De
 * Customizable sound effects
 * A perfect compliment to SavageDeathChest and SavageGraveyards
 
+### Commands:
+
+Command | Description
+------- | -----------
+`/deathcompass status` | Displays version info and configured settings.
+`/deathcompass reload` | Reloads configuration file.
+`/deathcompass help [command]` | Displays short help and usage message.
+
 ### Permissions:
 
 Permission | Description | Default
 ---------- | ----------- | -------
 `deathcompass.use` | Give player a DeathCompass when respawning after death | false
+`deathcompass.status` | Allow viewing plugin status | op
 `deathcompass.reload` | Allow reloading of configuration file	| op
 `deathcompass.admin` | All admin commands | op
-
-### Commands:
-
-Command | Description | Permission
-------- | ----------- | ----------
-`/deathcompass help [command]` | Displays short help and usage message. | deathcompass.help
-`/deathcompass reload` | Reloads config file. Requires deathcompass.reload permission. | deathcompass.reload
-`/deathcompass status` | Displays version info and config settings. | deathcompass.status
 
 ### Installation:
 
