@@ -20,7 +20,7 @@ public class ReloadCommand extends AbstractSubcommand {
 	ReloadCommand(final PluginMain plugin) {
 		this.plugin = Objects.requireNonNull(plugin);
 		setName("reload");
-		setUsage("/deathchest reload");
+		setUsage("/deathcompass reload");
 		setDescription(COMMAND_HELP_RELOAD);
 	}
 
