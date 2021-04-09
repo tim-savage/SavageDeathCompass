@@ -1,266 +1,133 @@
 package com.winterhaven_mc.deathcompass.commands;
 
 import com.winterhaven_mc.deathcompass.PluginMain;
-import com.winterhaven_mc.deathcompass.storage.DataStore;
 
-import com.winterhaven_mc.util.LanguageManager;
-import org.bukkit.ChatColor;
+import com.winterhaven_mc.deathcompass.messages.Message;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+
+import static com.winterhaven_mc.deathcompass.messages.MessageId.*;
+import static com.winterhaven_mc.deathcompass.sounds.SoundId.*;
 
 
 /**
- * Implements commands for this plugin
+ * A class that implements player commands for the plugin
  */
-public class CommandManager implements CommandExecutor, TabCompleter {
+public final class CommandManager implements CommandExecutor, TabCompleter {
 
 	private final PluginMain plugin;
-
-	private final static ChatColor helpColor = ChatColor.YELLOW;
-	private final static ChatColor usageColor = ChatColor.GOLD;
-	private final static ChatColor errorColor = ChatColor.RED;
-
-	// constant List of SUBCOMMANDS
-	private final static List<String> SUBCOMMANDS =
-			Collections.unmodifiableList(new ArrayList<>(
-					Arrays.asList("status", "reload", "help")));
+	private final SubcommandMap subcommandMap = new SubcommandMap();
 
 
-	/**
-	 * Class constructor
-	 *
-	 * @param plugin reference to plugin main class
-	 */
 	public CommandManager(final PluginMain plugin) {
+		this.plugin = Objects.requireNonNull(plugin);
+		Objects.requireNonNull(plugin.getCommand("deathcompass")).setExecutor(this);
 
-		this.plugin = plugin;
-		//noinspection ConstantConditions
-		plugin.getCommand("deathcompass").setExecutor(this);
+		for (SubcommandType subcommandType : SubcommandType.values()) {
+			subcommandType.register(plugin, subcommandMap);
+		}
 	}
 
 
 	/**
-	 * Tab completer for DeathCompass command
+	 * Tab completer for DeathChest
+	 *
+	 * @param sender  the command sender
+	 * @param command the command typed
+	 * @param alias   alias for the command
+	 * @param args    additional command arguments
+	 * @return List of String - the possible matching values for tab completion
 	 */
 	@Override
-	public final List<String> onTabComplete(final CommandSender sender,
-											final Command command,
-											final String alias,
-											final String[] args) {
+	public List<String> onTabComplete(final CommandSender sender, final Command command,
+	                                  final String alias, final String[] args) {
 
-		// initialize return list
-		final List<String> returnList = new ArrayList<>();
+		// if more than one argument, use tab completer of subcommand
+		if (args.length > 1) {
 
-		// if first argument, return list of valid matching SUBCOMMANDS
-		if (args.length == 1) {
+			// get subcommand from map
+			Subcommand subcommand = subcommandMap.getCommand(args[0]);
 
-			for (String subcommand : SUBCOMMANDS) {
-				if (sender.hasPermission("deathcompass." + subcommand)
-						&& subcommand.startsWith(args[0].toLowerCase())) {
-					returnList.add(subcommand);
-				}
+			// if no subcommand returned from map, return empty list
+			if (subcommand == null) {
+				return Collections.emptyList();
+			}
+
+			// return subcommand tab completer output
+			return subcommand.onTabComplete(sender, command, alias, args);
+		}
+
+		// return list of subcommands for which sender has permission
+		return matchingCommands(sender, args[0]);
+	}
+
+
+	/**
+	 * Command handler for DeathChest
+	 *
+	 * @param sender   the command sender
+	 * @param command  the command typed
+	 * @param label    the command label
+	 * @param args     Array of String - command arguments
+	 * @return boolean - always returns {@code true}, to suppress bukkit builtin help message
+	 */
+	@Override
+	public final boolean onCommand(final CommandSender sender,
+	                               final Command command,
+	                               final String label,
+	                               final String[] args) {
+
+		// convert args array to list
+		List<String> argsList = new ArrayList<>(Arrays.asList(args));
+
+		String subcommandName;
+
+		// get subcommand, remove from front of list
+		if (argsList.size() > 0) {
+			subcommandName = argsList.remove(0);
+		}
+
+		// if no arguments, set command to help
+		else {
+			subcommandName = "help";
+		}
+
+		// get subcommand from map by name
+		Subcommand subcommand = subcommandMap.getCommand(subcommandName);
+
+		// if subcommand is null, get help command from map
+		if (subcommand == null) {
+			subcommand = subcommandMap.getCommand("help");
+			Message.create(sender, COMMAND_FAIL_INVALID_COMMAND).send();
+			plugin.soundConfig.playSound(sender, COMMAND_INVALID);
+		}
+
+		// execute subcommand
+		return subcommand.onCommand(sender, argsList);
+	}
+
+
+	/**
+	 * Get matching list of subcommands for which sender has permission
+	 * @param sender the command sender
+	 * @param matchString the string prefix to match against command names
+	 * @return List of String - command names that match prefix and sender has permission
+	 */
+	private List<String> matchingCommands(CommandSender sender, String matchString) {
+
+		List<String> returnList = new ArrayList<>();
+
+		for (String subcommand : subcommandMap.getNames()) {
+			if (sender.hasPermission("deathcompass." + subcommand)
+					&& subcommand.startsWith(matchString.toLowerCase())) {
+				returnList.add(subcommand);
 			}
 		}
 		return returnList;
-	}
-
-
-	/**
-	 * Command handler
-	 */
-	@Override
-	public boolean onCommand(final CommandSender sender,
-							 final Command cmd,
-							 final String label,
-							 final String[] args) {
-
-		int maxArgs = 2;
-
-		if (args.length > maxArgs) {
-			sender.sendMessage(errorColor + "Too many arguments!");
-			return false;
-		}
-
-		String subcommand;
-
-		if (args.length > 0) {
-			subcommand = args[0];
-		}
-		else {
-			subcommand = "help";
-		}
-
-		// status command
-		if (subcommand.equalsIgnoreCase("status")) {
-			return statusCommand(sender);
-		}
-
-		// reload command
-		if (subcommand.equalsIgnoreCase("reload")) {
-			return reloadCommand(sender);
-		}
-
-		// help command
-		//noinspection SimplifiableIfStatement
-		if (subcommand.equalsIgnoreCase("help")) {
-			return helpCommand(sender, args);
-		}
-		return false;
-	}
-
-
-	/**
-	 * Status command
-	 *
-	 * @param sender the command sender
-	 * @return always returns {@code true}, to prevent display of bukkit usage string
-	 */
-	private boolean statusCommand(final CommandSender sender) {
-
-		// if sender does not have status permission, send message
-		if (!sender.hasPermission("deathcompass.status")) {
-			sender.sendMessage(errorColor + "You do not have permission for this command!");
-			return true;
-		}
-
-		sender.sendMessage(ChatColor.DARK_AQUA + "[" + plugin.getName() + "] "
-				+ ChatColor.AQUA + "Version: " + ChatColor.RESET + plugin.getDescription().getVersion());
-
-		if (plugin.getConfig().getBoolean("debug")) {
-			sender.sendMessage(ChatColor.GREEN + "Debug: "
-					+ ChatColor.RED + plugin.getConfig().getString("debug"));
-		}
-
-		sender.sendMessage(ChatColor.GREEN + "Language: "
-				+ ChatColor.RESET + plugin.getConfig().getString("language"));
-
-		sender.sendMessage(ChatColor.GREEN + "Destroy On Drop: "
-				+ ChatColor.RESET + plugin.getConfig().getString("destroy-on-drop"));
-
-		sender.sendMessage(ChatColor.GREEN + "Set Compass Target Delay: "
-				+ ChatColor.RESET + plugin.getConfig().getString("target-delay"));
-
-		sender.sendMessage(ChatColor.GREEN + "Enabled Words: "
-				+ ChatColor.RESET + plugin.worldManager.getEnabledWorldNames().toString()
-				+ ChatColor.RESET);
-		return true;
-	}
-
-
-	/**
-	 * Reload command
-	 *
-	 * @param sender the command sender
-	 * @return always returns {@code true}, to prevent display of bukkit usage string
-	 */
-	private boolean reloadCommand(final CommandSender sender) {
-
-		// if sender does not have reload permission, send error message
-		if (!sender.hasPermission("deathcompass.reload")) {
-			sender.sendMessage(errorColor + "You do not have permission for this command!");
-			return true;
-		}
-
-		// reinstall config.yml if necessary
-		plugin.saveDefaultConfig();
-
-		// reload config.yml
-		plugin.reloadConfig();
-
-		// update debug field
-		plugin.debug = plugin.getConfig().getBoolean("debug");
-
-		// update enabledWorlds field
-		plugin.worldManager.reload();
-
-		// reload messages
-		LanguageManager.reload();
-
-		// reload sounds
-		plugin.soundConfig.reload();
-
-		// reload datastore
-		DataStore.reload();
-
-		// send reloaded message to command sender
-		sender.sendMessage(ChatColor.DARK_AQUA + "[" + plugin.getName() + "] "
-				+ ChatColor.AQUA + " configuration reloaded.");
-
-		return true;
-	}
-
-
-	/**
-	 * Help command
-	 *
-	 * @param sender the command sender
-	 * @param args   the command arguments
-	 * @return always returns {@code true}, to prevent display of bukkit usage string
-	 */
-	private boolean helpCommand(final CommandSender sender, final String[] args) {
-
-		if (args.length < 1) {
-			displayUsage(sender, "all");
-			return true;
-		}
-
-		String command = "";
-		if (args.length > 1) {
-			command = args[1];
-		}
-
-		if (command.equalsIgnoreCase("status")
-				&& sender.hasPermission("deathcompass.status")) {
-			sender.sendMessage(helpColor + "Display plugin configuration.");
-		}
-		if (command.equalsIgnoreCase("reload")
-				&& sender.hasPermission("deathcompass.reload")) {
-			sender.sendMessage(helpColor + "Reload plugin configuration.");
-		}
-		if (command.equalsIgnoreCase("help")) {
-			sender.sendMessage(helpColor + "Display plugin help.");
-		}
-		displayUsage(sender, command);
-		return true;
-
-	}
-
-
-	/**
-	 * Display command usage
-	 *
-	 * @param sender        the command sender
-	 * @param passedCommand the command for which to display usage
-	 */
-	private void displayUsage(final CommandSender sender, final String passedCommand) {
-
-		String command = passedCommand;
-
-		if (command.isEmpty()) {
-			command = "all";
-		}
-
-		if ((command.equalsIgnoreCase("help")
-				|| command.equalsIgnoreCase("all"))) {
-			sender.sendMessage(usageColor + "/deathcompass help [command]");
-		}
-		if ((command.equalsIgnoreCase("reload")
-				|| command.equalsIgnoreCase("all"))
-				&& sender.hasPermission("deathcompass.reload")) {
-			sender.sendMessage(usageColor + "/deathcompass reload");
-		}
-		if ((command.equalsIgnoreCase("status")
-				|| command.equalsIgnoreCase("all"))
-				&& sender.hasPermission("deathcompass.status")) {
-			sender.sendMessage(usageColor + "/deathcompass status");
-		}
 	}
 
 }
