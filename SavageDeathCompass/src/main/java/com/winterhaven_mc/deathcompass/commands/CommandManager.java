@@ -181,7 +181,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 		plugin.worldManager.reload();
 
 		// reload messages
-		LanguageManager.reload();
+		plugin.languageManager.reload();
 
 		// reload sounds
 		plugin.soundConfig.reload();
