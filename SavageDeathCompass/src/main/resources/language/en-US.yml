@@ -33,3 +33,50 @@ MESSAGES:
   ACTION_INVENTORY_DENY_TRANSFER:
     enabled: true
     string: '&c%ITEM% can not be placed in containers.'
+
+
+  COMMAND_FAIL_INVALID_COMMAND:
+    enabled: true
+    string: '&cThat is not a valid command!'
+    # available subs: %PLAYER%
+
+  COMMAND_FAIL_HELP_PERMISSION:
+    enabled: true
+    string: '&cYou do not have permission to display DeathCompass help!'
+    # available subs: %PLAYER%
+
+  COMMAND_FAIL_RELOAD_PERMISSION:
+    enabled: true
+    string: '&cYou do not have permission to reload DeathCompass configuration!'
+    # available subs: %PLAYER%
+
+  COMMAND_FAIL_STATUS_PERMISSION:
+    enabled: true
+    string: '&cYou do not have permission to view DeathCompass settings!'
+    # available subs: %PLAYER%
+
+  COMMAND_SUCCESS_RELOAD:
+    enabled: true
+    string: '&7DeathCompass configuration reloaded.'
+    # available subs: %PLAYER%
+
+
+  COMMAND_HELP_HELP:
+    enabled: true
+    string: '&eDisplays help for DeathCompass commands.'
+
+  COMMAND_HELP_RELOAD:
+    enabled: true
+    string: '&eReloads the plugin configuration.'
+
+  COMMAND_HELP_STATUS:
+    enabled: true
+    string: '&eDisplays plugin configuration settings.'
+
+  COMMAND_HELP_INVALID:
+    enabled: true
+    string: '&eThat is not a valid command.'
+
+  COMMAND_HELP_USAGE:
+    enabled: true
+    string: '&eCommand usage:'
