@@ -5,7 +5,7 @@ import com.winterhaven_mc.deathcompass.listeners.InventoryEventListener;
 import com.winterhaven_mc.deathcompass.listeners.PlayerEventListener;
 import com.winterhaven_mc.deathcompass.storage.DataStore;
 
-import com.winterhaven_mc.util.LanguageManager;
+import com.winterhaven_mc.util.LanguageHandler;
 import com.winterhaven_mc.util.SoundConfiguration;
 import com.winterhaven_mc.util.YamlSoundConfiguration;
 
@@ -25,6 +25,7 @@ public final class PluginMain extends JavaPlugin {
 	// global debug setting read from config file
 	public Boolean debug = this.getConfig().getBoolean("debug");
 
+	public LanguageHandler languageHandler;
 	public SoundConfiguration soundConfig;
 	public WorldManager worldManager;
 	public DataStore dataStore;
@@ -37,7 +38,7 @@ public final class PluginMain extends JavaPlugin {
 		saveDefaultConfig();
 
 		// initialize language manager
-		LanguageManager.init();
+		languageHandler = new LanguageHandler(this);
 
 		// instantiate sound config
 		soundConfig = new YamlSoundConfiguration(this);
