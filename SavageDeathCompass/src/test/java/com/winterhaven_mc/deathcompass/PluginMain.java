@@ -30,7 +30,6 @@ public final class PluginMain extends JavaPlugin {
 	public SoundConfiguration soundConfig;
 	public WorldManager worldManager;
 	//	public DataStore dataStore;
-	public CommandManager compassManager;
 	public CommandManager commandManager;
 	public PlayerEventListener playerEventListener;
 	public InventoryEventListener inventoryEventListener;
@@ -58,9 +57,6 @@ public final class PluginMain extends JavaPlugin {
 
 		// instantiate datastore
 		//		dataStore = DataStore.create();
-
-		// instantiate compass manager
-		compassManager = new CommandManager(this);
 
 		// instantiate command handler
 		commandManager = new CommandManager(this);
