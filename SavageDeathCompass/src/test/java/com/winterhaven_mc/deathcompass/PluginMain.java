@@ -29,7 +29,7 @@ public final class PluginMain extends JavaPlugin {
 	public LanguageHandler languageHandler;
 	public SoundConfiguration soundConfig;
 	public WorldManager worldManager;
-//	public DataStore dataStore;
+	//	public DataStore dataStore;
 	public CommandManager compassManager;
 	public CommandManager commandManager;
 	public PlayerEventListener playerEventListener;
