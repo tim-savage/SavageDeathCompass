@@ -1,7 +1,6 @@
 package com.winterhaven_mc.deathcompass.util;
 
 import com.winterhaven_mc.deathcompass.PluginMain;
-import com.winterhaven_mc.util.LanguageManager;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -87,10 +86,10 @@ public final class DeathCompass {
 	private static void setMetaData(final ItemStack itemStack) {
 
 		// retrieve item name from language file file
-		String itemName = LanguageManager.getInstance().getItemName();
+		String itemName = plugin.languageHandler.getItemName();
 
 		// retrieve item lore from language file file
-		List<String> itemLore = LanguageManager.getInstance().getItemLore();
+		List<String> itemLore = plugin.languageHandler.getItemLore();
 
 		// get item metadata object
 		final ItemMeta itemMeta = itemStack.getItemMeta();

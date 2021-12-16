@@ -76,7 +76,7 @@ public final class CommandManager implements CommandExecutor, TabCompleter {
 	 * @return boolean - always returns {@code true}, to suppress bukkit builtin help message
 	 */
 	@Override
-	public final boolean onCommand(final CommandSender sender,
+	public boolean onCommand(final CommandSender sender,
 	                               final Command command,
 	                               final String label,
 	                               final String[] args) {
@@ -102,7 +102,7 @@ public final class CommandManager implements CommandExecutor, TabCompleter {
 		// if subcommand is null, get help command from map
 		if (subcommand == null) {
 			subcommand = subcommandMap.getCommand("help");
-			Message.create(sender, COMMAND_FAIL_INVALID_COMMAND).send();
+			Message.create(sender, COMMAND_FAIL_INVALID_COMMAND).send(plugin.languageHandler);
 			plugin.soundConfig.playSound(sender, COMMAND_INVALID);
 		}
 

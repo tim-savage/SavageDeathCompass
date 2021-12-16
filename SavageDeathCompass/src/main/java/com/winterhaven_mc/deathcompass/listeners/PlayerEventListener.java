@@ -140,7 +140,7 @@ public class PlayerEventListener implements Listener {
 		setDeathCompassTarget(player);
 
 		// send player respawn message
-		Message.create(player, ACTION_PLAYER_RESPAWN).send();
+		Message.create(player, ACTION_PLAYER_RESPAWN).send(plugin.languageHandler);
 	}
 
 
@@ -292,7 +292,7 @@ public class PlayerEventListener implements Listener {
 		}
 
 		// send player compass destroyed message
-		Message.create(player, ACTION_ITEM_DESTROY).send();
+		Message.create(player, ACTION_ITEM_DESTROY).send(plugin.languageHandler);
 	}
 
 

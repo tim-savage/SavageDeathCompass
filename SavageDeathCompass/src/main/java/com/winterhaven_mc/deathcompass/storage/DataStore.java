@@ -254,7 +254,7 @@ public abstract class DataStore {
 				}
 				catch (Exception e) {
 					plugin.getLogger().warning("Could not initialize "
-							+ oldDataStore.toString() + " datastore for conversion.");
+							+ oldDataStore + " datastore for conversion.");
 					plugin.getLogger().warning(e.getLocalizedMessage());
 					return;
 				}

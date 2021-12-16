@@ -3,15 +3,15 @@ package com.winterhaven_mc.deathcompass;
 import com.winterhaven_mc.deathcompass.commands.CommandManager;
 import com.winterhaven_mc.deathcompass.listeners.InventoryEventListener;
 import com.winterhaven_mc.deathcompass.listeners.PlayerEventListener;
-import com.winterhaven_mc.deathcompass.storage.DataStore;
-
 import com.winterhaven_mc.util.LanguageHandler;
 import com.winterhaven_mc.util.SoundConfiguration;
-import com.winterhaven_mc.util.YamlSoundConfiguration;
-
-import org.bukkit.plugin.java.JavaPlugin;
-
 import com.winterhaven_mc.util.WorldManager;
+import com.winterhaven_mc.util.YamlSoundConfiguration;
+import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.java.JavaPluginLoader;
+
+import java.io.File;
 
 
 /**
@@ -23,12 +23,21 @@ import com.winterhaven_mc.util.WorldManager;
 public final class PluginMain extends JavaPlugin {
 
 	// global debug setting read from config file
+	@SuppressWarnings("unused")
 	public Boolean debug = this.getConfig().getBoolean("debug");
 
 	public LanguageHandler languageHandler;
 	public SoundConfiguration soundConfig;
 	public WorldManager worldManager;
-	public DataStore dataStore;
+	//	public DataStore dataStore;
+	public CommandManager commandManager;
+	public PlayerEventListener playerEventListener;
+	public InventoryEventListener inventoryEventListener;
+
+
+	public PluginMain(JavaPluginLoader loader, PluginDescriptionFile descriptionFile, File dataFolder, File file) {
+		super(loader, descriptionFile, dataFolder, file);
+	}
 
 
 	@Override
@@ -37,7 +46,7 @@ public final class PluginMain extends JavaPlugin {
 		// Save a copy of the default config.yml if file does not already exist
 		saveDefaultConfig();
 
-		// initialize language manager
+		// instantiate language manager
 		languageHandler = new LanguageHandler(this);
 
 		// instantiate sound config
@@ -47,22 +56,22 @@ public final class PluginMain extends JavaPlugin {
 		worldManager = new WorldManager(this);
 
 		// instantiate datastore
-		dataStore = DataStore.create();
+		//		dataStore = DataStore.create();
 
 		// instantiate command handler
-		new CommandManager(this);
+		commandManager = new CommandManager(this);
 
 		// instantiate player event listener
-		new PlayerEventListener(this);
+		playerEventListener = new PlayerEventListener(this);
 
 		// instantiate inventory event listener
-		new InventoryEventListener(this);
+		inventoryEventListener = new InventoryEventListener(this);
 	}
 
 
 	@Override
 	public void onDisable() {
-		dataStore.close();
+//		dataStore.close();
 	}
 
 }

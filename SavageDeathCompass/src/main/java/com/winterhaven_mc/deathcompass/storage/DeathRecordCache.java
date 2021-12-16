@@ -42,7 +42,7 @@ final class DeathRecordCache implements Listener {
 	 *
 	 * @param deathRecord object containing player UUID and death location to cache
 	 */
-	final void put(final DeathRecord deathRecord) {
+	void put(final DeathRecord deathRecord) {
 
 		// check for null parameter
 		Objects.requireNonNull(deathRecord);
@@ -78,7 +78,7 @@ final class DeathRecordCache implements Listener {
 	 * @param worldUid  world UID to use as key
 	 * @return deathRecord containing playerUid and death location for world, or null if no record exists
 	 */
-	final DeathRecord get(final UUID playerUid, final UUID worldUid) {
+	DeathRecord get(final UUID playerUid, final UUID worldUid) {
 
 		// if passed playerUid is null, return null record
 		if (playerUid == null) {
@@ -117,7 +117,7 @@ final class DeathRecordCache implements Listener {
 	 * @param event the event handled by this listener
 	 */
 	@EventHandler
-	final void onPlayerQuit(PlayerQuitEvent event) {
+	void onPlayerQuit(PlayerQuitEvent event) {
 		deathRecordMap.remove(event.getPlayer().getUniqueId());
 	}
 

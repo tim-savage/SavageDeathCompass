@@ -59,7 +59,7 @@ public final class DeathRecord {
 	 *
 	 * @return UUID for death record player
 	 */
-	final UUID getPlayerUid() {
+	UUID getPlayerUid() {
 		return this.playerUid;
 	}
 
@@ -69,7 +69,7 @@ public final class DeathRecord {
 	 *
 	 * @return UUID for death record world
 	 */
-	public final UUID getWorldUid() {
+	public UUID getWorldUid() {
 		return this.worldUid;
 	}
 
@@ -79,7 +79,7 @@ public final class DeathRecord {
 	 *
 	 * @return x coordinate
 	 */
-	public final double getX() {
+	public double getX() {
 		return this.x;
 	}
 
@@ -89,7 +89,7 @@ public final class DeathRecord {
 	 *
 	 * @return y coordinate
 	 */
-	public final double getY() {
+	public double getY() {
 		return this.y;
 	}
 
@@ -99,7 +99,7 @@ public final class DeathRecord {
 	 *
 	 * @return z coordinate
 	 */
-	public final double getZ() {
+	public double getZ() {
 		return this.z;
 	}
 
@@ -109,7 +109,7 @@ public final class DeathRecord {
 	 *
 	 * @return Location - death compass player death location
 	 */
-	public final Location getLocation() {
+	public Location getLocation() {
 
 		// get world from uid
 		final World world = Bukkit.getServer().getWorld(this.worldUid);
