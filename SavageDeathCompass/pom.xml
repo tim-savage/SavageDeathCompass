@@ -8,7 +8,11 @@
 	<name>SavageDeathCompass</name>
 
 	<url>https://github.com/tim-savage/SavageDeathCompass</url>
-	<description>An alternative to /back on death command. On death, players are given a compass that points to their death location.</description>
+
+	<description>
+		An alternative to /back on death command.
+		On death, players are given a compass that points to their death location.
+	</description>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
