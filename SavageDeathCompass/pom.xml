@@ -15,6 +15,14 @@
 		<project.author>Tim Savage</project.author>
 	</properties>
 
+	<licenses>
+		<license>
+			<name>GNU General Public License v3.0</name>
+			<url>https://www.gnu.org/licenses/gpl-3.0-standalone.html</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
 	<distributionManagement>
 		<repository>
 			<id>releases</id>
