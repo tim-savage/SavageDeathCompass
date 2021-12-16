@@ -11,6 +11,11 @@
 .idea/dictionaries
 .idea/vcs.xml
 .idea/jsLibraryMappings.xml
+.idea/copyright
+.idea/libraries
+
+# private notes
+notes.txt
 
 # Sensitive or high-churn files:
 .idea/dataSources.ids
@@ -22,7 +27,6 @@
 
 # Gradle:
 .idea/gradle.xml
-.idea/libraries
 
 # Mongo Explorer plugin:
 .idea/mongoSettings.xml
