@@ -4,7 +4,7 @@
 
 	<groupId>com.winterhaven-mc</groupId>
 	<artifactId>SavageDeathCompass</artifactId>
-	<version>1.18.1</version>
+	<version>1.18.2</version>
 	<name>SavageDeathCompass</name>
 
 	<url>https://github.com/tim-savage/SavageDeathCompass</url>
@@ -61,7 +61,7 @@
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
-			<version>1.17.1-R0.1-SNAPSHOT</version>
+			<version>1.18.1-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -69,7 +69,7 @@
 		<dependency>
 			<groupId>com.winterhaven-mc</groupId>
 			<artifactId>messenger-lib</artifactId>
-			<version>1.16.1</version>
+			<version>1.16.2</version>
 		</dependency>
 
 		<!-- SoundConfigLib -->
@@ -97,8 +97,8 @@
 		<!-- Mock Bukkit Framework -->
 		<dependency>
 			<groupId>com.github.seeseemelk</groupId>
-			<artifactId>MockBukkit-v1.16</artifactId>
-			<version>1.5.2</version>
+			<artifactId>MockBukkit-v1.18</artifactId>
+			<version>1.14.0</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
