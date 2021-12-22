@@ -3,8 +3,8 @@ package com.winterhaven_mc.deathcompass;
 import com.winterhaven_mc.deathcompass.commands.CommandManager;
 import com.winterhaven_mc.deathcompass.listeners.InventoryEventListener;
 import com.winterhaven_mc.deathcompass.listeners.PlayerEventListener;
-import com.winterhaven_mc.deathcompass.storage.DataStore;
 
+import com.winterhaven_mc.deathcompass.storage.DataStore;
 import com.winterhaven_mc.util.LanguageHandler;
 import com.winterhaven_mc.util.SoundConfiguration;
 import com.winterhaven_mc.util.YamlSoundConfiguration;
@@ -47,7 +47,7 @@ public final class PluginMain extends JavaPlugin {
 		worldManager = new WorldManager(this);
 
 		// instantiate datastore
-		dataStore = DataStore.create();
+		dataStore = DataStore.create(this);
 
 		// instantiate command handler
 		new CommandManager(this);

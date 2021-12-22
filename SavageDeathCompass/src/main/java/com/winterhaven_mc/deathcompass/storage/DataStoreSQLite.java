@@ -11,7 +11,7 @@ import java.sql.*;
 import java.util.*;
 
 
-class DataStoreSQLite extends DataStore implements Listener {
+class DataStoreSQLite extends AbstractDataStore implements DataStore, Listener {
 
 	// reference to main class
 	private final PluginMain plugin;
@@ -48,7 +48,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 
 
 	@Override
-	void initialize() throws SQLException, ClassNotFoundException {
+	public void initialize() throws SQLException, ClassNotFoundException {
 
 		// if data store is already initialized, do nothing and return
 		if (this.isInitialized()) {
@@ -223,7 +223,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 
 
 	@Override
-	synchronized Collection<DeathRecord> selectAllRecords() {
+	public synchronized Collection<DeathRecord> selectAllRecords() {
 
 		Collection<DeathRecord> returnList = new ArrayList<>();
 
@@ -457,7 +457,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 
 
 	@Override
-	synchronized DeathRecord deleteRecord(final UUID playerUid, final UUID worldUid) {
+	public synchronized DeathRecord deleteRecord(final UUID playerUid, final UUID worldUid) {
 
 		// if player uuid is null return null record
 		if (playerUid == null) {
@@ -536,7 +536,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 
 
 	@Override
-	void save() {
+	public void save() {
 
 		// no action necessary for this storage type
 
@@ -544,7 +544,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 
 
 	@Override
-	boolean delete() {
+	public boolean delete() {
 
 		boolean result = false;
 		File dataStoreFile = new File(plugin.getDataFolder() + File.separator + this.getFilename());
@@ -556,7 +556,7 @@ class DataStoreSQLite extends DataStore implements Listener {
 
 
 	@Override
-	boolean exists() {
+	public boolean exists() {
 
 		// get path name to old data store file
 		File dataStoreFile = new File(plugin.getDataFolder() + File.separator + this.getFilename());

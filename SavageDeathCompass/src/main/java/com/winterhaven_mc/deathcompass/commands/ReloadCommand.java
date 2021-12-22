@@ -53,7 +53,7 @@ public class ReloadCommand extends AbstractSubcommand {
 		plugin.soundConfig.reload();
 
 		// reload datastore if changed
-		DataStore.reload();
+		DataStore.reload(plugin);
 
 		// send success message
 		Message.create(sender, COMMAND_SUCCESS_RELOAD).send(plugin.languageHandler);
