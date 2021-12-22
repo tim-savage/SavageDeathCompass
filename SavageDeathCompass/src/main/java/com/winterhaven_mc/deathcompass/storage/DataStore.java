@@ -2,6 +2,7 @@ package com.winterhaven_mc.deathcompass.storage;
 
 import com.winterhaven_mc.deathcompass.PluginMain;
 import org.bukkit.Bukkit;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -103,7 +104,7 @@ public interface DataStore {
 	 *
 	 * @return new datastore of configured type
 	 */
-	static DataStore create(PluginMain plugin) {
+	static DataStore create(JavaPlugin plugin) {
 
 		// get data store type from config
 		DataStoreType dataStoreType = DataStoreType.match(plugin.getConfig().getString("storage-type"));
@@ -122,7 +123,7 @@ public interface DataStore {
 	 * @param oldDataStore  existing datastore reference
 	 * @return a new datastore instance of the given type
 	 */
-	static DataStore create(PluginMain plugin, final DataStoreType dataStoreType, final DataStore oldDataStore) {
+	static DataStore create(JavaPlugin plugin, final DataStoreType dataStoreType, final DataStore oldDataStore) {
 
 		// get new data store of specified type
 		DataStore newDataStore = dataStoreType.create();
@@ -133,7 +134,7 @@ public interface DataStore {
 		}
 		catch (Exception e) {
 			plugin.getLogger().severe("Could not initialize " + newDataStore.toString() + " datastore!");
-			if (plugin.debug) {
+			if (plugin.getConfig().getBoolean("debug")) {
 				e.printStackTrace();
 			}
 		}

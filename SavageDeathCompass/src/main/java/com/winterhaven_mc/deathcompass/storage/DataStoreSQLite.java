@@ -1,9 +1,8 @@
 package com.winterhaven_mc.deathcompass.storage;
 
-import com.winterhaven_mc.deathcompass.PluginMain;
-
 import org.bukkit.World;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
@@ -14,7 +13,7 @@ import java.util.*;
 class DataStoreSQLite extends AbstractDataStore implements DataStore, Listener {
 
 	// reference to main class
-	private final PluginMain plugin;
+	private final JavaPlugin plugin;
 
 	// database connection object
 	private Connection connection;
@@ -31,7 +30,7 @@ class DataStoreSQLite extends AbstractDataStore implements DataStore, Listener {
 	 *
 	 * @param plugin reference to plugin main class
 	 */
-	DataStoreSQLite(final PluginMain plugin) {
+	DataStoreSQLite(final JavaPlugin plugin) {
 
 		// reference to main class
 		this.plugin = plugin;
@@ -43,7 +42,7 @@ class DataStoreSQLite extends AbstractDataStore implements DataStore, Listener {
 		this.filename = "deathlocations.db";
 
 		// initialize death record cache
-		deathRecordCache = new DeathRecordCache();
+		deathRecordCache = new DeathRecordCache(plugin);
 	}
 
 
@@ -52,7 +51,7 @@ class DataStoreSQLite extends AbstractDataStore implements DataStore, Listener {
 
 		// if data store is already initialized, do nothing and return
 		if (this.isInitialized()) {
-			if (plugin.debug) {
+			if (plugin.getConfig().getBoolean("debug")) {
 				plugin.getLogger().info("SQLite datastore already initialized.");
 			}
 			return;
@@ -206,7 +205,7 @@ class DataStoreSQLite extends AbstractDataStore implements DataStore, Listener {
 			plugin.getLogger().warning(e.getLocalizedMessage());
 
 			// if debugging is enabled, output stack trace
-			if (plugin.debug) {
+			if (plugin.getConfig().getBoolean("debug")) {
 				e.getStackTrace();
 			}
 			return null;
@@ -256,7 +255,7 @@ class DataStoreSQLite extends AbstractDataStore implements DataStore, Listener {
 						playerUUID = UUID.fromString(key);
 					}
 					catch (Exception e) {
-						if (plugin.debug) {
+						if (plugin.getConfig().getBoolean("debug")) {
 							plugin.getLogger().warning("Player UUID in datastore is invalid!");
 						}
 					}
@@ -304,7 +303,7 @@ class DataStoreSQLite extends AbstractDataStore implements DataStore, Listener {
 			plugin.getLogger().warning(e.getLocalizedMessage());
 
 			// if debugging is enabled, output stack trace
-			if (plugin.debug) {
+			if (plugin.getConfig().getBoolean("debug")) {
 				e.getStackTrace();
 			}
 		}
@@ -372,7 +371,7 @@ class DataStoreSQLite extends AbstractDataStore implements DataStore, Listener {
 					plugin.getLogger().warning(e.getLocalizedMessage());
 
 					// if debugging is enabled, output stack trace
-					if (plugin.debug) {
+					if (plugin.getConfig().getBoolean("debug")) {
 						e.getStackTrace();
 					}
 				}
@@ -444,7 +443,7 @@ class DataStoreSQLite extends AbstractDataStore implements DataStore, Listener {
 						plugin.getLogger().warning(e.getLocalizedMessage());
 
 						// if debugging is enabled, output stack trace
-						if (plugin.debug) {
+						if (plugin.getConfig().getBoolean("debug")) {
 							e.getStackTrace();
 						}
 					}
@@ -493,7 +492,7 @@ class DataStoreSQLite extends AbstractDataStore implements DataStore, Listener {
 			int rowsAffected = preparedStatement.executeUpdate();
 
 			// output debugging information
-			if (plugin.debug) {
+			if (plugin.getConfig().getBoolean("debug")) {
 				plugin.getLogger().info(rowsAffected + " rows deleted.");
 			}
 		}
@@ -505,7 +504,7 @@ class DataStoreSQLite extends AbstractDataStore implements DataStore, Listener {
 			plugin.getLogger().warning(e.getLocalizedMessage());
 
 			// if debugging is enabled, output stack trace
-			if (plugin.debug) {
+			if (plugin.getConfig().getBoolean("debug")) {
 				e.getStackTrace();
 			}
 		}
@@ -527,7 +526,7 @@ class DataStoreSQLite extends AbstractDataStore implements DataStore, Listener {
 			plugin.getLogger().warning(e.getMessage());
 
 			// if debugging is enabled, output stack trace
-			if (plugin.debug) {
+			if (plugin.getConfig().getBoolean("debug")) {
 				e.getStackTrace();
 			}
 		}

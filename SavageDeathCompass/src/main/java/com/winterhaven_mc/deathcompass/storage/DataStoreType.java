@@ -19,7 +19,7 @@ public enum DataStoreType {
 	};
 
 	// static reference to main class
-	private final static PluginMain plugin = JavaPlugin.getPlugin(PluginMain.class);
+	private final static JavaPlugin plugin = JavaPlugin.getPlugin(PluginMain.class);
 
 	// DataStoreType display name
 	private final String displayName;

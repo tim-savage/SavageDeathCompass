@@ -1,6 +1,5 @@
 package com.winterhaven_mc.deathcompass.storage;
 
-import com.winterhaven_mc.deathcompass.PluginMain;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -18,7 +17,7 @@ import java.util.UUID;
 final class DeathRecordCache implements Listener {
 
 	// static reference to plugin main class
-	private final PluginMain plugin = JavaPlugin.getPlugin(PluginMain.class);
+	private final JavaPlugin plugin;
 
 	// death location map by player uuid, world uid -> death record
 	private final Map<UUID, Map<UUID, DeathRecord>> deathRecordMap;
@@ -27,7 +26,9 @@ final class DeathRecordCache implements Listener {
 	/**
 	 * Constructor
 	 */
-	DeathRecordCache() {
+	DeathRecordCache(JavaPlugin plugin) {
+
+		this.plugin = plugin;
 
 		// initialize location map
 		deathRecordMap = new HashMap<>();
@@ -82,7 +83,7 @@ final class DeathRecordCache implements Listener {
 
 		// if passed playerUid is null, return null record
 		if (playerUid == null) {
-			if (plugin.debug) {
+			if (plugin.getConfig().getBoolean("debug")) {
 				plugin.getLogger().warning("LocationCache.get was passed null playerUid!");
 			}
 			return null;
@@ -90,7 +91,7 @@ final class DeathRecordCache implements Listener {
 
 		// if passed worldUid is null, return null record
 		if (worldUid == null) {
-			if (plugin.debug) {
+			if (plugin.getConfig().getBoolean("debug")) {
 				plugin.getLogger().warning("LocationCache.get was passed null worldUid!");
 			}
 			return null;

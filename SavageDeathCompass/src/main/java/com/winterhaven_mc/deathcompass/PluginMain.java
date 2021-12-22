@@ -9,9 +9,13 @@ import com.winterhaven_mc.util.LanguageHandler;
 import com.winterhaven_mc.util.SoundConfiguration;
 import com.winterhaven_mc.util.YamlSoundConfiguration;
 
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.winterhaven_mc.util.WorldManager;
+import org.bukkit.plugin.java.JavaPluginLoader;
+
+import java.io.File;
 
 
 /**
@@ -29,6 +33,17 @@ public final class PluginMain extends JavaPlugin {
 	public SoundConfiguration soundConfig;
 	public WorldManager worldManager;
 	public DataStore dataStore;
+
+
+	public PluginMain() {
+		super();
+	}
+
+
+	@SuppressWarnings("unused")
+	private PluginMain(JavaPluginLoader loader, PluginDescriptionFile descriptionFile, File dataFolder, File file) {
+		super(loader, descriptionFile, dataFolder, file);
+	}
 
 
 	@Override
