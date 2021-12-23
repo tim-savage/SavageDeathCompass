@@ -26,9 +26,6 @@ import java.io.File;
  */
 public final class PluginMain extends JavaPlugin {
 
-	// global debug setting read from config file
-	public Boolean debug = this.getConfig().getBoolean("debug");
-
 	public LanguageHandler languageHandler;
 	public SoundConfiguration soundConfig;
 	public WorldManager worldManager;
