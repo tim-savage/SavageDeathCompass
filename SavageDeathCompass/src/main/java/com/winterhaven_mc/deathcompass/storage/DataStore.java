@@ -126,7 +126,7 @@ public interface DataStore {
 	static DataStore create(JavaPlugin plugin, final DataStoreType dataStoreType, final DataStore oldDataStore) {
 
 		// get new data store of specified type
-		DataStore newDataStore = dataStoreType.create();
+		DataStore newDataStore = dataStoreType.create(plugin);
 
 		// initialize new data store
 		try {
@@ -144,7 +144,7 @@ public interface DataStore {
 			convert(oldDataStore, newDataStore);
 		}
 		else {
-			convertAll(newDataStore);
+			convertAll(plugin, newDataStore);
 		}
 		// return initialized data store
 		return newDataStore;
@@ -220,7 +220,7 @@ public interface DataStore {
 	 *
 	 * @param newDataStore the datastore to convert all other existing datastore to
 	 */
-	static void convertAll(final DataStore newDataStore) {
+	static void convertAll(JavaPlugin plugin, final DataStore newDataStore) {
 
 		// get array list of all data store types
 		ArrayList<DataStoreType> dataStoresTypes = new ArrayList<>(Arrays.asList(DataStoreType.values()));
@@ -231,7 +231,7 @@ public interface DataStore {
 		for (DataStoreType type : dataStoresTypes) {
 
 			// create oldDataStore holder
-			DataStore oldDataStore = type.create();
+			DataStore oldDataStore = type.create(plugin);
 
 			if (oldDataStore != null && oldDataStore.exists()) {
 

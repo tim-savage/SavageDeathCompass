@@ -11,7 +11,7 @@ public enum DataStoreType {
 
 	SQLITE("SQLite") {
 		@Override
-		public DataStore create() {
+		public DataStore create(JavaPlugin plugin) {
 
 			// create new sqlite datastore object
 			return new DataStoreSQLite(plugin);
@@ -19,7 +19,7 @@ public enum DataStoreType {
 	};
 
 	// static reference to main class
-	private final static JavaPlugin plugin = JavaPlugin.getPlugin(PluginMain.class);
+//	private final static JavaPlugin plugin = JavaPlugin.getPlugin(PluginMain.class);
 
 	// DataStoreType display name
 	private final String displayName;
@@ -82,6 +82,6 @@ public enum DataStoreType {
 	 *
 	 * @return new DataStore
 	 */
-	public abstract DataStore create();
+	public abstract DataStore create(JavaPlugin plugin);
 
 }
