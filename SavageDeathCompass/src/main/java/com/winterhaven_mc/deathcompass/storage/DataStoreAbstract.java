@@ -4,7 +4,7 @@ package com.winterhaven_mc.deathcompass.storage;
 /**
  * Abstract class declares methods that need to be implemented for plugin data stores.
  */
-public abstract class AbstractDataStore {
+public abstract class DataStoreAbstract {
 
 	// datastore initialized state
 	private boolean initialized;

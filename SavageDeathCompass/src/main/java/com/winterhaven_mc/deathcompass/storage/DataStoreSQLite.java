@@ -10,7 +10,7 @@ import java.sql.*;
 import java.util.*;
 
 
-class DataStoreSQLite extends AbstractDataStore implements DataStore, Listener {
+class DataStoreSQLite extends DataStoreAbstract implements DataStore, Listener {
 
 	// reference to main class
 	private final JavaPlugin plugin;
@@ -543,14 +543,15 @@ class DataStoreSQLite extends AbstractDataStore implements DataStore, Listener {
 
 
 	@Override
-	public boolean delete() {
+	public void delete() {
 
-		boolean result = false;
 		File dataStoreFile = new File(plugin.getDataFolder() + File.separator + this.getFilename());
 		if (dataStoreFile.exists()) {
-			result = dataStoreFile.delete();
+			if (!dataStoreFile.delete()) {
+				plugin.getLogger().warning("Could not delete "
+						+ this + " datastore file " + this.getFilename() + ".");
+			}
 		}
-		return result;
 	}
 
 

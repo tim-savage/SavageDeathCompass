@@ -32,11 +32,17 @@ public final class PluginMain extends JavaPlugin {
 	public DataStore dataStore;
 
 
+	/**
+	 * Class constructor for testing
+	 */
 	public PluginMain() {
 		super();
 	}
 
 
+	/**
+	 * Class constructor for testing
+	 */
 	@SuppressWarnings("unused")
 	private PluginMain(JavaPluginLoader loader, PluginDescriptionFile descriptionFile, File dataFolder, File file) {
 		super(loader, descriptionFile, dataFolder, file);
