@@ -37,46 +37,46 @@ MESSAGES:
 
   COMMAND_FAIL_INVALID_COMMAND:
     enabled: true
-    string: '&cThat is not a valid command!'
+    string: '&cDat is geen geldig bevel!'
     # available subs: %PLAYER%
 
   COMMAND_FAIL_HELP_PERMISSION:
     enabled: true
-    string: '&cYou do not have permission to display DeathCompass help!'
+    string: '&cU heeft geen toestemming om DeathCompass-help weer te geven!'
     # available subs: %PLAYER%
 
   COMMAND_FAIL_RELOAD_PERMISSION:
     enabled: true
-    string: '&cYou do not have permission to reload DeathCompass configuration!'
+    string: '&cU heeft geen toestemming om de DeathCompass-configuratie opnieuw te laden!'
     # available subs: %PLAYER%
 
   COMMAND_FAIL_STATUS_PERMISSION:
     enabled: true
-    string: '&cYou do not have permission to view DeathCompass settings!'
+    string: '&cU heeft geen toestemming om DeathCompass-instellingen te bekijken!'
     # available subs: %PLAYER%
 
   COMMAND_SUCCESS_RELOAD:
     enabled: true
-    string: '&7DeathCompass configuration reloaded.'
+    string: '&7DeathCompass-configuratie opnieuw geladen.'
     # available subs: %PLAYER%
 
 
   COMMAND_HELP_HELP:
     enabled: true
-    string: '&eDisplays help for DeathCompass commands.'
+    string: '&eGeeft hulp weer voor DeathCompass-commando's.'
 
   COMMAND_HELP_RELOAD:
     enabled: true
-    string: '&eReloads the plugin configuration.'
+    string: '&eLaadt de plug-inconfiguratie opnieuw.'
 
   COMMAND_HELP_STATUS:
     enabled: true
-    string: '&eDisplays plugin configuration settings.'
+    string: '&eGeeft configuratie-instellingen voor plug-ins weer.'
 
   COMMAND_HELP_INVALID:
     enabled: true
-    string: '&eThat is not a valid command.'
+    string: '&eDat is geen geldig bevel.'
 
   COMMAND_HELP_USAGE:
     enabled: true
-    string: '&eCommand usage:'
+    string: '&eGebruik van de opdracht:'
