@@ -37,27 +37,27 @@ MESSAGES:
 
   COMMAND_FAIL_INVALID_COMMAND:
     enabled: true
-    string: '&cThat is not a valid command!'
+    string: '&cDas ist kein gültiger Befehl!'
     # available subs: %PLAYER%
 
   COMMAND_FAIL_HELP_PERMISSION:
     enabled: true
-    string: '&cYou do not have permission to display DeathCompass help!'
+    string: '&cSie sind nicht berechtigt, die DeathCompass-Hilfe anzuzeigen!'
     # available subs: %PLAYER%
 
   COMMAND_FAIL_RELOAD_PERMISSION:
     enabled: true
-    string: '&cYou do not have permission to reload DeathCompass configuration!'
+    string: '&cSie haben keine Berechtigung, die DeathCompass-Konfiguration neu zu laden!'
     # available subs: %PLAYER%
 
   COMMAND_FAIL_STATUS_PERMISSION:
     enabled: true
-    string: '&cYou do not have permission to view DeathCompass settings!'
+    string: '&cSie haben keine Berechtigung, die DeathCompass-Einstellungen anzuzeigen!'
     # available subs: %PLAYER%
 
   COMMAND_SUCCESS_RELOAD:
     enabled: true
-    string: '&7DeathCompass configuration reloaded.'
+    string: '&7DeathCompass-Konfiguration neu geladen.'
     # available subs: %PLAYER%
 
 
