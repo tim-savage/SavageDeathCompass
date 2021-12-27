@@ -2,12 +2,12 @@ package com.winterhaven_mc.deathcompass.commands;
 
 import com.winterhaven_mc.deathcompass.PluginMain;
 
-import com.winterhaven_mc.deathcompass.messages.Message;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 import static com.winterhaven_mc.deathcompass.messages.MessageId.*;
@@ -43,8 +43,8 @@ public final class CommandManager implements CommandExecutor, TabCompleter {
 	 * @return List of String - the possible matching values for tab completion
 	 */
 	@Override
-	public List<String> onTabComplete(final CommandSender sender, final Command command,
-	                                  final String alias, final String[] args) {
+	public List<String> onTabComplete(final @Nonnull CommandSender sender, final @Nonnull Command command,
+	                                  final @Nonnull String alias, final String[] args) {
 
 		// if more than one argument, use tab completer of subcommand
 		if (args.length > 1) {
@@ -76,9 +76,9 @@ public final class CommandManager implements CommandExecutor, TabCompleter {
 	 * @return boolean - always returns {@code true}, to suppress bukkit builtin help message
 	 */
 	@Override
-	public boolean onCommand(final CommandSender sender,
-	                               final Command command,
-	                               final String label,
+	public boolean onCommand(final @Nonnull CommandSender sender,
+	                               final @Nonnull Command command,
+	                               final @Nonnull String label,
 	                               final String[] args) {
 
 		// convert args array to list
@@ -102,7 +102,7 @@ public final class CommandManager implements CommandExecutor, TabCompleter {
 		// if subcommand is null, get help command from map
 		if (subcommand == null) {
 			subcommand = subcommandMap.getCommand("help");
-			Message.create(sender, COMMAND_FAIL_INVALID_COMMAND).send(plugin.languageHandler);
+			plugin.messageBuilder.build(sender, COMMAND_FAIL_INVALID_COMMAND).send(plugin.languageHandler);
 			plugin.soundConfig.playSound(sender, COMMAND_INVALID);
 		}
 
