@@ -1,7 +1,6 @@
 package com.winterhaven_mc.deathcompass.listeners;
 
 import com.winterhaven_mc.deathcompass.PluginMain;
-import com.winterhaven_mc.deathcompass.messages.Message;
 import com.winterhaven_mc.deathcompass.sounds.SoundId;
 import com.winterhaven_mc.deathcompass.storage.DeathRecord;
 
@@ -140,7 +139,7 @@ public class PlayerEventListener implements Listener {
 		setDeathCompassTarget(player);
 
 		// send player respawn message
-		Message.create(player, ACTION_PLAYER_RESPAWN).send(plugin.languageHandler);
+		plugin.messageBuilder.build(player, ACTION_PLAYER_RESPAWN).send(plugin.languageHandler);
 	}
 
 
@@ -292,7 +291,7 @@ public class PlayerEventListener implements Listener {
 		}
 
 		// send player compass destroyed message
-		Message.create(player, ACTION_ITEM_DESTROY).send(plugin.languageHandler);
+		plugin.messageBuilder.build(player, ACTION_ITEM_DESTROY).send(plugin.languageHandler);
 	}
 
 

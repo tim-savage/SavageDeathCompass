@@ -3,17 +3,19 @@ package com.winterhaven_mc.deathcompass;
 import com.winterhaven_mc.deathcompass.commands.CommandManager;
 import com.winterhaven_mc.deathcompass.listeners.InventoryEventListener;
 import com.winterhaven_mc.deathcompass.listeners.PlayerEventListener;
-
+import com.winterhaven_mc.deathcompass.messages.Macro;
+import com.winterhaven_mc.deathcompass.messages.MessageId;
 import com.winterhaven_mc.deathcompass.storage.DataStore;
-import com.winterhaven_mc.util.LanguageHandler;
-import com.winterhaven_mc.util.SoundConfiguration;
-import com.winterhaven_mc.util.YamlSoundConfiguration;
-
-import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import com.winterhaven_mc.util.WorldManager;
+import com.winterhaven_mc.util.SoundConfiguration;
+import com.winterhaven_mc.util.YamlSoundConfiguration;
+import com.winterhavenmc.util.messagebuilder.LanguageHandler;
+import com.winterhavenmc.util.messagebuilder.MessageBuilder;
+
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.java.JavaPluginLoader;
+import org.bukkit.plugin.PluginDescriptionFile;
 
 import java.io.File;
 
@@ -27,6 +29,7 @@ import java.io.File;
 public final class PluginMain extends JavaPlugin {
 
 	public LanguageHandler languageHandler;
+	public MessageBuilder<MessageId, Macro> messageBuilder;
 	public SoundConfiguration soundConfig;
 	public WorldManager worldManager;
 	public DataStore dataStore;
@@ -43,8 +46,8 @@ public final class PluginMain extends JavaPlugin {
 	/**
 	 * Class constructor for testing
 	 */
-	@SuppressWarnings("unused")
-	private PluginMain(JavaPluginLoader loader, PluginDescriptionFile descriptionFile, File dataFolder, File file) {
+	@SuppressWarnings({"unused", "ProtectedMemberInFinalClass"})
+	protected PluginMain(JavaPluginLoader loader, PluginDescriptionFile descriptionFile, File dataFolder, File file) {
 		super(loader, descriptionFile, dataFolder, file);
 	}
 
@@ -57,6 +60,7 @@ public final class PluginMain extends JavaPlugin {
 
 		// initialize language manager
 		languageHandler = new LanguageHandler(this);
+		messageBuilder = new MessageBuilder<>();
 
 		// instantiate sound config
 		soundConfig = new YamlSoundConfiguration(this);

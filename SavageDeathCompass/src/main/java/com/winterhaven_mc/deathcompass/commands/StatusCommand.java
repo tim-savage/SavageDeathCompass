@@ -1,7 +1,6 @@
 package com.winterhaven_mc.deathcompass.commands;
 
 import com.winterhaven_mc.deathcompass.PluginMain;
-import com.winterhaven_mc.deathcompass.messages.Message;
 import com.winterhaven_mc.deathcompass.sounds.SoundId;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -29,7 +28,7 @@ public class StatusCommand extends AbstractSubcommand {
 	public boolean onCommand(final CommandSender sender, final List<String> args) {
 
 		if (!sender.hasPermission("deathcompass.status")) {
-			Message.create(sender, COMMAND_FAIL_STATUS_PERMISSION).send(plugin.languageHandler);
+			plugin.messageBuilder.build(sender, COMMAND_FAIL_STATUS_PERMISSION).send(plugin.languageHandler);
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}

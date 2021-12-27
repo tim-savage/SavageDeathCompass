@@ -1,7 +1,6 @@
 package com.winterhaven_mc.deathcompass.listeners;
 
 import com.winterhaven_mc.deathcompass.PluginMain;
-import com.winterhaven_mc.deathcompass.messages.Message;
 import com.winterhaven_mc.deathcompass.sounds.SoundId;
 import com.winterhaven_mc.deathcompass.util.DeathCompass;
 
@@ -112,7 +111,7 @@ public final class InventoryEventListener implements Listener {
 				event.setCancelled(true);
 
 				// send player message
-				Message.create(event.getWhoClicked(), ACTION_INVENTORY_DENY_TRANSFER).send(plugin.languageHandler);
+				plugin.messageBuilder.build(event.getWhoClicked(), ACTION_INVENTORY_DENY_TRANSFER).send(plugin.languageHandler);
 
 				// play sound
 				plugin.soundConfig.playSound(event.getWhoClicked(), SoundId.INVENTORY_DENY_TRANSFER);
@@ -134,7 +133,7 @@ public final class InventoryEventListener implements Listener {
 					event.setCancelled(true);
 
 					// send player message
-					Message.create(event.getWhoClicked(), ACTION_INVENTORY_DENY_TRANSFER).send(plugin.languageHandler);
+					plugin.messageBuilder.build(event.getWhoClicked(), ACTION_INVENTORY_DENY_TRANSFER).send(plugin.languageHandler);
 
 					// play sound
 					plugin.soundConfig.playSound(event.getWhoClicked(), SoundId.INVENTORY_DENY_TRANSFER);
@@ -158,7 +157,7 @@ public final class InventoryEventListener implements Listener {
 					event.setCancelled(true);
 
 					// send player message
-					Message.create(event.getWhoClicked(), ACTION_INVENTORY_DENY_TRANSFER).send(plugin.languageHandler);
+					plugin.messageBuilder.build(event.getWhoClicked(), ACTION_INVENTORY_DENY_TRANSFER).send(plugin.languageHandler);
 
 					// play sound
 					plugin.soundConfig.playSound(event.getWhoClicked(), SoundId.INVENTORY_DENY_TRANSFER);
@@ -195,7 +194,7 @@ public final class InventoryEventListener implements Listener {
 					event.setCancelled(true);
 
 					// send player message
-					Message.create(event.getWhoClicked(), ACTION_INVENTORY_DENY_TRANSFER).send(plugin.languageHandler);
+					plugin.messageBuilder.build(event.getWhoClicked(), ACTION_INVENTORY_DENY_TRANSFER).send(plugin.languageHandler);
 
 					// play sound
 					plugin.soundConfig.playSound(event.getWhoClicked(), SoundId.INVENTORY_DENY_TRANSFER);
