@@ -63,20 +63,20 @@ MESSAGES:
 
   COMMAND_HELP_HELP:
     enabled: true
-    string: '&eDisplays help for DeathCompass commands.'
+    string: '&eZeigt Hilfe für DeathCompass-Befehle an.'
 
   COMMAND_HELP_RELOAD:
     enabled: true
-    string: '&eReloads the plugin configuration.'
+    string: '&eLädt die Plugin-Konfiguration neu.'
 
   COMMAND_HELP_STATUS:
     enabled: true
-    string: '&eDisplays plugin configuration settings.'
+    string: '&eZeigt die Plugin-Konfigurationseinstellungen an.'
 
   COMMAND_HELP_INVALID:
     enabled: true
-    string: '&eThat is not a valid command.'
+    string: '&eDas ist kein gültiger Befehl.'
 
   COMMAND_HELP_USAGE:
     enabled: true
-    string: '&eCommand usage:'
+    string: '&eBefehlsverwendung:'
