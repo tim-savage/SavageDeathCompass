@@ -45,6 +45,10 @@ class DataStoreSQLite extends DataStoreAbstract implements DataStore, Listener {
 		deathRecordCache = new DeathRecordCache(plugin);
 	}
 
+	@Override
+	public String toString() {
+		return "SQLite";
+	}
 
 	@Override
 	public void initialize() throws SQLException, ClassNotFoundException {
@@ -52,7 +56,7 @@ class DataStoreSQLite extends DataStoreAbstract implements DataStore, Listener {
 		// if data store is already initialized, do nothing and return
 		if (this.isInitialized()) {
 			if (plugin.getConfig().getBoolean("debug")) {
-				plugin.getLogger().info("SQLite datastore already initialized.");
+				plugin.getLogger().info(this + " datastore already initialized.");
 			}
 			return;
 		}
@@ -75,7 +79,7 @@ class DataStoreSQLite extends DataStoreAbstract implements DataStore, Listener {
 
 		// set initialized true
 		setInitialized(true);
-		plugin.getLogger().info("SQLite datastore initialized.");
+		plugin.getLogger().info(this + " datastore initialized.");
 	}
 
 
