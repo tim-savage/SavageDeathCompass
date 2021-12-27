@@ -37,46 +37,46 @@ MESSAGES:
 
   COMMAND_FAIL_INVALID_COMMAND:
     enabled: true
-    string: '&cThat is not a valid command!'
+    string: '&c¡Ese no es un comando válido!'
     # available subs: %PLAYER%
 
   COMMAND_FAIL_HELP_PERMISSION:
     enabled: true
-    string: '&cYou do not have permission to display DeathCompass help!'
+    string: '&c¡No tienes permiso para mostrar la ayuda de DeathCompass!'
     # available subs: %PLAYER%
 
   COMMAND_FAIL_RELOAD_PERMISSION:
     enabled: true
-    string: '&cYou do not have permission to reload DeathCompass configuration!'
+    string: '&c¡No tienes permiso para volver a cargar la configuración de DeathCompass!'
     # available subs: %PLAYER%
 
   COMMAND_FAIL_STATUS_PERMISSION:
     enabled: true
-    string: '&cYou do not have permission to view DeathCompass settings!'
+    string: '&c¡No tienes permiso para ver la configuración de DeathCompass!'
     # available subs: %PLAYER%
 
   COMMAND_SUCCESS_RELOAD:
     enabled: true
-    string: '&7DeathCompass configuration reloaded.'
+    string: '&7Se recargó la configuración de DeathCompass.'
     # available subs: %PLAYER%
 
 
   COMMAND_HELP_HELP:
     enabled: true
-    string: '&eDisplays help for DeathCompass commands.'
+    string: '&eMuestra ayuda para los comandos de DeathCompass.'
 
   COMMAND_HELP_RELOAD:
     enabled: true
-    string: '&eReloads the plugin configuration.'
+    string: '&eVuelve a cargar la configuración del complemento.'
 
   COMMAND_HELP_STATUS:
     enabled: true
-    string: '&eDisplays plugin configuration settings.'
+    string: '&eMuestra los ajustes de configuración del complemento.'
 
   COMMAND_HELP_INVALID:
     enabled: true
-    string: '&eThat is not a valid command.'
+    string: '&eEse no es un comando válido.'
 
   COMMAND_HELP_USAGE:
     enabled: true
-    string: '&eCommand usage:'
+    string: '&eUso del comando:'
