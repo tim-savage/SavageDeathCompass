@@ -68,7 +68,7 @@ public class PluginMainTests {
 		@Test
 		@DisplayName("language handler not null.")
 		void LanguageHandlerNotNull() {
-			Assertions.assertNotNull(plugin.languageHandler, "language manager is null.");
+			Assertions.assertNotNull(plugin.languageHandler, "language handler is null.");
 		}
 
 		@Test
@@ -118,14 +118,14 @@ public class PluginMainTests {
 			return plugin.getConfig().getKeys(false);
 		}
 
-//		@ParameterizedTest
-//		@DisplayName("file config key is contained in ConfigSetting enum.")
-//		@MethodSource("ConfigFileKeys")
-//		void ConfigFileKeyNotNull(String key) {
-//			Assertions.assertNotNull(key);
-//			Assertions.assertTrue(enumConfigKeyStrings.contains(key),
-//					"file config key is not contained in ConfigSetting enum.");
-//		}
+		@ParameterizedTest
+		@DisplayName("file config key is contained in ConfigSetting enum.")
+		@MethodSource("ConfigFileKeys")
+		void ConfigFileKeyNotNull(String key) {
+			Assertions.assertNotNull(key);
+			Assertions.assertTrue(enumConfigKeyStrings.contains(key),
+					"file config key is not contained in ConfigSetting enum.");
+		}
 
 		@ParameterizedTest
 		@EnumSource(ConfigSetting.class)
