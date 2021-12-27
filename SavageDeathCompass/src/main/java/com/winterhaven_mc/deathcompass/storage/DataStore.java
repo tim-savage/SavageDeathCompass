@@ -143,7 +143,7 @@ public interface DataStore {
 			newDataStore.initialize();
 		}
 		catch (Exception e) {
-			plugin.getLogger().severe("Could not initialize " + newDataStore.toString() + " datastore!");
+			plugin.getLogger().severe("Could not initialize " + newDataStore + " datastore!");
 			if (plugin.getConfig().getBoolean("debug")) {
 				e.printStackTrace();
 			}
