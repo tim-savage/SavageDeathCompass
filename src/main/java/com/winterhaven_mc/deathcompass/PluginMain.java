@@ -69,7 +69,7 @@ public final class PluginMain extends JavaPlugin {
 		worldManager = new WorldManager(this);
 
 		// instantiate datastore
-		dataStore = DataStore.create(this);
+		dataStore = DataStore.connect(this);
 
 		// instantiate command handler
 		new CommandManager(this);

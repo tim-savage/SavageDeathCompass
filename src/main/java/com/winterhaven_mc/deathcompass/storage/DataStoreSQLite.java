@@ -18,6 +18,9 @@ class DataStoreSQLite extends DataStoreAbstract implements DataStore, Listener {
 	// database connection object
 	private Connection connection;
 
+	// file path for datastore file
+	private final String dataFilePath;
+
 	// death record cache
 	private final DeathRecordCache deathRecordCache;
 
@@ -38,16 +41,11 @@ class DataStoreSQLite extends DataStoreAbstract implements DataStore, Listener {
 		// set datastore type
 		this.type = DataStoreType.SQLITE;
 
-		// set filename
-		this.filename = "deathlocations.db";
+		// set datastore file path
+		this.dataFilePath = plugin.getDataFolder() + File.separator + type.getStorageName();
 
 		// initialize death record cache
 		deathRecordCache = new DeathRecordCache(plugin);
-	}
-
-	@Override
-	public String toString() {
-		return "SQLite";
 	}
 
 	@Override
@@ -67,9 +65,8 @@ class DataStoreSQLite extends DataStoreAbstract implements DataStore, Listener {
 		Class.forName(jdbcDriverName);
 
 		// create database url
-		String dbFile = plugin.getDataFolder() + File.separator + filename;
 		String jdbc = "jdbc:sqlite";
-		String dbUrl = jdbc + ":" + dbFile;
+		String dbUrl = jdbc + ":" + dataFilePath;
 
 		// create a database connection
 		connection = DriverManager.getConnection(dbUrl);
@@ -539,7 +536,7 @@ class DataStoreSQLite extends DataStoreAbstract implements DataStore, Listener {
 
 
 	@Override
-	public void save() {
+	public void sync() {
 
 		// no action necessary for this storage type
 
@@ -547,25 +544,15 @@ class DataStoreSQLite extends DataStoreAbstract implements DataStore, Listener {
 
 
 	@Override
-	public void delete() {
+	public boolean delete() {
 
-		File dataStoreFile = new File(plugin.getDataFolder() + File.separator + this.getFilename());
+		// get path name to data store file
+		File dataStoreFile = new File(dataFilePath);
+		boolean result = false;
 		if (dataStoreFile.exists()) {
-			if (!dataStoreFile.delete()) {
-				plugin.getLogger().warning("Could not delete "
-						+ this + " datastore file " + this.getFilename() + ".");
-			}
+			result = dataStoreFile.delete();
 		}
-	}
-
-
-	@Override
-	public boolean exists() {
-
-		// get path name to old data store file
-		File dataStoreFile = new File(plugin.getDataFolder() + File.separator + this.getFilename());
-		return dataStoreFile.exists();
-
+		return result;
 	}
 
 }

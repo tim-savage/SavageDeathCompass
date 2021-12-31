@@ -1,11 +1,10 @@
 package com.winterhaven_mc.deathcompass.storage;
 
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 
 
 /**
@@ -13,18 +12,30 @@ import java.util.Collection;
  */
 public enum DataStoreType {
 
-	SQLITE("SQLite") {
+	SQLITE("SQLite", "deathlocations.db") {
+
 		@Override
-		public DataStore create(JavaPlugin plugin) {
+		public DataStore connect(JavaPlugin plugin) {
 
 			// create new sqlite datastore object
 			return new DataStoreSQLite(plugin);
+		}
+
+
+		@Override
+		boolean storageObjectExists(JavaPlugin plugin) {
+			// get path name to data store file
+			File dataStoreFile = new File(plugin.getDataFolder() + File.separator + this.getStorageName());
+			return dataStoreFile.exists();
 		}
 	};
 
 
 	// DataStoreType display name
 	private final String displayName;
+
+	// data store object name
+	private final String storageName;
 
 	// default DataStoreType
 	private final static DataStoreType defaultType = DataStoreType.SQLITE;
@@ -35,8 +46,9 @@ public enum DataStoreType {
 	 *
 	 * @param displayName the display name of the datastore type
 	 */
-	DataStoreType(final String displayName) {
+	DataStoreType(final String displayName, final String storageName) {
 		this.displayName = displayName;
+		this.storageName = storageName;
 	}
 
 
@@ -51,12 +63,32 @@ public enum DataStoreType {
 
 
 	/**
-	 * Static getter method for default DataStoreType
+	 * Getter for storage object name.
 	 *
-	 * @return default DataStoreType
+	 * @return the name of the backing store object for a data store type
 	 */
-	public static DataStoreType getDefaultType() {
-		return defaultType;
+	String getStorageName() {
+		return storageName;
+	}
+
+
+	/**
+	 * Test if datastore backing object (file, database) exists
+	 *
+	 * @param plugin reference to plugin main class
+	 * @return true if backing object exists, false if not
+	 */
+	abstract boolean storageObjectExists(JavaPlugin plugin);
+
+
+	/**
+	 * Get display name of DataStoreType
+	 *
+	 * @return String - display name of DataStoreType
+	 */
+	@Override
+	public String toString() {
+		return displayName;
 	}
 
 
@@ -75,7 +107,7 @@ public enum DataStoreType {
 			}
 		}
 		// no match; return sqlite
-		return DataStoreType.SQLITE;
+		return defaultType;
 	}
 
 
@@ -84,7 +116,7 @@ public enum DataStoreType {
 	 *
 	 * @return new DataStore
 	 */
-	public abstract DataStore create(JavaPlugin plugin);
+	public abstract DataStore connect(JavaPlugin plugin);
 
 
 	/**
@@ -93,7 +125,7 @@ public enum DataStoreType {
 	 * @param oldDataStore the old datastore to be converted from
 	 * @param newDataStore the new datastore to be converted to
 	 */
-	static void convert(final DataStore oldDataStore, final DataStore newDataStore) {
+	static void convert(final JavaPlugin plugin, final DataStore oldDataStore, final DataStore newDataStore) {
 
 		// if datastores are same type, do not convert
 		if (oldDataStore.getType().equals(newDataStore.getType())) {
@@ -101,10 +133,10 @@ public enum DataStoreType {
 		}
 
 		// if old datastore file exists, attempt to read all records
-		if (oldDataStore.exists()) {
+		if (oldDataStore.getType().storageObjectExists(plugin)) {
 
-			Bukkit.getLogger().info("Converting existing " + oldDataStore.getDisplayName() + " datastore to "
-					+ newDataStore.getDisplayName() + " datastore...");
+			plugin.getLogger().info("Converting existing " + oldDataStore + " datastore to "
+					+ newDataStore + " datastore...");
 
 			// initialize old datastore
 			if (!oldDataStore.isInitialized()) {
@@ -112,21 +144,26 @@ public enum DataStoreType {
 					oldDataStore.initialize();
 				}
 				catch (Exception e) {
-					Bukkit.getLogger().warning("Could not initialize "
+					plugin.getLogger().warning("Could not initialize "
 							+ oldDataStore + " datastore for conversion.");
-					Bukkit.getLogger().warning(e.getLocalizedMessage());
+					plugin.getLogger().warning(e.getLocalizedMessage());
 					return;
 				}
 			}
 
-			Collection<DeathRecord> allRecords = oldDataStore.selectAllRecords();
+			// get count of records inserted in new datastore
+			int count = newDataStore.insertRecords(oldDataStore.selectAllRecords());
 
-			int count = newDataStore.insertRecords(allRecords);
+			// log record count message
+			plugin.getLogger().info(count + " records converted to new datastore.");
 
-			Bukkit.getLogger().info(count + " records converted to new datastore.");
+			// flush new datastore to disk if applicable
+			newDataStore.sync();
 
-			newDataStore.save();
+			// close old datastore
 			oldDataStore.close();
+
+			// delete old datastore storage object
 			oldDataStore.delete();
 		}
 	}
@@ -146,13 +183,8 @@ public enum DataStoreType {
 		dataStoresTypes.remove(newDataStore.getType());
 
 		for (DataStoreType type : dataStoresTypes) {
-
-			// create oldDataStore holder
-			DataStore oldDataStore = type.create(plugin);
-
-			if (oldDataStore != null && oldDataStore.exists()) {
-
-				convert(oldDataStore, newDataStore);
+			if (type.storageObjectExists(plugin)) {
+				convert(plugin, type.connect(plugin), newDataStore);
 			}
 		}
 	}
