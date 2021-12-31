@@ -34,7 +34,7 @@ public class PluginMainTests {
 
 	@Nested
 	@DisplayName("Test mock objects.")
-	class Mocking {
+	class MockingTests {
 
 		@Test
 		@DisplayName("server is not null.")
@@ -63,12 +63,12 @@ public class PluginMainTests {
 
 	@Nested
 	@DisplayName("Test plugin main objects.")
-	class PluginMainObjects {
+	class PluginMainObjectTests {
 
 		@Test
 		@DisplayName("language handler not null.")
 		void LanguageHandlerNotNull() {
-			Assertions.assertNotNull(plugin.languageHandler, "language handler is null.");
+			Assertions.assertNotNull(plugin.messageBuilder, "language handler is null.");
 		}
 
 		@Test
@@ -89,11 +89,11 @@ public class PluginMainTests {
 	@Nested
 	@DisplayName("Test plugin config.")
 	@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-	class Config {
+	class ConfigTests {
 
 		Set<String> enumConfigKeyStrings = new HashSet<>();
 
-		public Config() {
+		public ConfigTests() {
 			for (ConfigSetting configSetting : ConfigSetting.values()) {
 				this.enumConfigKeyStrings.add(configSetting.getKey());
 			}

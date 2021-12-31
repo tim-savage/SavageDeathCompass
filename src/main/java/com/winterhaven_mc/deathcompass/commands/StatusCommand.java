@@ -28,7 +28,7 @@ public class StatusCommand extends AbstractSubcommand {
 	public boolean onCommand(final CommandSender sender, final List<String> args) {
 
 		if (!sender.hasPermission("deathcompass.status")) {
-			plugin.messageBuilder.build(sender, COMMAND_FAIL_STATUS_PERMISSION).send(plugin.languageHandler);
+			plugin.messageBuilder.build(sender, COMMAND_FAIL_STATUS_PERMISSION).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}

@@ -68,7 +68,7 @@
 		<!-- MessageBuilder -->
 		<dependency>
 			<groupId>com.winterhaven-mc</groupId>
-			<artifactId>message-builder</artifactId>
+			<artifactId>message-builder-lib</artifactId>
 			<version>1.0.0</version>
 		</dependency>
 
@@ -147,7 +147,7 @@
 							<rules>
 								<bannedDependencies>
 									<excludes>
-										<exclude>org.apache.logging.log4j:log4j-core:(,2.16.0)</exclude>
+										<exclude>org.apache.logging.log4j:log4j-core:(,2.17.0)</exclude>
 										<message>
 											Versions of log4j prior to 2.17.0 may be vulnerable to remote code execution or denial of service attacks.
 											https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-44228
@@ -187,9 +187,20 @@
 						</goals>
 						<configuration>
 							<minimizeJar>true</minimizeJar>
+							<filters>
+								<filter>
+									<artifact>com.winterhaven-mc:*-lib</artifact>
+									<excludes>
+										<exclude>META-INF/MANIFEST.MF</exclude>
+										<exclude>META-INF/*.SF</exclude>
+										<exclude>META-INF/*.DSA</exclude>
+										<exclude>META-INF/*.RSA</exclude>
+									</excludes>
+								</filter>
+							</filters>
 							<artifactSet>
 								<includes>
-									<include>com.winterhaven-mc:message-builder</include>
+									<include>com.winterhaven-mc:message-builder-lib</include>
 									<include>com.winterhaven-mc:world-manager-lib</include>
 									<include>com.winterhaven-mc:sound-config-lib</include>
 								</includes>

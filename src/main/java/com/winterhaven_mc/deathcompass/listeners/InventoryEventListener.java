@@ -111,7 +111,7 @@ public final class InventoryEventListener implements Listener {
 				event.setCancelled(true);
 
 				// send player message
-				plugin.messageBuilder.build(event.getWhoClicked(), ACTION_INVENTORY_DENY_TRANSFER).send(plugin.languageHandler);
+				plugin.messageBuilder.build(event.getWhoClicked(), ACTION_INVENTORY_DENY_TRANSFER).send();
 
 				// play sound
 				plugin.soundConfig.playSound(event.getWhoClicked(), SoundId.INVENTORY_DENY_TRANSFER);
@@ -133,7 +133,7 @@ public final class InventoryEventListener implements Listener {
 					event.setCancelled(true);
 
 					// send player message
-					plugin.messageBuilder.build(event.getWhoClicked(), ACTION_INVENTORY_DENY_TRANSFER).send(plugin.languageHandler);
+					plugin.messageBuilder.build(event.getWhoClicked(), ACTION_INVENTORY_DENY_TRANSFER).send();
 
 					// play sound
 					plugin.soundConfig.playSound(event.getWhoClicked(), SoundId.INVENTORY_DENY_TRANSFER);
@@ -157,7 +157,7 @@ public final class InventoryEventListener implements Listener {
 					event.setCancelled(true);
 
 					// send player message
-					plugin.messageBuilder.build(event.getWhoClicked(), ACTION_INVENTORY_DENY_TRANSFER).send(plugin.languageHandler);
+					plugin.messageBuilder.build(event.getWhoClicked(), ACTION_INVENTORY_DENY_TRANSFER).send();
 
 					// play sound
 					plugin.soundConfig.playSound(event.getWhoClicked(), SoundId.INVENTORY_DENY_TRANSFER);
@@ -194,7 +194,7 @@ public final class InventoryEventListener implements Listener {
 					event.setCancelled(true);
 
 					// send player message
-					plugin.messageBuilder.build(event.getWhoClicked(), ACTION_INVENTORY_DENY_TRANSFER).send(plugin.languageHandler);
+					plugin.messageBuilder.build(event.getWhoClicked(), ACTION_INVENTORY_DENY_TRANSFER).send();
 
 					// play sound
 					plugin.soundConfig.playSound(event.getWhoClicked(), SoundId.INVENTORY_DENY_TRANSFER);

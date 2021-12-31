@@ -42,7 +42,7 @@ public class DeathCompassTests {
 
     @Nested
     @DisplayName("Test config objects.")
-    class Config {
+    class ConfigTests {
 
         @Test
         @DisplayName("plugin config not null.")
@@ -54,7 +54,7 @@ public class DeathCompassTests {
     @Test
     @DisplayName("language manager not null.")
     void LanguageManagerNotNull() {
-        Assertions.assertNotNull(plugin.languageHandler);
+        Assertions.assertNotNull(plugin.messageBuilder);
     }
 
     @Test

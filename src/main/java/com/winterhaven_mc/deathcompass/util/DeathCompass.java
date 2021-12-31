@@ -86,10 +86,10 @@ public final class DeathCompass {
 	private static void setMetaData(final ItemStack itemStack) {
 
 		// retrieve item name from language file file
-		String itemName = plugin.languageHandler.getItemName();
+		String itemName = plugin.messageBuilder.getItemName();
 
 		// retrieve item lore from language file file
-		List<String> itemLore = plugin.languageHandler.getItemLore();
+		List<String> itemLore = plugin.messageBuilder.getItemLore();
 
 		// get item metadata object
 		final ItemMeta itemMeta = itemStack.getItemMeta();
