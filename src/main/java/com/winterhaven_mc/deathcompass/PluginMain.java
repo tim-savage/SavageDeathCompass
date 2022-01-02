@@ -7,10 +7,10 @@ import com.winterhaven_mc.deathcompass.messages.Macro;
 import com.winterhaven_mc.deathcompass.messages.MessageId;
 import com.winterhaven_mc.deathcompass.storage.DataStore;
 
-import com.winterhaven_mc.util.WorldManager;
-import com.winterhaven_mc.util.SoundConfiguration;
-import com.winterhaven_mc.util.YamlSoundConfiguration;
 import com.winterhavenmc.util.messagebuilder.MessageBuilder;
+import com.winterhavenmc.util.soundconfig.SoundConfiguration;
+import com.winterhavenmc.util.soundconfig.YamlSoundConfiguration;
+import com.winterhavenmc.util.worldmanager.WorldManager;
 
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.java.JavaPluginLoader;
