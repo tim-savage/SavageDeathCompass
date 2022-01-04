@@ -1,7 +1,7 @@
 name: ${project.name}
 version: ${project.version}
 author: ${project.author}
-main: com.winterhaven_mc.deathcompass.PluginMain
+main: com.winterhavenmc.deathcompass.PluginMain
 api-version: 1.16
 softdepend: [Multiverse-Core]
 
