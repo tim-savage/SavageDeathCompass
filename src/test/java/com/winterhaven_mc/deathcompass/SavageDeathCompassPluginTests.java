@@ -11,7 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class PluginMainTests {
+public class SavageDeathCompassPluginTests {
 
 	private ServerMock server;
 	private PluginMain plugin;
