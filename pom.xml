@@ -208,7 +208,7 @@
 							<relocations>
 								<relocation>
 									<pattern>com.winterhavenmc.util</pattern>
-									<shadedPattern>com.winterhaven_mc.deathcompass.shaded</shadedPattern>
+									<shadedPattern>com.winterhavenmc.deathcompass.shaded</shadedPattern>
 								</relocation>
 							</relocations>
 						</configuration>
