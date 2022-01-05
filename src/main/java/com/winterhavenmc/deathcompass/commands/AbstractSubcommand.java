@@ -31,12 +31,12 @@ public abstract class AbstractSubcommand implements Subcommand {
 	}
 
 	@Override
-	public void setAliases(List<String> aliases) {
+	public void setAliases(final List<String> aliases) {
 		this.aliases = aliases;
 	}
 
 	@Override
-	public void addAlias(String alias) {
+	public void addAlias(final String alias) {
 		this.aliases.add(alias);
 	}
 
@@ -46,12 +46,12 @@ public abstract class AbstractSubcommand implements Subcommand {
 	}
 
 	@Override
-	public void displayUsage(CommandSender sender) {
+	public void displayUsage(final CommandSender sender) {
 		sender.sendMessage(usageString);
 	}
 
 	@Override
-	public void setUsage(String usageString) {
+	public void setUsage(final String usageString) {
 		this.usageString = usageString;
 	}
 

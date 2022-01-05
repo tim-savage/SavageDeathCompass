@@ -26,7 +26,7 @@ final class DeathRecordCache implements Listener {
 	/**
 	 * Constructor
 	 */
-	DeathRecordCache(JavaPlugin plugin) {
+	DeathRecordCache(final JavaPlugin plugin) {
 
 		this.plugin = plugin;
 
@@ -118,7 +118,7 @@ final class DeathRecordCache implements Listener {
 	 * @param event the event handled by this listener
 	 */
 	@EventHandler
-	void onPlayerQuit(PlayerQuitEvent event) {
+	void onPlayerQuit(final PlayerQuitEvent event) {
 		deathRecordMap.remove(event.getPlayer().getUniqueId());
 	}
 

@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface Subcommand {
 
-	boolean onCommand(CommandSender sender, List<String> argsList);
+	boolean onCommand(final CommandSender sender, final List<String> argsList);
 
 	List<String> onTabComplete(final CommandSender sender, final Command command,
 	                           final String alias, final String[] args);
@@ -19,18 +19,21 @@ public interface Subcommand {
 
 	List<String> getAliases();
 
-	void setAliases(List<String> aliases);
+	@SuppressWarnings("unused")
+	void setAliases(final List<String> aliases);
 
-	void addAlias(String alias);
+	@SuppressWarnings("unused")
+	void addAlias(final String alias);
 
+	@SuppressWarnings("unused")
 	String getUsage();
 
-	void setUsage(String usageString);
+	void setUsage(final String usageString);
 
-	void displayUsage(CommandSender sender);
+	void displayUsage(final CommandSender sender);
 
 	MessageId getDescription();
 
-	void setDescription(MessageId messageId);
+	void setDescription(final MessageId messageId);
 
 }

@@ -45,7 +45,10 @@ public final class PluginMain extends JavaPlugin {
 	 * Class constructor for testing
 	 */
 	@SuppressWarnings({"unused", "ProtectedMemberInFinalClass"})
-	protected PluginMain(JavaPluginLoader loader, PluginDescriptionFile descriptionFile, File dataFolder, File file) {
+	protected PluginMain(final JavaPluginLoader loader,
+	                     final PluginDescriptionFile descriptionFile,
+	                     final File dataFolder,
+	                     final File file) {
 		super(loader, descriptionFile, dataFolder, file);
 	}
 

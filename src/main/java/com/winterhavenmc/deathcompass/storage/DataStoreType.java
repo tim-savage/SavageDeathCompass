@@ -15,7 +15,7 @@ public enum DataStoreType {
 	SQLITE("SQLite", "deathlocations.db") {
 
 		@Override
-		public DataStore connect(JavaPlugin plugin) {
+		public DataStore connect(final JavaPlugin plugin) {
 
 			// create new sqlite datastore object
 			return new DataStoreSQLite(plugin);
@@ -23,7 +23,7 @@ public enum DataStoreType {
 
 
 		@Override
-		boolean storageObjectExists(JavaPlugin plugin) {
+		boolean storageObjectExists(final JavaPlugin plugin) {
 			// get path name to data store file
 			File dataStoreFile = new File(plugin.getDataFolder() + File.separator + this.getStorageName());
 			return dataStoreFile.exists();
@@ -78,7 +78,7 @@ public enum DataStoreType {
 	 * @param plugin reference to plugin main class
 	 * @return true if backing object exists, false if not
 	 */
-	abstract boolean storageObjectExists(JavaPlugin plugin);
+	abstract boolean storageObjectExists(final JavaPlugin plugin);
 
 
 	/**
@@ -116,7 +116,7 @@ public enum DataStoreType {
 	 *
 	 * @return new DataStore
 	 */
-	public abstract DataStore connect(JavaPlugin plugin);
+	public abstract DataStore connect(final JavaPlugin plugin);
 
 
 	/**
@@ -174,7 +174,7 @@ public enum DataStoreType {
 	 *
 	 * @param newDataStore the datastore to convert all other existing datastore to
 	 */
-	static void convertAll(JavaPlugin plugin, final DataStore newDataStore) {
+	static void convertAll(final JavaPlugin plugin, final DataStore newDataStore) {
 
 		// get array list of all data store types
 		ArrayList<DataStoreType> dataStoresTypes = new ArrayList<>(Arrays.asList(DataStoreType.values()));

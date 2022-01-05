@@ -117,7 +117,7 @@ public final class CommandManager implements CommandExecutor, TabCompleter {
 	 * @param matchString the string prefix to match against command names
 	 * @return List of String - command names that match prefix and sender has permission
 	 */
-	private List<String> matchingCommands(CommandSender sender, String matchString) {
+	private List<String> matchingCommands(final CommandSender sender, final String matchString) {
 
 		List<String> returnList = new ArrayList<>();
 
