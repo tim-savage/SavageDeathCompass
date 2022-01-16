@@ -2,7 +2,7 @@ package com.winterhavenmc.deathcompass.commands;
 
 import java.util.*;
 
-public class SubcommandMap {
+public class SubcommandRegistry {
 
 	SortedMap<String, Subcommand> subcommandMap = new TreeMap<>();
 	Map<String, String> aliasMap = new HashMap<>();

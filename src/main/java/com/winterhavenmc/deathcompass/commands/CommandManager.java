@@ -20,7 +20,7 @@ import static com.winterhavenmc.deathcompass.sounds.SoundId.*;
 public final class CommandManager implements CommandExecutor, TabCompleter {
 
 	private final PluginMain plugin;
-	private final SubcommandMap subcommandMap = new SubcommandMap();
+	private final SubcommandRegistry subcommandRegistry = new SubcommandRegistry();
 
 
 	public CommandManager(final PluginMain plugin) {
@@ -28,7 +28,7 @@ public final class CommandManager implements CommandExecutor, TabCompleter {
 		Objects.requireNonNull(plugin.getCommand("deathcompass")).setExecutor(this);
 
 		for (SubcommandType subcommandType : SubcommandType.values()) {
-			subcommandType.register(plugin, subcommandMap);
+			subcommandType.register(plugin, subcommandRegistry);
 		}
 	}
 
@@ -50,7 +50,7 @@ public final class CommandManager implements CommandExecutor, TabCompleter {
 		if (args.length > 1) {
 
 			// get subcommand from map
-			Subcommand subcommand = subcommandMap.getCommand(args[0]);
+			Subcommand subcommand = subcommandRegistry.getCommand(args[0]);
 
 			// if no subcommand returned from map, return empty list
 			if (subcommand == null) {
@@ -97,11 +97,11 @@ public final class CommandManager implements CommandExecutor, TabCompleter {
 		}
 
 		// get subcommand from map by name
-		Subcommand subcommand = subcommandMap.getCommand(subcommandName);
+		Subcommand subcommand = subcommandRegistry.getCommand(subcommandName);
 
 		// if subcommand is null, get help command from map
 		if (subcommand == null) {
-			subcommand = subcommandMap.getCommand("help");
+			subcommand = subcommandRegistry.getCommand("help");
 			plugin.messageBuilder.build(sender, MessageId.COMMAND_FAIL_INVALID_COMMAND).send();
 			plugin.soundConfig.playSound(sender, COMMAND_INVALID);
 		}
@@ -121,7 +121,7 @@ public final class CommandManager implements CommandExecutor, TabCompleter {
 
 		List<String> returnList = new ArrayList<>();
 
-		for (String subcommand : subcommandMap.getNames()) {
+		for (String subcommand : subcommandRegistry.getNames()) {
 			if (sender.hasPermission("deathcompass." + subcommand)
 					&& subcommand.startsWith(matchString.toLowerCase())) {
 				returnList.add(subcommand);
