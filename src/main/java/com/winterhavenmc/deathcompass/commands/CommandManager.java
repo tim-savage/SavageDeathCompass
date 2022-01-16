@@ -27,9 +27,13 @@ public final class CommandManager implements CommandExecutor, TabCompleter {
 		this.plugin = Objects.requireNonNull(plugin);
 		Objects.requireNonNull(plugin.getCommand("deathcompass")).setExecutor(this);
 
+		// register subcommands
 		for (SubcommandType subcommandType : SubcommandType.values()) {
-			subcommandType.register(plugin, subcommandRegistry);
+			subcommandRegistry.register(subcommandType.create(plugin));
 		}
+
+		// register help subcommand
+		subcommandRegistry.register(new HelpCommand(plugin, subcommandRegistry));
 	}
 
 
