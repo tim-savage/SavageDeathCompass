@@ -10,7 +10,7 @@ import java.util.Objects;
 
 import static com.winterhavenmc.deathcompass.messages.MessageId.*;
 
-public class ReloadCommand extends AbstractSubcommand {
+final class ReloadCommand extends AbstractSubcommand {
 
 	private final PluginMain plugin;
 

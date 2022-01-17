@@ -13,7 +13,7 @@ import static com.winterhavenmc.deathcompass.messages.MessageId.*;
 import static com.winterhavenmc.deathcompass.sounds.SoundId.COMMAND_INVALID;
 
 
-public class HelpCommand extends AbstractSubcommand {
+final class HelpCommand extends AbstractSubcommand {
 
 	private final PluginMain plugin;
 	private final SubcommandRegistry subcommandRegistry;

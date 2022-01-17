@@ -2,7 +2,7 @@ package com.winterhavenmc.deathcompass.commands;
 
 import com.winterhavenmc.deathcompass.PluginMain;
 
-public enum SubcommandType {
+enum SubcommandType {
 
 	RELOAD() {
 		@Override
