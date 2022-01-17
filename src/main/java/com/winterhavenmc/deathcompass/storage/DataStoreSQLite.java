@@ -10,7 +10,7 @@ import java.sql.*;
 import java.util.*;
 
 
-class DataStoreSQLite extends DataStoreAbstract implements DataStore, Listener {
+final class DataStoreSQLite extends DataStoreAbstract implements DataStore, Listener {
 
 	// reference to main class
 	private final JavaPlugin plugin;

@@ -10,7 +10,7 @@ import java.util.Arrays;
 /**
  * Enum of datastore types available for use by plugin
  */
-public enum DataStoreType {
+enum DataStoreType {
 
 	SQLITE("SQLite", "deathlocations.db") {
 

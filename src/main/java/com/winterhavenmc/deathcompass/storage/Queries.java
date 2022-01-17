@@ -9,7 +9,7 @@ import java.util.Properties;
 /**
  * Retrieve sql queries from properties resource
  */
-class Queries {
+final class Queries {
 
 	private final static String propFileName = "queries.properties";
 
