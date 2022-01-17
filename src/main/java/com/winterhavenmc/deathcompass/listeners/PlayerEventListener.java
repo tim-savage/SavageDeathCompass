@@ -28,7 +28,7 @@ import static com.winterhavenmc.deathcompass.messages.MessageId.ACTION_PLAYER_RE
 /**
  * Implements event handlers for player events
  */
-public class PlayerEventListener implements Listener {
+public final class PlayerEventListener implements Listener {
 
 	// reference to main class
 	private final PluginMain plugin;
