@@ -23,13 +23,12 @@ public final class InventoryEventListener implements Listener {
 	private final PluginMain plugin;
 
 	// set of inventory types to allow shift-click transfers from hotbar (item goes into player inventory)
-	private final static Set<InventoryType> SHIFT_CLICK_ALLOWED_TYPES =
-			Collections.unmodifiableSet(new HashSet<>(
-					Arrays.asList(InventoryType.BEACON,
-							InventoryType.BREWING,
-							InventoryType.CRAFTING,
-							InventoryType.FURNACE,
-							InventoryType.WORKBENCH)));
+	private final static Set<InventoryType> SHIFT_CLICK_ALLOWED_TYPES = Set.of(
+			InventoryType.BEACON,
+			InventoryType.BREWING,
+			InventoryType.CRAFTING,
+			InventoryType.FURNACE,
+			InventoryType.WORKBENCH );
 
 
 	/**
