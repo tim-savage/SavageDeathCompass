@@ -64,6 +64,7 @@ public final class PluginMain extends JavaPlugin {
 		// instantiate inventory event listener
 		new InventoryEventListener(this);
 
+		// instantiate death compass factory
 		deathCompassFactory = new DeathCompassFactory(this);
 	}
 
