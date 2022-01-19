@@ -21,8 +21,8 @@ public final class InventoryEventListener implements Listener {
 	// reference to main class
 	private final PluginMain plugin;
 
-	// set of inventory types to allow shift-click transfers from hotbar (item goes into player inventory)
-	private final static Set<InventoryType> SHIFT_CLICK_ALLOWED_TYPES = Set.of(
+	// set of inventory types to allow shift-click transfers from hot bar (item goes into player inventory)
+	private final static Collection<InventoryType> SHIFT_CLICK_ALLOWED_TYPES = Set.of(
 			InventoryType.BEACON,
 			InventoryType.BREWING,
 			InventoryType.CRAFTING,
@@ -63,10 +63,10 @@ public final class InventoryEventListener implements Listener {
 			return;
 		}
 
-		// get itemstack involved in event
+		// get item stack involved in event
 		final ItemStack itemStack = event.getItem();
 
-		// if itemstack is death compass, cancel event
+		// if item stack is death compass, cancel event
 		if (plugin.deathCompassFactory.isDeathCompass(itemStack)) {
 			event.setCancelled(true);
 		}
@@ -100,7 +100,7 @@ public final class InventoryEventListener implements Listener {
 			// check if current item is death compass
 			if (plugin.deathCompassFactory.isDeathCompass(event.getCurrentItem())) {
 
-				// if inventory type is in set, do nothing and return (allow transfer between player inventory and hotbar)
+				// if inventory type is in set, do nothing and return (allow transfer between player inventory and hot bar)
 				if (SHIFT_CLICK_ALLOWED_TYPES.contains(event.getInventory().getType())) {
 					return;
 				}
