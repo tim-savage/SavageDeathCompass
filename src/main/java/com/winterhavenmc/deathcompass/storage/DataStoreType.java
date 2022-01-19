@@ -3,8 +3,9 @@ package com.winterhavenmc.deathcompass.storage;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 
 
 /**
@@ -177,7 +178,7 @@ enum DataStoreType {
 	static void convertAll(JavaPlugin plugin, final DataStore newDataStore) {
 
 		// get array list of all data store types
-		ArrayList<DataStoreType> dataStoresTypes = new ArrayList<>(Arrays.asList(DataStoreType.values()));
+		Collection<DataStoreType> dataStoresTypes = new HashSet<>(Arrays.asList(DataStoreType.values()));
 
 		// remove newDataStore from list of types to convert
 		dataStoresTypes.remove(newDataStore.getType());

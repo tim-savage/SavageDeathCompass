@@ -225,7 +225,7 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore, List
 	@Override
 	public synchronized Collection<DeathRecord> selectAllRecords() {
 
-		Collection<DeathRecord> returnList = new ArrayList<>();
+		Collection<DeathRecord> returnSet = new HashSet<>();
 
 		try {
 			PreparedStatement preparedStatement = connection.prepareStatement(Queries.getQuery("SelectAllLocations"));
@@ -264,7 +264,7 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore, List
 					// if playerUUID is not null, add record to return list
 					if (playerUUID != null) {
 						DeathRecord deathRecord = new DeathRecord(playerUUID, world.getUID(), x, y, z);
-						returnList.add(deathRecord);
+						returnSet.add(deathRecord);
 					}
 				}
 
@@ -292,7 +292,7 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore, List
 					UUID playerUUID = new UUID(playerUidMsb, playerUidLsb);
 
 					DeathRecord deathRecord = new DeathRecord(playerUUID, world.getUID(), x, y, z);
-					returnList.add(deathRecord);
+					returnSet.add(deathRecord);
 				}
 			}
 		}
@@ -310,7 +310,7 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore, List
 		}
 
 		// return results
-		return returnList;
+		return returnSet;
 	}
 
 
