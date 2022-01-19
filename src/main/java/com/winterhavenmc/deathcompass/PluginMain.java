@@ -14,10 +14,6 @@ import com.winterhavenmc.util.worldmanager.WorldManager;
 
 import org.bstats.bukkit.Metrics;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.plugin.java.JavaPluginLoader;
-import org.bukkit.plugin.PluginDescriptionFile;
-
-import java.io.File;
 
 
 /**
@@ -32,23 +28,6 @@ public final class PluginMain extends JavaPlugin {
 	public SoundConfiguration soundConfig;
 	public WorldManager worldManager;
 	public DataStore dataStore;
-
-
-	/**
-	 * Class constructor for testing
-	 */
-	public PluginMain() {
-		super();
-	}
-
-
-	/**
-	 * Class constructor for testing
-	 */
-	@SuppressWarnings({"unused", "ProtectedMemberInFinalClass"})
-	protected PluginMain(JavaPluginLoader loader, PluginDescriptionFile descriptionFile, File dataFolder, File file) {
-		super(loader, descriptionFile, dataFolder, file);
-	}
 
 
 	@Override
