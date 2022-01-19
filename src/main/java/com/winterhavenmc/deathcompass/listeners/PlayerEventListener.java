@@ -4,7 +4,6 @@ import com.winterhavenmc.deathcompass.PluginMain;
 import com.winterhavenmc.deathcompass.sounds.SoundId;
 import com.winterhavenmc.deathcompass.storage.DeathRecord;
 
-import com.winterhavenmc.deathcompass.util.DeathCompass;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -70,7 +69,7 @@ public final class PlayerEventListener implements Listener {
 			ListIterator<ItemStack> iterator = drops.listIterator();
 
 			// create death compass stack for comparison
-			ItemStack deathCompass = DeathCompass.createItem();
+			ItemStack deathCompass = plugin.deathCompassFactory.createItem();
 
 			// loop through all dropped items and remove any stacks that are death compasses
 			while (iterator.hasNext()) {
@@ -164,7 +163,7 @@ public final class PlayerEventListener implements Listener {
 		}
 
 		// create 1 compass itemstack with configured settings
-		ItemStack deathcompass = DeathCompass.createItem();
+		ItemStack deathcompass = plugin.deathCompassFactory.createItem();
 
 		// get player last death location
 		Location lastdeathloc = getDeathLocation(player);
@@ -203,7 +202,7 @@ public final class PlayerEventListener implements Listener {
 		}
 
 		// create DeathCompass itemstack
-		ItemStack deathcompass = DeathCompass.createItem();
+		ItemStack deathcompass = plugin.deathCompassFactory.createItem();
 
 		// if player does not have a death compass in inventory, do nothing and return
 		if (!player.getInventory().containsAtLeast(deathcompass,1)) {
@@ -272,7 +271,7 @@ public final class PlayerEventListener implements Listener {
 		ItemStack droppedItemStack = event.getItemDrop().getItemStack();
 
 		// create death compass itemstack for comparison
-		ItemStack dc = DeathCompass.createItem();
+		ItemStack dc = plugin.deathCompassFactory.createItem();
 
 		// if droppedItemStack is not a DeathCompass or destroy-on-drop config is not true, do nothing and return
 		if (!droppedItemStack.isSimilar(dc) || !plugin.getConfig().getBoolean("destroy-on-drop")) {
@@ -303,7 +302,7 @@ public final class PlayerEventListener implements Listener {
 	private void giveDeathCompass(final Player player) {
 
 		// create DeathCompass itemstack
-		ItemStack deathcompass = DeathCompass.createItem();
+		ItemStack deathcompass = plugin.deathCompassFactory.createItem();
 
 		// add DeathCompass itemstack to player inventory
 		player.getInventory().addItem(deathcompass);
@@ -320,7 +319,7 @@ public final class PlayerEventListener implements Listener {
 	 * @param inventory the inventory from which to remove all death compasses
 	 */
 	private void removeDeathCompasses(final Inventory inventory) {
-		ItemStack deathcompass = DeathCompass.createItem();
+		ItemStack deathcompass = plugin.deathCompassFactory.createItem();
 		inventory.removeItem(deathcompass);
 	}
 

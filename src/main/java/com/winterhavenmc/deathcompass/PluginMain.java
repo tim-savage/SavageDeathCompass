@@ -6,6 +6,7 @@ import com.winterhavenmc.deathcompass.listeners.PlayerEventListener;
 import com.winterhavenmc.deathcompass.messages.Macro;
 import com.winterhavenmc.deathcompass.messages.MessageId;
 import com.winterhavenmc.deathcompass.storage.DataStore;
+import com.winterhavenmc.deathcompass.util.DeathCompassFactory;
 
 import com.winterhavenmc.util.messagebuilder.MessageBuilder;
 import com.winterhavenmc.util.soundconfig.SoundConfiguration;
@@ -28,6 +29,7 @@ public final class PluginMain extends JavaPlugin {
 	public SoundConfiguration soundConfig;
 	public WorldManager worldManager;
 	public DataStore dataStore;
+	public DeathCompassFactory deathCompassFactory;
 
 
 	@Override
@@ -61,6 +63,8 @@ public final class PluginMain extends JavaPlugin {
 
 		// instantiate inventory event listener
 		new InventoryEventListener(this);
+
+		deathCompassFactory = new DeathCompassFactory(this);
 	}
 
 

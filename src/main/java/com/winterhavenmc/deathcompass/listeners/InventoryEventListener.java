@@ -2,7 +2,6 @@ package com.winterhavenmc.deathcompass.listeners;
 
 import com.winterhavenmc.deathcompass.PluginMain;
 import com.winterhavenmc.deathcompass.sounds.SoundId;
-import com.winterhavenmc.deathcompass.util.DeathCompass;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -68,7 +67,7 @@ public final class InventoryEventListener implements Listener {
 		final ItemStack itemStack = event.getItem();
 
 		// if itemstack is death compass, cancel event
-		if (DeathCompass.isDeathCompass(itemStack)) {
+		if (plugin.deathCompassFactory.isDeathCompass(itemStack)) {
 			event.setCancelled(true);
 		}
 	}
@@ -99,7 +98,7 @@ public final class InventoryEventListener implements Listener {
 		if (action.equals(InventoryAction.MOVE_TO_OTHER_INVENTORY)) {
 
 			// check if current item is death compass
-			if (DeathCompass.isDeathCompass(event.getCurrentItem())) {
+			if (plugin.deathCompassFactory.isDeathCompass(event.getCurrentItem())) {
 
 				// if inventory type is in set, do nothing and return (allow transfer between player inventory and hotbar)
 				if (SHIFT_CLICK_ALLOWED_TYPES.contains(event.getInventory().getType())) {
@@ -122,8 +121,8 @@ public final class InventoryEventListener implements Listener {
 		if (action.equals(InventoryAction.SWAP_WITH_CURSOR)) {
 
 			// check if cursor item or current item is death compass
-			if (DeathCompass.isDeathCompass(event.getCursor())
-					|| DeathCompass.isDeathCompass(event.getCurrentItem())) {
+			if (plugin.deathCompassFactory.isDeathCompass(event.getCursor())
+					|| plugin.deathCompassFactory.isDeathCompass(event.getCurrentItem())) {
 
 				// check if slot is in container inventory
 				if (event.getRawSlot() < event.getInventory().getSize()) {
@@ -147,7 +146,7 @@ public final class InventoryEventListener implements Listener {
 				|| action.equals(InventoryAction.PLACE_ALL)) {
 
 			// check if cursor item is a death compass
-			if (DeathCompass.isDeathCompass(event.getCursor())) {
+			if (plugin.deathCompassFactory.isDeathCompass(event.getCursor())) {
 
 				// check if slot is in container inventory
 				if (event.getRawSlot() < event.getInventory().getSize()) {
@@ -185,7 +184,7 @@ public final class InventoryEventListener implements Listener {
 		}
 
 		// if cursor item is a death compass
-		if (DeathCompass.isDeathCompass(event.getOldCursor())) {
+		if (plugin.deathCompassFactory.isDeathCompass(event.getOldCursor())) {
 
 			// iterate over dragged slots and if any are above max slot, cancel event
 			for (int slot : event.getRawSlots()) {
