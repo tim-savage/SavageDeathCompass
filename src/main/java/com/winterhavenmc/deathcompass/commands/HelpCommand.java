@@ -13,12 +13,21 @@ import static com.winterhavenmc.deathcompass.messages.MessageId.*;
 import static com.winterhavenmc.deathcompass.sounds.SoundId.COMMAND_INVALID;
 
 
+/**
+ * A class that implements the help subcommand
+ */
 final class HelpCommand extends AbstractSubcommand {
 
 	private final PluginMain plugin;
 	private final SubcommandRegistry subcommandRegistry;
 
 
+	/**
+	 * Class constructor
+	 *
+	 * @param plugin reference to plugin main class
+	 * @param subcommandRegistry reference to subcommand registry instance
+	 */
 	HelpCommand(final PluginMain plugin, final SubcommandRegistry subcommandRegistry) {
 		this.plugin = Objects.requireNonNull(plugin);
 		this.subcommandRegistry = Objects.requireNonNull(subcommandRegistry);
@@ -73,6 +82,7 @@ final class HelpCommand extends AbstractSubcommand {
 
 	/**
 	 * Display help message and usage for a command
+	 *
 	 * @param sender the command sender
 	 * @param commandName the name of the command for which to show help and usage
 	 */
@@ -98,6 +108,7 @@ final class HelpCommand extends AbstractSubcommand {
 
 	/**
 	 * Display usage message for all commands
+	 *
 	 * @param sender the command sender
 	 */
 	void displayUsageAll(CommandSender sender) {

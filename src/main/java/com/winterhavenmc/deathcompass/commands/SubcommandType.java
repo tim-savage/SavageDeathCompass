@@ -2,6 +2,9 @@ package com.winterhavenmc.deathcompass.commands;
 
 import com.winterhavenmc.deathcompass.PluginMain;
 
+/**
+ * Enumeration of subcommands to be instantiated
+ */
 enum SubcommandType {
 
 	RELOAD() {

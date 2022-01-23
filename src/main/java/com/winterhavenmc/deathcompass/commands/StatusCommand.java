@@ -10,12 +10,19 @@ import java.util.Objects;
 
 import static com.winterhavenmc.deathcompass.messages.MessageId.*;
 
-
+/**
+ * A class that implements the status subcommand
+ */
 final class StatusCommand extends AbstractSubcommand {
 
 	private final PluginMain plugin;
 
 
+	/**
+	 * Class constructor
+	 *
+	 * @param plugin reference to plugin main class
+	 */
 	StatusCommand(final PluginMain plugin) {
 		this.plugin = Objects.requireNonNull(plugin);
 		setName("status");

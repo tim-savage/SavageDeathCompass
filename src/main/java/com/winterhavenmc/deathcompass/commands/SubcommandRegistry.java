@@ -4,6 +4,7 @@ import java.util.*;
 
 final class SubcommandRegistry {
 
+	// map to hold subcommand instances keyed by name
 	Map<String, Subcommand> subcommandMap = new LinkedHashMap<>();
 
 
@@ -12,9 +13,7 @@ final class SubcommandRegistry {
 	 * @param subcommand an instance of the command
 	 */
 	void register(final Subcommand subcommand) {
-
 		String name = subcommand.getName().toLowerCase();
-
 		subcommandMap.put(name, subcommand);
 	}
 
@@ -25,7 +24,6 @@ final class SubcommandRegistry {
 	 * @return Subcommand - the subcommand instance, or null if no matching name
 	 */
 	Subcommand getCommand(final String name) {
-
 		return (subcommandMap.get(name.toLowerCase()));
 	}
 

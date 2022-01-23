@@ -15,7 +15,7 @@ import static com.winterhavenmc.deathcompass.sounds.SoundId.*;
 
 
 /**
- * A class that implements player commands for the plugin
+ * A class that implements subcommands for the plugin
  */
 public final class CommandManager implements CommandExecutor, TabCompleter {
 
@@ -23,6 +23,11 @@ public final class CommandManager implements CommandExecutor, TabCompleter {
 	private final SubcommandRegistry subcommandRegistry = new SubcommandRegistry();
 
 
+	/**
+	 * Class constructor
+	 *
+	 * @param plugin reference to plugin main class
+	 */
 	public CommandManager(final PluginMain plugin) {
 		this.plugin = Objects.requireNonNull(plugin);
 		Objects.requireNonNull(plugin.getCommand("deathcompass")).setExecutor(this);

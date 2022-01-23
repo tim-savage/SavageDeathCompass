@@ -10,11 +10,18 @@ import java.util.Objects;
 
 import static com.winterhavenmc.deathcompass.messages.MessageId.*;
 
+/**
+ * A class that implements the reload subcommand
+ */
 final class ReloadCommand extends AbstractSubcommand {
 
 	private final PluginMain plugin;
 
 
+	/**
+	 * Class constructor
+	 * @param plugin reference to plugin main class
+	 */
 	ReloadCommand(final PluginMain plugin) {
 		this.plugin = Objects.requireNonNull(plugin);
 		setName("reload");
@@ -23,6 +30,7 @@ final class ReloadCommand extends AbstractSubcommand {
 	}
 
 
+	@Override
 	public boolean onCommand(final CommandSender sender, final List<String> args) {
 		// check for null parameter
 		Objects.requireNonNull(sender);

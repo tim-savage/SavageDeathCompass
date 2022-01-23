@@ -6,6 +6,9 @@ import org.bukkit.command.CommandSender;
 
 import java.util.List;
 
+/**
+ * Interface that defines a subcommand
+ */
 @SuppressWarnings("unused")
 interface Subcommand {
 
