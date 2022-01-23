@@ -9,7 +9,6 @@ import java.util.*;
 abstract class AbstractSubcommand implements Subcommand {
 
 	private String name;
-	private Collection<String> aliases = new HashSet<>();
 	private String usageString;
 	private MessageId description;
 
@@ -21,21 +20,6 @@ abstract class AbstractSubcommand implements Subcommand {
 	@Override
 	public void setName(final String name) {
 		this.name = name;
-	}
-
-	@Override
-	public Collection<String> getAliases() {
-		return aliases;
-	}
-
-	@Override
-	public void setAliases(Collection<String> aliases) {
-		this.aliases = aliases;
-	}
-
-	@Override
-	public void addAlias(String alias) {
-		this.aliases.add(alias);
 	}
 
 	@Override

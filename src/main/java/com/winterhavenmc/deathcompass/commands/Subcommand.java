@@ -4,7 +4,6 @@ import com.winterhavenmc.deathcompass.messages.MessageId;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import java.util.Collection;
 import java.util.List;
 
 @SuppressWarnings("unused")
@@ -18,12 +17,6 @@ interface Subcommand {
 	String getName();
 
 	void setName(final String name);
-
-	Collection<String> getAliases();
-
-	void setAliases(Collection<String> aliases);
-
-	void addAlias(String alias);
 
 	String getUsage();
 
