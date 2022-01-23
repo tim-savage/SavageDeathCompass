@@ -14,7 +14,7 @@ import static com.winterhavenmc.deathcompass.sounds.SoundId.COMMAND_INVALID;
 
 
 /**
- * A class that implements the help subcommand
+ * Displays description and usage of a subcommand
  */
 final class HelpCommand extends AbstractSubcommand {
 

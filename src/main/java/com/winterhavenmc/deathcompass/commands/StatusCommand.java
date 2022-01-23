@@ -11,7 +11,7 @@ import java.util.Objects;
 import static com.winterhavenmc.deathcompass.messages.MessageId.*;
 
 /**
- * A class that implements the status subcommand
+ * Displays configuration settings of the plugin
  */
 final class StatusCommand extends AbstractSubcommand {
 
