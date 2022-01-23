@@ -166,12 +166,12 @@ public final class PlayerEventListener implements Listener {
 		ItemStack deathcompass = plugin.deathCompassFactory.createItem();
 
 		// get player last death location
-		Location lastdeathloc = getDeathLocation(player);
+		Location lastDeathLocation = getDeathLocation(player);
 
 		// if player does not have at least one death compass in inventory or
 		// saved death location in current world, do nothing and return
 		if (!player.getInventory().containsAtLeast(deathcompass, 1) ||
-				lastdeathloc == null) {
+				lastDeathLocation == null) {
 			return;
 		}
 
@@ -359,7 +359,7 @@ public final class PlayerEventListener implements Listener {
 	/**
 	 * Retrieve player death location from datastore
 	 *
-	 * @param player the player whose death location is being retrieve
+	 * @param player the player whose death location is being retrieved
 	 * @return location
 	 */
 	private Location getDeathLocation(final Player player) {
