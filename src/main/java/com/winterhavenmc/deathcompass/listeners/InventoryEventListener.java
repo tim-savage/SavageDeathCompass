@@ -50,13 +50,8 @@ public final class InventoryEventListener implements Listener {
 	 *
 	 * @param event the event being handled by this method
 	 */
-	@EventHandler
+	@EventHandler(ignoreCancelled = true)
 	public void onInventoryMoveItem(final InventoryMoveItemEvent event) {
-
-		// if event is already cancelled, do nothing and return
-		if (event.isCancelled()) {
-			return;
-		}
 
 		// if prevent-storage is configured false, do nothing and return
 		if (!plugin.getConfig().getBoolean("prevent-storage")) {
@@ -78,13 +73,8 @@ public final class InventoryEventListener implements Listener {
 	 *
 	 * @param event the event being handled by this method
 	 */
-	@EventHandler
+	@EventHandler(ignoreCancelled = true)
 	public void onInventoryClick(final InventoryClickEvent event) {
-
-		// if event is already cancelled, do nothing and return
-		if (event.isCancelled()) {
-			return;
-		}
 
 		// if prevent-storage is configured false, do nothing and return
 		if (!plugin.getConfig().getBoolean("prevent-storage")) {
@@ -170,13 +160,8 @@ public final class InventoryEventListener implements Listener {
 	 *
 	 * @param event the event being handled by this method
 	 */
-	@EventHandler
+	@EventHandler(ignoreCancelled = true)
 	public void onInventoryDrag(final InventoryDragEvent event) {
-
-		// if event is already cancelled, do nothing and return
-		if (event.isCancelled()) {
-			return;
-		}
 
 		// if prevent-storage is configured false, do nothing and return
 		if (!plugin.getConfig().getBoolean("prevent-storage")) {

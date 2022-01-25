@@ -257,13 +257,8 @@ public final class PlayerEventListener implements Listener {
 	 *
 	 * @param event the event handled by this method
 	 */
-	@EventHandler(priority = EventPriority.HIGH)
+	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onItemDrop(final PlayerDropItemEvent event) {
-
-		// if event is cancelled, do nothing and return
-		if (event.isCancelled()) {
-			return;
-		}
 
 		Player player = event.getPlayer();
 
