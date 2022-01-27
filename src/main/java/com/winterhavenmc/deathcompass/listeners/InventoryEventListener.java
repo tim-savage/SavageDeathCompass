@@ -1,6 +1,7 @@
 package com.winterhavenmc.deathcompass.listeners;
 
 import com.winterhavenmc.deathcompass.PluginMain;
+import com.winterhavenmc.deathcompass.messages.MessageId;
 import com.winterhavenmc.deathcompass.sounds.SoundId;
 
 import org.bukkit.entity.HumanEntity;
@@ -14,8 +15,6 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
-
-import static com.winterhavenmc.deathcompass.messages.MessageId.ACTION_INVENTORY_DENY_TRANSFER;
 
 
 /**
@@ -164,7 +163,7 @@ public final class InventoryEventListener implements Listener {
 	 */
 	private void cancelInventoryTransfer(final Cancellable event, final HumanEntity player) {
 		event.setCancelled(true);
-		plugin.messageBuilder.build(player, ACTION_INVENTORY_DENY_TRANSFER).send();
+		plugin.messageBuilder.build(player, MessageId.ACTION_INVENTORY_DENY_TRANSFER).send();
 		plugin.soundConfig.playSound(player, SoundId.INVENTORY_DENY_TRANSFER);
 	}
 

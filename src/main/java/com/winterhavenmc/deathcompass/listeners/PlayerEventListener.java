@@ -1,6 +1,7 @@
 package com.winterhavenmc.deathcompass.listeners;
 
 import com.winterhavenmc.deathcompass.PluginMain;
+import com.winterhavenmc.deathcompass.messages.MessageId;
 import com.winterhavenmc.deathcompass.sounds.SoundId;
 import com.winterhavenmc.deathcompass.storage.DeathRecord;
 
@@ -19,9 +20,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-
-import static com.winterhavenmc.deathcompass.messages.MessageId.ACTION_ITEM_DESTROY;
-import static com.winterhavenmc.deathcompass.messages.MessageId.ACTION_PLAYER_RESPAWN;
 
 
 /**
@@ -138,7 +136,7 @@ public final class PlayerEventListener implements Listener {
 		setDeathCompassTarget(player);
 
 		// send player respawn message
-		plugin.messageBuilder.build(player, ACTION_PLAYER_RESPAWN).send();
+		plugin.messageBuilder.build(player, MessageId.ACTION_PLAYER_RESPAWN).send();
 	}
 
 
@@ -285,7 +283,7 @@ public final class PlayerEventListener implements Listener {
 		}
 
 		// send player compass destroyed message
-		plugin.messageBuilder.build(player, ACTION_ITEM_DESTROY).send();
+		plugin.messageBuilder.build(player, MessageId.ACTION_ITEM_DESTROY).send();
 	}
 
 

@@ -1,14 +1,15 @@
 package com.winterhavenmc.deathcompass.commands;
 
 import com.winterhavenmc.deathcompass.PluginMain;
+import com.winterhavenmc.deathcompass.messages.MessageId;
 import com.winterhavenmc.deathcompass.sounds.SoundId;
 import com.winterhavenmc.deathcompass.storage.DataStore;
+
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
 import java.util.Objects;
 
-import static com.winterhavenmc.deathcompass.messages.MessageId.*;
 
 /**
  * Reloads configuration settings of the plugin
@@ -26,7 +27,7 @@ final class ReloadCommand extends AbstractSubcommand {
 		this.plugin = Objects.requireNonNull(plugin);
 		setName("reload");
 		setUsage("/deathcompass reload");
-		setDescription(COMMAND_HELP_RELOAD);
+		setDescription(MessageId.COMMAND_HELP_RELOAD);
 	}
 
 
@@ -36,7 +37,7 @@ final class ReloadCommand extends AbstractSubcommand {
 		Objects.requireNonNull(sender);
 
 		if (!sender.hasPermission("deathcompass.reload")) {
-			plugin.messageBuilder.build(sender, COMMAND_FAIL_RELOAD_PERMISSION).send();
+			plugin.messageBuilder.build(sender, MessageId.COMMAND_FAIL_RELOAD_PERMISSION).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
@@ -60,7 +61,7 @@ final class ReloadCommand extends AbstractSubcommand {
 		DataStore.reload(plugin);
 
 		// send success message
-		plugin.messageBuilder.build(sender, COMMAND_SUCCESS_RELOAD).send();
+		plugin.messageBuilder.build(sender, MessageId.COMMAND_SUCCESS_RELOAD).send();
 
 		// return true to prevent bukkit command help display
 		return true;
