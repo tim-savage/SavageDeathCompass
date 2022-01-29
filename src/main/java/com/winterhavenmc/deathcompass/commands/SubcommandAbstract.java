@@ -8,9 +8,9 @@ import java.util.*;
 
 abstract class SubcommandAbstract implements Subcommand {
 
-	private String name;
-	private String usageString;
-	private MessageId description;
+	protected String name;
+	protected String usageString;
+	protected MessageId description;
 
 	@Override
 	public String getName() {

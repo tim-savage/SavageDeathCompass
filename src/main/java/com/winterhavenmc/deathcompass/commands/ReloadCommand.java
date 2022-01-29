@@ -25,9 +25,9 @@ final class ReloadCommand extends SubcommandAbstract {
 	 */
 	ReloadCommand(final PluginMain plugin) {
 		this.plugin = Objects.requireNonNull(plugin);
-		setName("reload");
-		setUsage("/deathcompass reload");
-		setDescription(MessageId.COMMAND_HELP_RELOAD);
+		this.name = "reload";
+		this.usageString = "/deathcompass reload";
+		this.description = MessageId.COMMAND_HELP_RELOAD;
 	}
 
 
