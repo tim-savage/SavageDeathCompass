@@ -11,5 +11,6 @@ public enum SoundId {
 
 	COMMAND_FAIL,
 	COMMAND_INVALID,
+	COMMAND_RELOAD_SUCCESS,
 
 }
