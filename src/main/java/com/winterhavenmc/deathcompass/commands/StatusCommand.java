@@ -1,26 +1,34 @@
 package com.winterhavenmc.deathcompass.commands;
 
 import com.winterhavenmc.deathcompass.PluginMain;
+import com.winterhavenmc.deathcompass.messages.MessageId;
 import com.winterhavenmc.deathcompass.sounds.SoundId;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
 import java.util.Objects;
 
-import static com.winterhavenmc.deathcompass.messages.MessageId.*;
 
-
-public class StatusCommand extends AbstractSubcommand {
+/**
+ * Displays configuration settings of the plugin
+ */
+final class StatusCommand extends SubcommandAbstract {
 
 	private final PluginMain plugin;
 
 
+	/**
+	 * Class constructor
+	 *
+	 * @param plugin reference to plugin main class
+	 */
 	StatusCommand(final PluginMain plugin) {
 		this.plugin = Objects.requireNonNull(plugin);
-		setName("status");
-		setUsage("/deathcompass status");
-		setDescription(COMMAND_HELP_STATUS);
+		this.name = "status";
+		this.usageString = "/deathcompass status";
+		this.description = MessageId.COMMAND_HELP_STATUS;
 	}
 
 
@@ -28,7 +36,7 @@ public class StatusCommand extends AbstractSubcommand {
 	public boolean onCommand(final CommandSender sender, final List<String> args) {
 
 		if (!sender.hasPermission("deathcompass.status")) {
-			plugin.messageBuilder.build(sender, COMMAND_FAIL_STATUS_PERMISSION).send();
+			plugin.messageBuilder.build(sender, MessageId.COMMAND_FAIL_STATUS_PERMISSION).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}

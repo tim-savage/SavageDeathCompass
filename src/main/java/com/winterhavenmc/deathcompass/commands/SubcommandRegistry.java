@@ -2,10 +2,10 @@ package com.winterhavenmc.deathcompass.commands;
 
 import java.util.*;
 
-public class SubcommandMap {
+final class SubcommandRegistry {
 
-	SortedMap<String, Subcommand> subcommandMap = new TreeMap<>();
-	Map<String, String> aliasMap = new HashMap<>();
+	// map to hold subcommand instances keyed by name
+	Map<String, Subcommand> subcommandMap = new LinkedHashMap<>();
 
 
 	/**
@@ -13,14 +13,8 @@ public class SubcommandMap {
 	 * @param subcommand an instance of the command
 	 */
 	void register(final Subcommand subcommand) {
-
 		String name = subcommand.getName().toLowerCase();
-
 		subcommandMap.put(name, subcommand);
-
-		for (String alias : subcommand.getAliases()) {
-			aliasMap.put(alias.toLowerCase(), name);
-		}
 	}
 
 
@@ -30,14 +24,7 @@ public class SubcommandMap {
 	 * @return Subcommand - the subcommand instance, or null if no matching name
 	 */
 	Subcommand getCommand(final String name) {
-
-		String key = name;
-
-		if (aliasMap.containsKey(key)) {
-			key = aliasMap.get(key);
-		}
-
-		return (subcommandMap.get(key));
+		return (subcommandMap.get(name.toLowerCase()));
 	}
 
 
@@ -45,7 +32,8 @@ public class SubcommandMap {
 	 * Get list of keys (subcommand names) from the subcommand map
 	 * @return List of String - keys of the subcommand map
 	 */
-	List<String> getNames() {
-		return new ArrayList<>(subcommandMap.keySet());
+	Collection<String> getNames() {
+		return new LinkedHashSet<>(subcommandMap.keySet());
 	}
+
 }

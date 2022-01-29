@@ -4,7 +4,7 @@
 
 	<groupId>com.winterhaven-mc</groupId>
 	<artifactId>SavageDeathCompass</artifactId>
-	<version>1.18.3</version>
+	<version>1.18.4</version>
 	<name>SavageDeathCompass</name>
 
 	<url>https://github.com/tim-savage/SavageDeathCompass</url>
@@ -15,8 +15,9 @@
 	</description>
 
 	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.author>Tim Savage</project.author>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.release>11</maven.compiler.release>
 	</properties>
 
 	<licenses>
@@ -76,21 +77,21 @@
 		<dependency>
 			<groupId>com.winterhaven-mc</groupId>
 			<artifactId>message-builder-lib</artifactId>
-			<version>1.0.4</version>
+			<version>1.11.1</version>
 		</dependency>
 
 		<!-- SoundConfigLib -->
 		<dependency>
 			<groupId>com.winterhaven-mc</groupId>
 			<artifactId>sound-config-lib</artifactId>
-			<version>1.16.3</version>
+			<version>1.11.0</version>
 		</dependency>
 
 		<!-- WorldManagerLib -->
 		<dependency>
 			<groupId>com.winterhaven-mc</groupId>
 			<artifactId>world-manager-lib</artifactId>
-			<version>1.16.3</version>
+			<version>1.11.0</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc -->
@@ -174,11 +175,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.1</version>
-				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-				</configuration>
+				<version>3.9.0</version>
 			</plugin>
 
 			<!-- Created Shaded jar -->
@@ -243,7 +240,6 @@
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>3.3.1</version>
 				<configuration>
-					<source>8</source>
 					<doclint>all,-missing</doclint>
 				</configuration>
 				<executions>
@@ -276,7 +272,6 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.22.2</version>
-
 				<configuration>
 					<junitArtifactName>org.junit.jupiter:junit-jupiter</junitArtifactName>
 					<trimStackTrace>false</trimStackTrace>

@@ -10,7 +10,7 @@ import java.sql.*;
 import java.util.*;
 
 
-class DataStoreSQLite extends DataStoreAbstract implements DataStore, Listener {
+final class DataStoreSQLite extends DataStoreAbstract implements DataStore, Listener {
 
 	// reference to main class
 	private final JavaPlugin plugin;
@@ -225,7 +225,7 @@ class DataStoreSQLite extends DataStoreAbstract implements DataStore, Listener {
 	@Override
 	public synchronized Collection<DeathRecord> selectAllRecords() {
 
-		Collection<DeathRecord> returnList = new ArrayList<>();
+		Collection<DeathRecord> returnSet = new HashSet<>();
 
 		try {
 			PreparedStatement preparedStatement = connection.prepareStatement(Queries.getQuery("SelectAllLocations"));
@@ -264,7 +264,7 @@ class DataStoreSQLite extends DataStoreAbstract implements DataStore, Listener {
 					// if playerUUID is not null, add record to return list
 					if (playerUUID != null) {
 						DeathRecord deathRecord = new DeathRecord(playerUUID, world.getUID(), x, y, z);
-						returnList.add(deathRecord);
+						returnSet.add(deathRecord);
 					}
 				}
 
@@ -292,7 +292,7 @@ class DataStoreSQLite extends DataStoreAbstract implements DataStore, Listener {
 					UUID playerUUID = new UUID(playerUidMsb, playerUidLsb);
 
 					DeathRecord deathRecord = new DeathRecord(playerUUID, world.getUID(), x, y, z);
-					returnList.add(deathRecord);
+					returnSet.add(deathRecord);
 				}
 			}
 		}
@@ -310,7 +310,7 @@ class DataStoreSQLite extends DataStoreAbstract implements DataStore, Listener {
 		}
 
 		// return results
-		return returnList;
+		return returnSet;
 	}
 
 

@@ -6,34 +6,23 @@ import org.bukkit.command.CommandSender;
 
 import java.util.List;
 
-public interface Subcommand {
+/**
+ * Interface that defines a subcommand
+ */
+interface Subcommand {
 
-	boolean onCommand(final CommandSender sender, final List<String> argsList);
+	boolean onCommand(CommandSender sender, List<String> argsList);
 
 	List<String> onTabComplete(final CommandSender sender, final Command command,
 	                           final String alias, final String[] args);
 
 	String getName();
 
-	void setName(final String name);
-
-	List<String> getAliases();
-
-	@SuppressWarnings("unused")
-	void setAliases(final List<String> aliases);
-
-	@SuppressWarnings("unused")
-	void addAlias(final String alias);
-
 	@SuppressWarnings("unused")
 	String getUsage();
 
-	void setUsage(final String usageString);
-
-	void displayUsage(final CommandSender sender);
+	void displayUsage(CommandSender sender);
 
 	MessageId getDescription();
-
-	void setDescription(final MessageId messageId);
 
 }

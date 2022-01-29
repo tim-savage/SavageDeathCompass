@@ -1,7 +1,9 @@
 package com.winterhavenmc.deathcompass.commands;
 
 import com.winterhavenmc.deathcompass.PluginMain;
+import com.winterhavenmc.deathcompass.messages.MessageId;
 import com.winterhavenmc.deathcompass.sounds.SoundId;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
@@ -9,22 +11,28 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static com.winterhavenmc.deathcompass.messages.MessageId.*;
-import static com.winterhavenmc.deathcompass.sounds.SoundId.COMMAND_INVALID;
 
-
-public class HelpCommand extends AbstractSubcommand {
+/**
+ * Displays description and usage of a subcommand
+ */
+final class HelpCommand extends SubcommandAbstract {
 
 	private final PluginMain plugin;
-	private final SubcommandMap subcommandMap;
+	private final SubcommandRegistry subcommandRegistry;
 
 
-	HelpCommand(final PluginMain plugin, final SubcommandMap subcommandMap) {
+	/**
+	 * Class constructor
+	 *
+	 * @param plugin reference to plugin main class
+	 * @param subcommandRegistry reference to subcommand registry instance
+	 */
+	HelpCommand(final PluginMain plugin, final SubcommandRegistry subcommandRegistry) {
 		this.plugin = Objects.requireNonNull(plugin);
-		this.subcommandMap = Objects.requireNonNull(subcommandMap);
-		this.setName("help");
-		this.setUsage("/deathcompass help [command]");
-		this.setDescription(COMMAND_HELP_HELP);
+		this.subcommandRegistry = Objects.requireNonNull(subcommandRegistry);
+		this.name = "help";
+		this.usageString = "/deathcompass help [command]";
+		this.description = MessageId.COMMAND_HELP_HELP;
 	}
 
 
@@ -35,7 +43,7 @@ public class HelpCommand extends AbstractSubcommand {
 		List<String> returnList = new ArrayList<>();
 
 		if (args.length == 2) {
-			for (String subcommand : subcommandMap.getNames()) {
+			for (String subcommand : subcommandRegistry.getNames()) {
 				if (sender.hasPermission("deathcompass." + subcommand)
 						&& subcommand.startsWith(args[1].toLowerCase())
 						&& !subcommand.equalsIgnoreCase("help")) {
@@ -53,7 +61,7 @@ public class HelpCommand extends AbstractSubcommand {
 
 		// if command sender does not have permission to display help, output error message and return true
 		if (!sender.hasPermission("deathcompass.help")) {
-			plugin.messageBuilder.build(sender, COMMAND_FAIL_HELP_PERMISSION).send();
+			plugin.messageBuilder.build(sender, MessageId.COMMAND_FAIL_HELP_PERMISSION).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
 		}
@@ -73,13 +81,14 @@ public class HelpCommand extends AbstractSubcommand {
 
 	/**
 	 * Display help message and usage for a command
+	 *
 	 * @param sender the command sender
 	 * @param commandName the name of the command for which to show help and usage
 	 */
 	void displayHelp(final CommandSender sender, final String commandName) {
 
 		// get subcommand from map by name
-		Subcommand subcommand = subcommandMap.getCommand(commandName);
+		Subcommand subcommand = subcommandRegistry.getCommand(commandName);
 
 		// if subcommand found in map, display help message and usage
 		if (subcommand != null) {
@@ -89,8 +98,8 @@ public class HelpCommand extends AbstractSubcommand {
 
 		// else display invalid command help message and usage for all commands
 		else {
-			plugin.messageBuilder.build(sender, COMMAND_HELP_INVALID).send();
-			plugin.soundConfig.playSound(sender, COMMAND_INVALID);
+			plugin.messageBuilder.build(sender, MessageId.COMMAND_HELP_INVALID).send();
+			plugin.soundConfig.playSound(sender, SoundId.COMMAND_INVALID);
 			displayUsageAll(sender);
 		}
 	}
@@ -98,15 +107,16 @@ public class HelpCommand extends AbstractSubcommand {
 
 	/**
 	 * Display usage message for all commands
+	 *
 	 * @param sender the command sender
 	 */
 	void displayUsageAll(final CommandSender sender) {
 
-		plugin.messageBuilder.build(sender, COMMAND_HELP_USAGE).send();
+		plugin.messageBuilder.build(sender, MessageId.COMMAND_HELP_USAGE).send();
 
-		for (String subcommandName : subcommandMap.getNames()) {
-			if (subcommandMap.getCommand(subcommandName) != null) {
-				subcommandMap.getCommand(subcommandName).displayUsage(sender);
+		for (String subcommandName : subcommandRegistry.getNames()) {
+			if (subcommandRegistry.getCommand(subcommandName) != null) {
+				subcommandRegistry.getCommand(subcommandName).displayUsage(sender);
 			}
 		}
 	}

@@ -32,35 +32,14 @@ public final class PluginMain extends JavaPlugin {
 	public SoundConfiguration soundConfig;
 	public WorldManager worldManager;
 	public DataStore dataStore;
-
-
-	/**
-	 * Class constructor for testing
-	 */
-	public PluginMain() {
-		super();
-	}
-
-
-	/**
-	 * Class constructor for testing
-	 */
-	@SuppressWarnings({"unused", "ProtectedMemberInFinalClass"})
-	protected PluginMain(final JavaPluginLoader loader,
-	                     final PluginDescriptionFile descriptionFile,
-	                     final File dataFolder,
-	                     final File file) {
-		super(loader, descriptionFile, dataFolder, file);
-	}
+	public DeathCompassFactory deathCompassFactory;
 
 
 	@Override
 	public void onEnable() {
 
-		// bstats
-		final int pluginId = 13925;
-		@SuppressWarnings("unused")
-		Metrics metrics = new Metrics(this, pluginId);
+		// bStats
+		new Metrics(this, 13925);
 
 		// Save a copy of the default config.yml if file does not already exist
 		saveDefaultConfig();
@@ -85,6 +64,9 @@ public final class PluginMain extends JavaPlugin {
 
 		// instantiate inventory event listener
 		new InventoryEventListener(this);
+
+		// instantiate death compass factory
+		deathCompassFactory = new DeathCompassFactory(this);
 	}
 
 

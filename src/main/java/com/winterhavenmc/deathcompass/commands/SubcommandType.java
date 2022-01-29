@@ -2,29 +2,25 @@ package com.winterhavenmc.deathcompass.commands;
 
 import com.winterhavenmc.deathcompass.PluginMain;
 
-public enum SubcommandType {
-
-	HELP() {
-		@Override
-		void register(final PluginMain plugin, final SubcommandMap subcommandMap) {
-			subcommandMap.register(new HelpCommand(plugin, subcommandMap));
-		}
-	},
+/**
+ * Enumeration of subcommands to be instantiated
+ */
+enum SubcommandType {
 
 	RELOAD() {
 		@Override
-		void register(final PluginMain plugin, final SubcommandMap subcommandMap) {
-			subcommandMap.register(new ReloadCommand(plugin));
+		Subcommand create(final PluginMain plugin) {
+			return new ReloadCommand(plugin);
 		}
 	},
 
 	STATUS() {
 		@Override
-		void register(final PluginMain plugin, final SubcommandMap subcommandMap) {
-			subcommandMap.register(new StatusCommand(plugin));
+		Subcommand create(final PluginMain plugin) {
+			return new StatusCommand(plugin);
 		}
 	};
 
-	abstract void register(final PluginMain plugin, final SubcommandMap subcommandMap);
+	abstract Subcommand create(final PluginMain plugin);
 
 }

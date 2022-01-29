@@ -9,24 +9,26 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
 
 
-public final class DeathCompass {
+public final class DeathCompassFactory {
 
-	// static reference to plugin main class
-	private final static PluginMain plugin = JavaPlugin.getPlugin(PluginMain.class);
+	// reference to plugin main class
+	private final PluginMain plugin;
 
 	// create itemTag string
-	private final static NamespacedKey itemKey = new NamespacedKey(plugin, "isItem");
+	private final NamespacedKey itemKey;
 
 
 	/**
 	 * Private constructor to prevent class instantiation
 	 */
-	private DeathCompass() { throw new AssertionError(); }
+	public DeathCompassFactory(final PluginMain plugin) {
+		this.plugin = plugin;
+		this.itemKey = new NamespacedKey(plugin, "isItem");
+	}
 
 
 	/**
@@ -34,7 +36,7 @@ public final class DeathCompass {
 	 *
 	 * @return ItemStack of DeathCompass
 	 */
-	public static ItemStack createItem() {
+	public ItemStack createItem() {
 
 		// create compass item stack
 		final ItemStack newItem = new ItemStack(Material.COMPASS, 1);
@@ -53,7 +55,7 @@ public final class DeathCompass {
 	 * @param itemStack the ItemStack to check
 	 * @return {@code true} if itemStack is a DeathCompass item, {@code false} if not
 	 */
-	public static boolean isDeathCompass(final ItemStack itemStack) {
+	public boolean isDeathCompass(final ItemStack itemStack) {
 
 		// if passed ItemStack is null, return false
 		if (itemStack == null) {
@@ -83,12 +85,12 @@ public final class DeathCompass {
 	 * @param itemStack the ItemStack on which to set DeathCompass MetaData
 	 */
 	@SuppressWarnings("ConstantConditions")
-	private static void setMetaData(final ItemStack itemStack) {
+	private void setMetaData(final ItemStack itemStack) {
 
-		// retrieve item name from language file file
+		// retrieve item name from language file
 		String itemName = plugin.messageBuilder.getItemName();
 
-		// retrieve item lore from language file file
+		// retrieve item lore from language file
 		List<String> itemLore = plugin.messageBuilder.getItemLore();
 
 		// get item metadata object
