@@ -9,7 +9,6 @@ import java.util.List;
 /**
  * Interface that defines a subcommand
  */
-@SuppressWarnings("unused")
 interface Subcommand {
 
 	boolean onCommand(CommandSender sender, List<String> argsList);
@@ -19,16 +18,11 @@ interface Subcommand {
 
 	String getName();
 
-	void setName(final String name);
-
+	@SuppressWarnings("unused")
 	String getUsage();
-
-	void setUsage(String usageString);
 
 	void displayUsage(CommandSender sender);
 
 	MessageId getDescription();
-
-	void setDescription(MessageId messageId);
 
 }

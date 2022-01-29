@@ -18,11 +18,6 @@ abstract class SubcommandAbstract implements Subcommand {
 	}
 
 	@Override
-	public void setName(final String name) {
-		this.name = name;
-	}
-
-	@Override
 	public String getUsage() {
 		return usageString;
 	}
@@ -33,18 +28,8 @@ abstract class SubcommandAbstract implements Subcommand {
 	}
 
 	@Override
-	public void setUsage(String usageString) {
-		this.usageString = usageString;
-	}
-
-	@Override
 	public MessageId getDescription() {
 		return description;
-	}
-
-	@Override
-	public void setDescription(final MessageId description) {
-		this.description = description;
 	}
 
 
