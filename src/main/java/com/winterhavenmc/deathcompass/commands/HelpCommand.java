@@ -15,7 +15,7 @@ import java.util.Objects;
 /**
  * Displays description and usage of a subcommand
  */
-final class HelpCommand extends AbstractSubcommand {
+final class HelpCommand extends SubcommandAbstract {
 
 	private final PluginMain plugin;
 	private final SubcommandRegistry subcommandRegistry;
