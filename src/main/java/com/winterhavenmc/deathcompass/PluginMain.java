@@ -6,6 +6,7 @@ import com.winterhavenmc.deathcompass.listeners.PlayerEventListener;
 import com.winterhavenmc.deathcompass.messages.Macro;
 import com.winterhavenmc.deathcompass.messages.MessageId;
 import com.winterhavenmc.deathcompass.storage.DataStore;
+import com.winterhavenmc.deathcompass.util.DeathCompassFactory;
 
 import com.winterhavenmc.util.messagebuilder.MessageBuilder;
 import com.winterhavenmc.util.soundconfig.SoundConfiguration;
@@ -14,10 +15,6 @@ import com.winterhavenmc.util.worldmanager.WorldManager;
 
 import org.bstats.bukkit.Metrics;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.plugin.java.JavaPluginLoader;
-import org.bukkit.plugin.PluginDescriptionFile;
-
-import java.io.File;
 
 
 /**
