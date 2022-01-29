@@ -13,7 +13,6 @@ import javax.annotation.Nonnull;
 import java.util.*;
 
 
-
 /**
  * A class that implements subcommands for the plugin
  */
