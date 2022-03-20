@@ -22,9 +22,8 @@ import com.winterhavenmc.deathcompass.messages.MessageId;
 import com.winterhavenmc.deathcompass.sounds.SoundId;
 
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
+import org.bukkit.command.TabExecutor;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -33,7 +32,7 @@ import java.util.*;
 /**
  * A class that implements subcommands for the plugin
  */
-public final class CommandManager implements CommandExecutor, TabCompleter {
+public final class CommandManager implements TabExecutor {
 
 	private final PluginMain plugin;
 	private final SubcommandRegistry subcommandRegistry = new SubcommandRegistry();

@@ -105,7 +105,7 @@ public final class DeathCompassFactory {
 	private void setMetaData(final ItemStack itemStack) {
 
 		// retrieve item name from language file
-		String itemName = plugin.messageBuilder.getItemName();
+		String itemName = plugin.messageBuilder.getItemName().orElse("Death Compass");
 
 		// retrieve item lore from language file
 		List<String> itemLore = plugin.messageBuilder.getItemLore();

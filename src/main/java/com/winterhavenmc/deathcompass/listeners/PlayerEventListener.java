@@ -384,11 +384,11 @@ public final class PlayerEventListener implements Listener {
 		Location location = player.getWorld().getSpawnLocation();
 
 		// fetch death record from datastore
-		final DeathRecord deathRecord = plugin.dataStore.selectRecord(player.getUniqueId(), worldUid);
+		final Optional<DeathRecord> optionalDeathRecord = plugin.dataStore.selectRecord(player.getUniqueId(), worldUid);
 
-		// if fetched record is not null, set location
-		if (deathRecord != null) {
-			location = deathRecord.getLocation();
+		// if fetched record is not empty, set location
+		if (optionalDeathRecord.isPresent() && optionalDeathRecord.get().getLocation().isPresent()) {
+			location = optionalDeathRecord.get().getLocation().get();
 		}
 
 		// return location

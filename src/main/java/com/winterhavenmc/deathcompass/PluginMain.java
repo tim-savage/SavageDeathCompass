@@ -25,6 +25,7 @@ import com.winterhavenmc.deathcompass.messages.MessageId;
 import com.winterhavenmc.deathcompass.storage.DataStore;
 import com.winterhavenmc.deathcompass.util.DeathCompassFactory;
 
+import com.winterhavenmc.deathcompass.util.MetricsHandler;
 import com.winterhavenmc.util.messagebuilder.MessageBuilder;
 import com.winterhavenmc.util.soundconfig.SoundConfiguration;
 import com.winterhavenmc.util.soundconfig.YamlSoundConfiguration;
@@ -52,9 +53,6 @@ public final class PluginMain extends JavaPlugin {
 	@Override
 	public void onEnable() {
 
-		// bStats
-		new Metrics(this, 13925);
-
 		// Save a copy of the default config.yml if file does not already exist
 		saveDefaultConfig();
 
@@ -81,6 +79,9 @@ public final class PluginMain extends JavaPlugin {
 
 		// instantiate death compass factory
 		deathCompassFactory = new DeathCompassFactory(this);
+
+		// instantiate metrics handler
+		new MetricsHandler(this);
 	}
 
 

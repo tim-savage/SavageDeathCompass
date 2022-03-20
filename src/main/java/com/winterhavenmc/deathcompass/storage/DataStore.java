@@ -21,6 +21,7 @@ import com.winterhavenmc.deathcompass.PluginMain;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface DataStore {
@@ -60,7 +61,7 @@ public interface DataStore {
 	 * @param worldUID   the world UID of the record to be retrieved
 	 * @return death record or null if no matching record found
 	 */
-	DeathRecord selectRecord(final UUID playerUUID, final UUID worldUID);
+	Optional<DeathRecord> selectRecord(final UUID playerUUID, final UUID worldUID);
 
 
 	/**
@@ -88,7 +89,7 @@ public interface DataStore {
 	 * @return the DeathRecord that was deleted from datastore
 	 */
 	@SuppressWarnings("unused")
-	DeathRecord deleteRecord(final UUID playerUUID, final UUID worldUID);
+	Optional<DeathRecord> deleteRecord(final UUID playerUUID, final UUID worldUID);
 
 
 	/**
