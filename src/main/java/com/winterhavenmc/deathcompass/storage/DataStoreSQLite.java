@@ -157,16 +157,16 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore, List
 
 
 	@Override
-	public synchronized DeathRecord selectRecord(final UUID playerUUID, final UUID worldUID) {
+	public synchronized Optional<DeathRecord> selectRecord(final UUID playerUUID, final UUID worldUID) {
 
 		// if key is null return null record
 		if (playerUUID == null) {
-			return null;
+			return Optional.empty();
 		}
 
 		// if world uid is null, return null record
 		if (worldUID == null) {
-			return null;
+			return Optional.empty();
 		}
 
 		// get player uuid components
@@ -178,12 +178,14 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore, List
 		final long worldUidLsb = worldUID.getLeastSignificantBits();
 
 		// try cache first
-		DeathRecord deathRecord = deathRecordCache.get(playerUUID, worldUID);
+		Optional<DeathRecord> optionalDeathRecord = deathRecordCache.get(playerUUID, worldUID);
 
 		// if a record was returned from cache, return the record; otherwise try datastore
-		if (deathRecord != null) {
-			return deathRecord;
+		if (optionalDeathRecord.isPresent()) {
+			return optionalDeathRecord;
 		}
+
+		DeathRecord deathRecord = null;
 
 		try {
 			PreparedStatement preparedStatement = connection.prepareStatement(Queries.getQuery("SelectLocation"));
@@ -210,7 +212,7 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore, List
 
 				if (world == null) {
 					plugin.getLogger().warning("World " + worldName + " is not loaded!");
-					return null;
+					return Optional.empty();
 				}
 
 				deathRecord = new DeathRecord(playerUUID, worldUID, x, y, z);
@@ -226,7 +228,7 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore, List
 			if (plugin.getConfig().getBoolean("debug")) {
 				e.getStackTrace();
 			}
-			return null;
+			return Optional.empty();
 		}
 
 		// if record is not null, put record in cache
@@ -235,7 +237,7 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore, List
 		}
 
 		// return record
-		return deathRecord;
+		return Optional.ofNullable(deathRecord);
 	}
 
 
@@ -474,16 +476,16 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore, List
 
 
 	@Override
-	public synchronized DeathRecord deleteRecord(final UUID playerUid, final UUID worldUid) {
+	public synchronized Optional<DeathRecord> deleteRecord(final UUID playerUid, final UUID worldUid) {
 
 		// if player uuid is null return null record
 		if (playerUid == null) {
-			return null;
+			return Optional.empty();
 		}
 
 		// if world uid is null return null record
 		if (worldUid == null) {
-			return null;
+			return Optional.empty();
 		}
 
 		// get player uid components
@@ -495,7 +497,7 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore, List
 		final long worldUidLsb = worldUid.getLeastSignificantBits();
 
 		// get destination record to be deleted, for return
-		DeathRecord deathRecord = selectRecord(playerUid, worldUid);
+		Optional<DeathRecord> optionalDeathRecord = selectRecord(playerUid, worldUid);
 
 		try {
 			// create prepared statement
@@ -526,7 +528,7 @@ final class DataStoreSQLite extends DataStoreAbstract implements DataStore, List
 				e.getStackTrace();
 			}
 		}
-		return deathRecord;
+		return optionalDeathRecord;
 	}
 
 

@@ -23,6 +23,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 
@@ -126,18 +127,18 @@ public final class DeathRecord {
 	 *
 	 * @return Location - death compass player death location
 	 */
-	public Location getLocation() {
+	public Optional<Location> getLocation() {
 
 		// get world from uid
 		final World world = Bukkit.getServer().getWorld(this.worldUid);
 
 		// if world is invalid, return null
 		if (world == null) {
-			return null;
+			return Optional.empty();
 		}
 
 		// return new location object
-		return new Location(world, this.x, this.y, this.z);
+		return Optional.of(new Location(world, this.x, this.y, this.z));
 	}
 
 }

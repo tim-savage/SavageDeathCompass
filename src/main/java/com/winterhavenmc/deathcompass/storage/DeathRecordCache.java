@@ -22,10 +22,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 
 /**
@@ -96,14 +93,14 @@ final class DeathRecordCache implements Listener {
 	 * @param worldUid  world UID to use as key
 	 * @return deathRecord containing playerUid and death location for world, or null if no record exists
 	 */
-	DeathRecord get(final UUID playerUid, final UUID worldUid) {
+	Optional<DeathRecord> get(final UUID playerUid, final UUID worldUid) {
 
 		// if passed playerUid is null, return null record
 		if (playerUid == null) {
 			if (plugin.getConfig().getBoolean("debug")) {
 				plugin.getLogger().warning("LocationCache.get was passed null playerUid!");
 			}
-			return null;
+			return Optional.empty();
 		}
 
 		// if passed worldUid is null, return null record
@@ -111,21 +108,21 @@ final class DeathRecordCache implements Listener {
 			if (plugin.getConfig().getBoolean("debug")) {
 				plugin.getLogger().warning("LocationCache.get was passed null worldUid!");
 			}
-			return null;
+			return Optional.empty();
 		}
 
 		// if map for player does not exist, return null record
 		if (deathRecordMap.get(playerUid) == null) {
-			return null;
+			return Optional.empty();
 		}
 
 		// if location in map is null, return null record
 		if (deathRecordMap.get(playerUid).get(worldUid) == null) {
-			return null;
+			return Optional.empty();
 		}
 
 		// return record fetched from cache
-		return deathRecordMap.get(playerUid).get(worldUid);
+		return Optional.of(deathRecordMap.get(playerUid).get(worldUid));
 	}
 
 
