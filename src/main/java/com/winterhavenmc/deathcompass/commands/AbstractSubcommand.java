@@ -23,11 +23,13 @@ import org.bukkit.command.CommandSender;
 
 import java.util.*;
 
-abstract class SubcommandAbstract implements Subcommand {
+abstract class AbstractSubcommand implements Subcommand {
 
 	protected String name;
 	protected String usageString;
 	protected MessageId description;
+	protected String permissionNode;
+
 
 	@Override
 	public String getName() {
@@ -49,6 +51,10 @@ abstract class SubcommandAbstract implements Subcommand {
 		return description;
 	}
 
+	@Override
+	public String getPermissionNode() {
+		return permissionNode;
+	}
 
 	@Override
 	public List<String> onTabComplete(final CommandSender sender, final Command command,

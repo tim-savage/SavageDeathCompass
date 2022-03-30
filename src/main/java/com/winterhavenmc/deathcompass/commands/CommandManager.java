@@ -27,6 +27,7 @@ import org.bukkit.command.TabExecutor;
 
 import javax.annotation.Nonnull;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -53,7 +54,7 @@ public final class CommandManager implements TabExecutor {
 		}
 
 		// register help subcommand
-		subcommandRegistry.register(new HelpCommand(plugin, subcommandRegistry));
+		subcommandRegistry.register(new HelpSubcommand(plugin, subcommandRegistry));
 	}
 
 
@@ -74,19 +75,19 @@ public final class CommandManager implements TabExecutor {
 		if (args.length > 1) {
 
 			// get subcommand from map
-			Subcommand subcommand = subcommandRegistry.getCommand(args[0]);
+			Optional<Subcommand> subcommand = subcommandRegistry.getSubcommand(args[0]);
 
 			// if no subcommand returned from map, return empty list
-			if (subcommand == null) {
+			if (subcommand.isEmpty()) {
 				return Collections.emptyList();
 			}
 
 			// return subcommand tab completer output
-			return subcommand.onTabComplete(sender, command, alias, args);
+			return subcommand.get().onTabComplete(sender, command, alias, args);
 		}
 
-		// return list of subcommands for which sender has permission
-		return matchingCommands(sender, args[0]);
+		// return list of matching subcommands for which sender has permission
+		return getMatchingSubcommandNames(sender, args[0]);
 	}
 
 
@@ -121,37 +122,38 @@ public final class CommandManager implements TabExecutor {
 		}
 
 		// get subcommand from map by name
-		Subcommand subcommand = subcommandRegistry.getCommand(subcommandName);
+		Optional<Subcommand> optionalSubcommand = subcommandRegistry.getSubcommand(subcommandName);
 
-		// if subcommand is null, get help command from map
-		if (subcommand == null) {
-			subcommand = subcommandRegistry.getCommand("help");
-			plugin.messageBuilder.build(sender, MessageId.COMMAND_FAIL_INVALID_COMMAND).send();
+		// if subcommand is empty, get help command from map
+		if (optionalSubcommand.isEmpty()) {
+			optionalSubcommand = subcommandRegistry.getSubcommand("help");
+			plugin.messageBuilder.compose(sender, MessageId.COMMAND_FAIL_INVALID_COMMAND).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_INVALID);
 		}
 
 		// execute subcommand
-		return subcommand.onCommand(sender, argsList);
+		optionalSubcommand.ifPresent( subcommand -> subcommand.onCommand(sender, argsList) );
+
+		return true;
 	}
 
 
 	/**
 	 * Get matching list of subcommands for which sender has permission
+	 *
 	 * @param sender the command sender
 	 * @param matchString the string prefix to match against command names
 	 * @return List of String - command names that match prefix and sender has permission
 	 */
-	private List<String> matchingCommands(CommandSender sender, String matchString) {
+	private List<String> getMatchingSubcommandNames(final CommandSender sender, final String matchString) {
 
-		List<String> returnList = new ArrayList<>();
-
-		for (String subcommand : subcommandRegistry.getNames()) {
-			if (sender.hasPermission("deathcompass." + subcommand)
-					&& subcommand.startsWith(matchString.toLowerCase())) {
-				returnList.add(subcommand);
-			}
-		}
-		return returnList;
+		return subcommandRegistry.getKeys().stream()
+				.map(subcommandRegistry::getSubcommand)
+				.filter(Optional::isPresent)
+				.filter(subcommand -> sender.hasPermission(subcommand.get().getPermissionNode()))
+				.map(subcommand -> subcommand.get().getName())
+				.filter(name -> name.toLowerCase().startsWith(matchString.toLowerCase()))
+				.collect(Collectors.toList());
 	}
 
 }

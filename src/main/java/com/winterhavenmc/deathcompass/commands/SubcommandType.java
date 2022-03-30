@@ -27,14 +27,14 @@ enum SubcommandType {
 	RELOAD() {
 		@Override
 		Subcommand create(final PluginMain plugin) {
-			return new ReloadCommand(plugin);
+			return new ReloadSubcommand(plugin);
 		}
 	},
 
 	STATUS() {
 		@Override
 		Subcommand create(final PluginMain plugin) {
-			return new StatusCommand(plugin);
+			return new StatusSubcommand(plugin);
 		}
 	};
 

@@ -42,4 +42,6 @@ interface Subcommand {
 
 	MessageId getDescription();
 
+	String getPermissionNode();
+
 }

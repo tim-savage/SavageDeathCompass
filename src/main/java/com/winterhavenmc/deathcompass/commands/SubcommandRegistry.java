@@ -19,6 +19,7 @@ package com.winterhavenmc.deathcompass.commands;
 
 import java.util.*;
 
+
 final class SubcommandRegistry {
 
 	// map to hold subcommand instances keyed by name
@@ -40,8 +41,8 @@ final class SubcommandRegistry {
 	 * @param name the command to retrieve from the map
 	 * @return Subcommand - the subcommand instance, or null if no matching name
 	 */
-	Subcommand getCommand(final String name) {
-		return (subcommandMap.get(name.toLowerCase()));
+	Optional<Subcommand> getSubcommand(final String name) {
+		return Optional.ofNullable(subcommandMap.get(name.toLowerCase()));
 	}
 
 
@@ -49,7 +50,7 @@ final class SubcommandRegistry {
 	 * Get list of keys (subcommand names) from the subcommand map
 	 * @return List of String - keys of the subcommand map
 	 */
-	Collection<String> getNames() {
+	Collection<String> getKeys() {
 		return new LinkedHashSet<>(subcommandMap.keySet());
 	}
 

@@ -31,7 +31,7 @@ import java.util.Objects;
 /**
  * Reloads configuration settings of the plugin
  */
-final class ReloadCommand extends SubcommandAbstract {
+final class ReloadSubcommand extends AbstractSubcommand {
 
 	private final PluginMain plugin;
 
@@ -40,20 +40,23 @@ final class ReloadCommand extends SubcommandAbstract {
 	 * Class constructor
 	 * @param plugin reference to plugin main class
 	 */
-	ReloadCommand(final PluginMain plugin) {
+	ReloadSubcommand(final PluginMain plugin) {
 		this.plugin = Objects.requireNonNull(plugin);
 		this.name = "reload";
 		this.usageString = "/deathcompass reload";
 		this.description = MessageId.COMMAND_HELP_RELOAD;
+		this.permissionNode = "deathcompass.reload";
 	}
 
 
 	@Override
 	public boolean onCommand(final CommandSender sender, final List<String> args) {
+
 		// check for null parameter
 		Objects.requireNonNull(sender);
 
-		if (!sender.hasPermission("deathcompass.reload")) {
+		// check sender has permission
+		if (!sender.hasPermission(permissionNode)) {
 			plugin.messageBuilder.build(sender, MessageId.COMMAND_FAIL_RELOAD_PERMISSION).send();
 			plugin.soundConfig.playSound(sender, SoundId.COMMAND_FAIL);
 			return true;
