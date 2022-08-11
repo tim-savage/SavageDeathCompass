@@ -128,9 +128,12 @@ final class HelpSubcommand extends AbstractSubcommand {
 	 */
 	void displayUsageAll(final CommandSender sender) {
 		plugin.messageBuilder.compose(sender, MessageId.COMMAND_HELP_USAGE).send();
-		for (String subcommandName : subcommandRegistry.getKeys()) {
-			subcommandRegistry.getSubcommand(subcommandName).ifPresent(subcommand -> subcommand.displayUsage(sender));
-		}
+
+		subcommandRegistry.getKeys().stream()
+				.map(subcommandRegistry::getSubcommand)
+				.filter(Optional::isPresent)
+				.filter(subcommand -> sender.hasPermission(subcommand.get().getPermissionNode()))
+				.forEach(subcommand -> subcommand.get().displayUsage(sender));
 	}
 
 }

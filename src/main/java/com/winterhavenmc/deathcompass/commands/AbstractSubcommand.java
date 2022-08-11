@@ -26,9 +26,9 @@ import java.util.*;
 abstract class AbstractSubcommand implements Subcommand {
 
 	protected String name;
-	protected String usageString;
+	protected String usageString = "";
 	protected MessageId description;
-	protected String permissionNode;
+	protected String permissionNode = "";
 
 
 	@Override
