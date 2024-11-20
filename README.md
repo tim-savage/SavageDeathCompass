@@ -1,3 +1,7 @@
+### This repository has been moved to the WinterhavenMC organization.
+
+https://github.com/winterhavenmc/SavageDeathCompass
+
 ### Description:
 
 This plugin was created as an alternative to the /back on death command. With DeathCompass enabled, a player is given a compass when they respawn after death. This compass points to their last death location in that world, so they can find their dropped loot. It also works well alongside various death chest and graveyard plugins.
